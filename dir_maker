@@ -1,0 +1,6 @@
+#!/bin/bash
+dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_')
+mkdir /tmp/foxhunt/"$dirname";
+tar -xvJ /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
+cd $dirname;
+
