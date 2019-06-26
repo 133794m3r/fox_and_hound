@@ -1,0 +1,11 @@
+#!/bin/bash
+cd $1;
+ls > /tmp/dirs;
+shopt -s dotglob
+while read line;
+do
+    cd "$line";
+   tar -cvJf challenge_file.txz *;
+   cd ..;
+done < /tmp/dirs
+shopt -u dotglob
