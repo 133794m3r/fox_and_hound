@@ -1,11 +1,12 @@
 #!/bin/bash
 cd $1;
-ls > /tmp/dirs;
+ls | grep -v '_built' > /tmp/dirs;
 shopt -s dotglob
 while read line;
 do
     cd "$line";
-   tar -cvJf challenge_file.txz *;
+    echo "${1:0:-5}";
+   tar -cvJf ../${1:0:-5}"_built"/"$line""/"challenge_file.txz *;
    cd ..;
 done < /tmp/dirs
 shopt -u dotglob
