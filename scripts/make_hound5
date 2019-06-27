@@ -1,20 +1,19 @@
 #!/bin/bash
-MAX=10;
+MAX=15;
 correct_flag=$(( $RANDOM % $MAX ));
 rm -rvf ../hounds/hound5/.secret/*
 rm -rvf bunch_dirs;
 mkdir bunch_dirs;
 cd bunch_dirs;
 name='';
-for (( i=0; i<=10; i++))
+for (( i=0; i<=$MAX; i++))
 do
 name=$i;
 if(( $i <=9 ))
 then
     name="0$i";
 fi
-    echo '' > "-file$name";
-    echo '' | openssl dgst -sha1 -binary > "-file$name";
+    echo $RANDOM | openssl dgst -sha1 -binary > "-file$name";
     if [[ $i -eq $correct_flag ]]
     then
         echo '3h9GplLdLnj9e6uYVToiNMBLFcY=' > "-file$name";
