@@ -10,6 +10,11 @@ rm -rvf bunch_dirs;
 mkdir bunch_dirs;
 cd bunch_dirs;
 name='';
+i=0;
+j=0;
+k=0;
+unique_filename_prefixes=3;
+num_file_names=$(( $max_file/ $unique_filename_prefixes ));
 for (( i=0; i<$max_dir; i++ )) do
     name=$i;
     if(( $i <=9 ))
@@ -17,4 +22,7 @@ for (( i=0; i<$max_dir; i++ )) do
         name="0$i";
     fi
     mkdir "$dir_prefix$name"
+    for (( j=0; j<$num_file_names; j++ )) do
+        
+    done;
 done
