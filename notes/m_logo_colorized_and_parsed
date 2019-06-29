@@ -1,8 +1,47 @@
-#The following is the smushed and ready to be echoed out "M" header with all of the color information intact.
+#!/bin/sh
+#The following is the smushed and ready to be echoed out "M" header with all of 
+#the color information intact.
 
 #to make sure that the terminal's clear
-clear
-#to make sure that the logos will fit on the screen at one time with the user's prompt.
-resize -s 32 80;
-echo -e '\e[0m \e[31m                       /#\ \n\e[31m                       /###\ \n\e[31m                      /#####\ \n\e[31m                     /#######\ \n\e[31m                    /#########\ \n\e[31m                   /##########/     \n\e[31m                  /##########/  /\ \n\e[31m                 /##########/  /##\ \n\e[31m                /##########/  /###/    \n\e[31m               /##########/__/###/  ___   \n\e[31m              /#################/  /###\ \n\e[31m             /#################/  /#####\ \n\e[31m           /##################/__/#######\ \n\e[31m          /###############################\ \n\e[31m         /#################################\ \n\e[31m        /#######/__\########################\ \n\e[31m       /#######/    \########################\ \n\e[31m      /#######/      \########################\ \n\e[31m     /#######/        \###########/__\#########\ \n\e[31m    /#######/          \#########/    \#########\ \n\e[31m   /#######/            \#######/      \#########\ \n\e[31m  /#######/              \#####/        \#########\ \n\e[31m /#######/                \###/          \#########\ \n\e[31m/#######/                  \#/            \#########\ \n\e[31m--------                    -              ----------     '
+clear;
+#to make sure that the logos will fit on the screen at one time with the user's 
+#prompt. I also went over by three characters in the columns so I have to resize it
+#for that also.
+#to make sure it doesn't output pointless lines.
+resize -s 27 83 &>/dev/null;
+#color table: 31=red fg, 33=yellow fg, 97=white fg.
+#This is included to help me easily revert it to change the textbox later.
+#I have ~362 characters to work with within it. It should be way more than enough
+#for pretty much everything that I'll need to do as that's 80words. I'll create
+#smaller versions of the textbox for earlier flags.
+#echo -e '\e[0m \e[31m                     /#\ 
+#\e[31m                       /###\ 
+#\e[31m                      /#####\ 
+#\e[31m                     /#######\ 
+#\e[31m                    /#########\ 
+#\e[31m                   /##########/              *****A textbox with some Info****
+#\e[31m                  /##########/  /\         \e[33m[+==================================+ 
+#\e[31m                 /##########/  /##\        \e[33m| \e[97m{ PLACEHOLDER TEXT IS HERE     }  \e[33m| 
+#\e[31m                /##########/  /###/        \e[33m| \e[97m { PLACEHOLDER TEXT IS HERE    }  \e[33m| 
+#\e[31m               /##########/__/###/  ___    \e[33m| \e[97m  { PLACEHOLDER TEXT IS HERE   }  \e[33m|  
+#\e[31m              /#################/  /###\   \e[33m\ \e[97m { PLACEHOLDER TEXT IS HERE   }   \e[33m|
+#\e[31m             /#################/  /#####\   \e[33m\ \e[97m{ PLACEHOLDER TEXT IS HERE    }  \e[33m|
+#\e[31m           /##################/__/#######\   \e[33m\ \e[97m{   PLACEHOLDER TEXT IS HERE  } \e[33m|
+#\e[31m          /###############################\   \e[33m\ \e[97m{   PLACEHOLDER TEXT IS HERE  }\e[33m|
+#\e[31m         /#######/\########################\   \e[33m\ \e[97m   Welcome to the Fox Hunt!   \e[33m|
+#\e[31m        /#######/  \########################\   \e[33m\ \e[97m{ PLACEHOLDER TEXT IS HERE  }\e[33m|
+#\e[31m       /#######/    \########################\   \e[33m| \e[97m{More placeholder text     }\e[33m|
+#\e[31m      /#######/      \#############/\#########\  \e[33m| \e[97m{and even more text inside }\e[33m|
+#\e[31m     /#######/        \###########/  \#########\ \e[33m+============================+
+#\e[31m    /#######/          \#########/    \#########\ 
+#\e[31m   /#######/            \#######/      \#########\ 
+#\e[31m  /#######/              \#####/        \#########\ 
+#\e[31m /#######/                \###/          \#########\ 
+#\e[31m/#######/                  \#/            \#########\ 
+#\e[31m--------                    -              ----------'
 
+#remove later.
+#old colored version
+#echo -e '\e[0m \e[31m                       /#\ \n\e[31m                       /###\ \n\e[31m                      /#####\ \n\e[31m                     /#######\ \n\e[31m                    /#########\ \n\e[31m                   /##########/              *****A textbox with some Info****\n\e[31m                  /##########/  /\         \e[33m[+==================================+ \n\e[31m                 /##########/  /##\        \e[33m| \e[97m{ PLACEHOLDER TEXT IS HERE     }  \e[33m| \n\e[31m                /##########/  /###/        \e[33m| \e[97m { PLACEHOLDER TEXT IS HERE    }  \e[33m| \n\e[31m               /##########/__/###/  ___    \e[33m| \e[97m  { PLACEHOLDER TEXT IS HERE   }  \e[33m|  \n\e[31m              /#################/  /###\   \e[33m\ \e[97m { PLACEHOLDER TEXT IS HERE   }   \e[33m|\n\e[31m             /#################/  /#####\   \e[33m\ \e[97m{ PLACEHOLDER TEXT IS HERE    }  \e[33m|\n\e[31m           /##################/__/#######\   \e[33m\ \e[97m{   PLACEHOLDER TEXT IS HERE  } \e[33m|\n\e[31m          /###############################\   \e[33m\ \e[97m{   PLACEHOLDER TEXT IS HERE  }\e[33m|\n\e[31m         /#################################\   \e[33m\ \e[97m   Welcome to the Fox Hunt!   \e[33m|\n\e[31m        /#######/__\########################\   \e[33m\ \e[97m{ PLACEHOLDER TEXT IS HERE  }\e[33m|\n\e[31m       /#######/    \########################\   \e[33m| \e[97m{More placeholder text     }\e[33m|\n\e[31m      /#######/      \########################\  \e[33m| \e[97m{and even more text inside }\e[33m|\n\e[31m     /#######/        \###########/__\#########\ \e[33m+============================+\n\e[31m    /#######/          \#########/    \#########\ \n\e[31m   /#######/            \#######/      \#########\ \n\e[31m  /#######/              \#####/        \#########\ \n\e[31m /#######/                \###/          \#########\ \n\e[31m/#######/                  \#/            \#########\ \n\e[31m--------                    -              ----------'
+#current version.
+echo -e '\e[0m \e[31m                       /#\ \n\e[31m                       /###\ \n\e[31m                      /#####\ \n\e[31m                     /#######\ \n\e[31m                    /#########\ \n\e[31m                   /##########/              \e[1;4m*****A textbox with some Info****\e[0m\n\e[31m                  /##########/  /\         \e[33m+===================================+ \n\e[31m                 /##########/  /##\        \e[33m| \e[97m{ PLACEHOLDER TEXT IS HERE     }  \e[33m|\e[31m \n\e[31m                /##########/  /###/        \e[33m| \e[97m { PLACEHOLDER TEXT IS HERE    }  \e[33m|\e[31m\n\e[31m               /##########/__/###/  ___    \e[33m| \e[97m  { PLACEHOLDER TEXT IS HERE   }  \e[33m|\e[31m  \n\e[31m              /#################/  /###\   \e[33m\ \e[97m { PLACEHOLDER TEXT IS HERE   }   \e[33m|\e[31m\n\e[31m             /#################/  /#####\   \e[33m\ \e[97m{ PLACEHOLDER TEXT IS HERE    }  \e[33m|\e[31m\n\e[31m           /##################/__/#######\   \e[33m\ \e[97m{   PLACEHOLDER TEXT IS HERE  } \e[33m|\e[31m\n\e[31m          /###############################\   \e[33m\ \e[97m{   PLACEHOLDER TEXT IS HERE  }\e[33m|\e[31m\n\e[31m         /#######/\########################\   \e[33m\ \e[97m   Welcome to the Fox Hunt!   \e[33m|\e[31m\n\e[31m        /#######/  \########################\   \e[33m\ \e[97m{ PLACEHOLDER TEXT IS HERE  }\e[33m|\e[31m\n\e[31m       /#######/    \########################\   \e[33m| \e[97m{More placeholder text     }\e[33m|\e[31m\n\e[31m      /#######/      \#############/\#########\  \e[33m| \e[97m{and even more text inside }\e[33m|\e[31m\n\e[31m     /#######/        \###########/  \#########\ \e[33m+=============================+\n\e[31m    /#######/          \#########/    \#########\ \n\e[31m   /#######/            \#######/      \#########\ \n\e[31m  /#######/              \#####/        \#########\ \n\e[31m /#######/                \###/          \#########\ \n\e[31m/#######/                  \#/            \#########\ \n\e[31m--------                    -              ----------'
