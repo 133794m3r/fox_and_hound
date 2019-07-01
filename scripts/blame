@@ -1,0 +1,10 @@
+#!/bin/bash
+case $1 in
+	'-debug)
+	echo "Person to blame: Macarthur Inbody <mdi2455@email.vccs.edu> Debug info:$DIRNAME $HOUND";;
+	'-person')
+	echo "Person to blame: Macarhtur Inbody <mdi2455@email.vccs.edu>";;
+	*)
+	echo -n 'usage: blame -person|-debug\n Person will say who to blame\nDebug will also help them figure out what went wrong.'
+	;;
+esac
