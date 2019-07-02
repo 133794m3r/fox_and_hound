@@ -5,6 +5,7 @@ rm -rvf ../hounds/hound5/.secret/*
 rm -rvf bunch_dirs;
 mkdir bunch_dirs;
 cd bunch_dirs;
+incorrect_flag_str='';
 name='';
 for (( i=0; i<=$MAX; i++))
 do
@@ -13,7 +14,10 @@ if(( $i <=9 ))
 then
     name="0$i";
 fi
-    echo $RANDOM | openssl dgst -sha1 -binary > "-file$name";
+#    echo $RANDOM | openssl dgst -sha1 -binary > "-file$name";
+	incorrect_flag_str=$( echo $RANDOM | openssl dgst -sha256 -binary);
+	echo '9Gp' > "-file$name";
+	echo ${incorrect_flag_str:0:25} >> "-file$name";
     if [[ $i -eq $correct_flag ]]
     then
         echo '3h9GplLdLnj9e6uYVToiNMBLFcY=' > "-file$name";

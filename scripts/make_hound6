@@ -23,6 +23,6 @@ for (( i=0; i<$max_dir; i++ )) do
     fi
     mkdir "$dir_prefix$name"
     for (( j=0; j<$num_file_names; j++ )) do
-        
+
     done;
 done
