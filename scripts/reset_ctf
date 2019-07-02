@@ -7,45 +7,49 @@ read CONFIRMATION;
 case $CONFIRMATION in
 	'y'|'Y'|'yes'|'YES')
 	rebuild;;
-	return 0;
 	'n'|'N'|'no'|'NO')
-	echo -e 'Not going forward. Directory kept in tact.';;
-	return 0;
+	echo -e 'Not going forward. Directory kept in tact.';
+	return 0;;
 	*)
 	echo 'No response given';;
 	esac
-	return -1;
+	return 255;
 }
 function rebuild(){
 local CONFIRMATION='';
 local do_it=0;
-	echo -n 'One last chance. Are you sure?\nYES/NO';
+	echo -ne 'One last chance. Are you sure?\nYES/NO\n';
 	read CONFIRMATION;
 	case $CONFIRMATION in
-	'y'|'YES'|'yes'|'Y')
+	'YES')
 	echo 'Actually rebuilding your workspace.';
 	do_it=1;
-	actually_do_it $do_it;
+	actually_do_it $do_it;;
+	*)
+	echo 'Doing nothing.';
+	esac
 return 0;
 }
 function actually_do_it(){
 	local dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_');
-	if [[ $1 -ne 1 ]] then
+	if [[ $1 -ne 1 ]]; then
 	echo 'Confirmation not provided';
-	exit -1;
-	else [[ $1 -eq 1 ]] then
-	rm -r "$USER";
-	tar -xvJ /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname";
-	echo "$USER folder has been recreated.";
+	exit 255;
+	elif [[ $1 -eq 1 ]]
+then
+#	rm -r "$USER";
+#	tar -xvJ /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname";
+#	echo "$USER folder has been recreated.";
+	echo 'did it';
 	fi
 	return 0;
 
 }
 case $1 in
-	'yesimsure'|'yes'|'y')
+	'-yesimsure'|'-yes'|'-y')
 	prompt;;
 	*)
 	echo -e 'usage: reset_ctf -yesimsure|yes\n then you''ll be prompted for comfirmation.'
 	;;
 esac
-return 0;
+exit 0;
