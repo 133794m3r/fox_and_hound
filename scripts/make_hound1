@@ -1,4 +1,5 @@
 #!/bin/bash
+#Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
 #the flag will be exported later so that it can be read from a file.
 FLAG_HOUND1='k3uLis-bFoOtxl8wBllZsKapwqM=';
 #The prefixes for the files
