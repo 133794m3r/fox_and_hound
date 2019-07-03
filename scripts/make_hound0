@@ -1,0 +1,21 @@
+#!/bin/bash
+#the flag will be exported later so that it can be read from a file.
+FLAG_HOUND0='-WeE1KX.EkmECsU-xKSki7cSQb8=';
+#The prefixes for the files
+file_prefix=(README INSIDETHIS FILE);
+file_prefix_len=${#file_prefix[*]};
+file_suffix=(txt flag secret);
+file_suffix_len=${#file_suffix[*]};
+#This line removes the old flag and puts the new file in there.
+cd ../hounds/hound0/
+i=0;
+#for (( i=0; i<$file_suffix_len; i++ )){
+#    rm *'.'${file_suffix[i]};
+#}
+tmp=$( echo ${file_suffix[*]} | tr ' ' '|' );
+
+rm $( ls | egrep "($tmp)");
+
+echo "The flag is $FLAG_HOUND0" > ${file_prefix[$(( $RANDOM % $file_prefix_len ))]}'.'${file_suffix[$(( $RANDOM % $file_suffix_len ))]};
+
+cd ../../scripts/

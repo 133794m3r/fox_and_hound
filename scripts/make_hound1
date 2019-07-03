@@ -1,0 +1,17 @@
+#!/bin/bash
+#the flag will be exported later so that it can be read from a file.
+FLAG_HOUND1='k3uLis-bFoOtxl8wBllZsKapwqM=';
+#The prefixes for the files
+filename_arr=('~-' '-~' '-.' '~.');
+filename_arr_len=${#filename_arr[*]};
+#This line removes the old flag and puts the new file in there.
+cd ../hounds/hound1/
+rm $( ls | egrep '([\-\~]).' )
+
+file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
+
+
+
+echo "The flag is $FLAG_HOUND1" > ./$file_name;
+
+cd ../../scripts
