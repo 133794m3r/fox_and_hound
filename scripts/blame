@@ -1,5 +1,6 @@
 #!/bin/bash
 #temporary
+#Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
 DIRNAME=$( echo 'whoami' | openssl dgst -sha1 -binary | base64 );
 case $1 in
 	'-debug')
