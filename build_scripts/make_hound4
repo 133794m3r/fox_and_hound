@@ -1,0 +1,53 @@
+#!/bin/bash
+#Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
+
+MAX=15;
+correct_flag=$(( $RANDOM % MAX ));
+#The prefixes for the files
+filename_arr=('~-' '-~' '-.' '~.');
+filename_arr_len=${#filename_arr[*]};
+filename='';
+endname_arr=('filename' 'files' 'texts' 'flags');
+endname_arr_len=${#endname_arr[*]};
+filename=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]}${endname_arr[ $(( $RANDOM % $endname_arr_len ))]};
+dirname_arr=('.secrets' '.filthy_lucre' '.files' '.information' '.top_secret' '.hidden' '.mystery');
+dirname_arr_len=${#dirname_arr[*]};
+dirname=${dirname_arr[$(( $RANDOM % dirname_arr_len ))]};
+tmp=${dirname_arr[0]};
+
+#rm -rvf ../hounds/hound5/.secret/*
+rm -rvf bunch_dirs;
+mkdir bunch_dirs;
+cd bunch_dirs;
+FLAG_HOUND4='3h9GplLdLnj9e6uYVToiNMBLFcY=';
+name='';
+for (( i=0; i<=$MAX; i++))
+do
+name=$i;
+if(( $i <=9 ))
+then
+    name="0$i";
+fi
+    if [[ $i -eq $correct_flag ]]
+    then
+        #echo $FLAG_HOUND4 > '-file'"$name";
+        echo $FLAG_HOUND4 > "$filename$name"
+    else
+    	#dd if=/dev/random bs=1 count=29 status=none > "-file$name";
+    	dd if=/dev/random bs=1 count=29 status=none > "$filename$name";
+    fi
+done
+echo 'done';
+cd ..;
+cd ../hounds/hound4;
+for (( i=1; i<$dirname_arr_len; i++ )){ 
+    tmp="$tmp|${dirname_arr[$i]}";
+}
+
+#otherwise the above could would not be needed at all.
+ls -a | egrep "($tmp)"| tr '|' '\n'|xargs -d'\n' rm -vdR
+pwd;
+cd ../../build_scripts || exit;
+mkdir ../hounds/hound4/"$dirname";
+cp -Rv bunch_dirs/* ../hounds/hound4/"$dirname";
+rm -rv bunch_dirs;
