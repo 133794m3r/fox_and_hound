@@ -1,7 +1,7 @@
 #!/bin/bash
 #Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
 
-FLAG_HOUND3='jEKpny.vBXBCLg5EA.D-RKZPH8w=';
+FLAG_HOUND3='jEKpny.vBXBCLg5EA.D-RKZPH8w';
 filename_arr=('this file has spaces' 'name has spaces' 'space character' 'many spaces within it' 'within the filename spaces');
 filename_arr_len=${#filename_arr[*]};
 filename=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
