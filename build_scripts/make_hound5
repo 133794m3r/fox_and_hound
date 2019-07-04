@@ -1,0 +1,74 @@
+#!/bin/bash
+#Hound 5 is the one where they have to extract a lot of files from a hex dumped file.
+#Macarthur Inbody <mdi2455@email.vccs.edu> (C) 2019 - 
+compression_depth=5;
+i=0;
+filenames=('data' 'file' 'dump','binary';
+filenames_len=${#filenames[*]};
+endnames=('bin' 'data' 'hex','dat');
+endnames_len=${#endnames[*]};
+compression_options=('bz' 'gz' 'tgz' 'txz' 'tar' 'xz');
+compression_options_len=${#compression_options[*]};
+compression='';
+FLAG_STR='Finny is my mascott';
+FLAG_HOUND5=$(echo $FLAG_STR | base64 );
+mkdir -p tmp;
+cd tmp;
+pwd;
+rm -v *;
+filename=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+#echo $filename;
+echo 'The password to the next level and the flag is '$FLAG_HOUND5 > "$filename";
+    if [[ "$filename2" == "$filename" ]]; then
+        filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+    fi
+xxd $filename > $filename2;
+echo $filename;
+echo $filename2;
+cp $filename2 'test';
+mv -v $filename2 $filename;
+
+#rm -v $filename;
+
+function compress_file(){
+    local input_file=$2;
+    local output_file=$3;
+    case $1 in
+        'bz')
+        bzip2 -c9v $input_file > $output_file;
+        ;;
+        'gz')
+        gzip -c9v $input_file > $output_file;
+        ;;
+        'tgz')
+        tar -cvzf $output_file $input_file;
+        ;;
+        'txz')
+         tar -cvJf $output_file $input_file;
+        ;;
+        'tar')
+        tar -cvf $output_file $input_file;
+        ;;
+        'xz')
+        xz -e9vc $input_file > $output_file;
+        ;;
+    esac
+#    rm -v $input_file;
+    return 0;
+}
+for (( i=0; i<compression_depth; i++)) {
+    compression=${compression_options[$(( $RANDOM % $compression_options_len ))]};
+    filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+    if [[ "$filename2" == "$filename" ]]; then
+        filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+    fi
+    echo $i;
+    echo $compression;
+    echo $filename;
+    echo $filename2;
+    echo '';
+    compress_file $compression $filename $filename2;
+    rm $filename;
+    filename="$filename2";
+}
