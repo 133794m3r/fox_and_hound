@@ -1,0 +1,23 @@
+This project contains the fox & hound CTFS the project is just called fox_ctf for 
+right now. The CTFs are grouped based upon theme.
+The ones where the user is rummaging around searching out something are called
+ hound<level>
+The ones where the user is instead trying do things that are clver are called 
+fox<level>
+
+
+The basic progress will be hound<0-n> and then the fox<0-n> with the different fox
+species being named for each type of wargame that's being utilized.
+
+The scripts are licensed under AGPLv3 and the data contained herein is licensed
+under CC-BY.
+
+
+Tools utilized when building the project.
+BASH, GNU Utils, OpenSSL, openSSH.
+
+Fox & The Hound Wargames (C) 2019-
+Macarthur Inbody <mdi2455@email.vccs.edu> <133794m3r@gmail.com> 
+Public GPG Signing Key is included in this repo to help verify authenticity of
+the commits.
+Fingerprint:16A0650B6A940FD271D9D0740B179CC3CC9D4470
