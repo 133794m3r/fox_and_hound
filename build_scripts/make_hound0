@@ -16,7 +16,7 @@ i=0;
 tmp=$( echo ${file_suffix[*]} | tr ' ' '|' );
 
 rm $( ls | egrep "($tmp)");
-
-echo "The flag is $FLAG_HOUND0" > ${file_prefix[$(( $RANDOM % $file_prefix_len ))]}'.'${file_suffix[$(( $RANDOM % $file_suffix_len ))]};
-
-cd ../../scripts/
+file_name=${file_prefix[$(( $RANDOM % $file_prefix_len ))]}'.'${file_suffix[$(( $RANDOM % $file_suffix_len ))]};
+echo "The flag is $FLAG_HOUND0" >$file_name;
+chown 1001 "$file_name";
+cd ../../build_scripts/

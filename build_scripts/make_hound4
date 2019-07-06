@@ -4,7 +4,7 @@ FLAG_HOUND4='3h9GplLdLnj9e6uYVToiNMBLFcY';
 MAX=15;
 correct_flag=$(( $RANDOM % MAX ));
 #The prefixes for the files
-filename_arr=('~-' '-~' '-.' '~.');
+filename_arr=('.-' '-~' '-.' '.~');
 filename_arr_len=${#filename_arr[*]};
 filename='';
 endname_arr=('filename' 'files' 'texts' 'flags');
@@ -49,5 +49,6 @@ ls -a | egrep "($tmp)"| tr '|' '\n'|xargs -d'\n' rm -vdR
 pwd;
 cd ../../build_scripts || exit;
 mkdir ../hounds/hound4/"$dirname";
+chown -R 1005 bunch_dirs;
 cp -Rv bunch_dirs/* ../hounds/hound4/"$dirname";
 rm -rv bunch_dirs;

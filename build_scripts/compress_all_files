@@ -1,13 +1,15 @@
 #!/bin/bash
 #Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
 cd $1;
-ls | grep -v '_built' > /tmp/dirs;
+ls > /tmp/dirs;
 shopt -s dotglob
 while read line;
 do
     cd "$line";
-    echo "${1:0:-5}";
-   tar -cvJf ../${1:0:-5}"_built"/"$line""/"challenge_file.txz *;
+    pwd;
+    echo "$1:";
+    mkdir -p ../../"hounds_built/$line";
+    tar -cvJf ../../"hounds_built/$line/"challenge_file.txz *;
    cd ..;
 done < /tmp/dirs
 shopt -u dotglob
