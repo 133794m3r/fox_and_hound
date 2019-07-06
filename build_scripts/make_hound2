@@ -20,5 +20,5 @@ file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
 
 
 echo "$FLAG_HOUND2" > "$file_name";
-
-cd ../../scripts
+chown 1003 "$file_name";
+cd ../../build_scripts
