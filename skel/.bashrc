@@ -7,7 +7,7 @@ case $- in
     *i*) ;;
       *) return;;
 esac
-#echo 'control';
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -111,9 +111,9 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr -d ' ' | tr '+\/' '-_');
-mkdir -pv /tmp/foxhunt/"$dirname";
-tar -xJvf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname";
-echo -e '\r ';
-cd /tmp/foxhunt/$dirname;
+#this will set the directories and CD into it for us.
+dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_')
+mkdir /tmp/foxhunt/"$dirname";
+tar -xvJ /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
+cd $dirname;
 
