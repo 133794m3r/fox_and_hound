@@ -5,7 +5,7 @@ compression_depth=5;
 i=0;
 filenames=('data' 'file' 'dump' 'binary');
 filenames_len=${#filenames[*]};
-endnames=('bin' 'data' 'hex','dat');
+endnames=('bin' 'data' 'hex' 'dat');
 endnames_len=${#endnames[*]};
 compression_options=('bz' 'gz' 'tgz' 'txz' 'tar' 'xz');
 compression_options_len=${#compression_options[*]};
@@ -75,3 +75,4 @@ for (( i=0; i<compression_depth; i++)) {
     rm $filename;
     filename="$filename2";
 }
+cp -v $filename ../../hounds/hound5
