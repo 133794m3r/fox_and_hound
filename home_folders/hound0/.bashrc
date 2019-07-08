@@ -7,6 +7,7 @@ case $- in
     *i*) ;;
       *) return;;
 esac
+#echo 'control';
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -15,10 +16,9 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-unset HISTFILE;
 HISTSIZE=1000
 HISTFILESIZE=2000
-
+unset HISTFILE;
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
@@ -112,8 +112,8 @@ if ! shopt -oq posix; then
   fi
 fi
 dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr -d ' ' | tr '+\/' '-_');
-mkdir -pv /tmp/foxhunt/"$dirname";
-tar -xJvf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname";
-echo -e '\r ';
+mkdir -p /tmp/foxhunt/"$dirname";
+tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname";
+#echo -e '\r ';
 cd /tmp/foxhunt/$dirname;
 
