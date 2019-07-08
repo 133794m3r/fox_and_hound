@@ -22,10 +22,10 @@ ls -a | egrep "($tmp)"| tr '|' '\n'|xargs -d'\n' rm -vdR
 #'and this line; tr could be removed and it would just be a `ls | egrep "(\ )" | rm -v` that is it'.
 mkdir $dirname;
 cd $dirname;
-file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
+#file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
 
 
 
 echo "$FLAG_HOUND3" > "$filename";
-chown 1004 "$file_name";
+chown -R 1004 "$filename";
 cd ../../../build_scripts

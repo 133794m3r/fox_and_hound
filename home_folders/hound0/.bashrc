@@ -7,7 +7,6 @@ case $- in
     *i*) ;;
       *) return;;
 esac
-#echo 'control';
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -16,6 +15,7 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+unset HISTFILE;
 HISTSIZE=1000
 HISTFILESIZE=2000
 

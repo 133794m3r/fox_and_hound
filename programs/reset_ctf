@@ -38,8 +38,8 @@ function actually_do_it(){
 	exit 255;
 	elif [[ $1 -eq 1 ]]
 then
-#	rm -r "$USER";
-#	tar -xvJ /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname";
+rm -rvd *
+	tar -xvJ /home/$USER/challenge_file.txz -C .
 #	echo "$USER folder has been recreated.";
 	echo 'did it';
 	fi
@@ -47,10 +47,10 @@ then
 
 }
 case $1 in
-	'-yesimsure'|'-yes'|'-y')
+    '-yes'|'-yesimsure')
 	prompt;;
 	*)
-	echo -e 'usage: reset_ctf -yesimsure|yes\n then you''ll be prompted for comfirmation.'
+	echo -e "usage: reset_ctf -yesimsure|yes\n then you\'ll be prompted for comfirmation."
 	;;
 esac
 exit 0;

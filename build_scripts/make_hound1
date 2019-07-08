@@ -9,12 +9,12 @@ filename_arr_len=${#filename_arr[*]};
 cd ../hounds/hound1/
 tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
 
-rm $( ls | egrep "($tmp)");
+rm './'$( ls | egrep "($tmp)");
 
 file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
 
 
 
 echo "The flag is $FLAG_HOUND1" > ./$file_name;
-chown 1002 "$file_name";
+chown 1002 ./"$file_name";
 cd ../../build_scripts/
