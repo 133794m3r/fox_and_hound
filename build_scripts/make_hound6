@@ -50,7 +50,7 @@ red_herrings=directory_number;
 #this assumes that file that is correct is counting from 0 like normal.
 #this is set for each directory as the file that will be correct.
 #the redherring will always be selected as a value that is this value +1 but then
-#it wraps around. 
+#it wraps around.
 correct_file=$(( ($RANDOM % $file_number) ));
 red_herring_file=$correct_file+1;
 if [[ $red_herring_file -gt $(( $file_number - 1 )) ]];
@@ -58,11 +58,31 @@ then
 $red_herring_file=0;
 fi
 function red_herring_options(){
-
+	local incorrect_file_metadata=$(( $RANDOM % 4));
+	local permission=751;
+	local group=1006;
+	local file_size=1337;
+	local owner=1007;
+	case incorrect_file_metadata in 
+	0)
+	    permission=${permission_array[$(( $RANDOM % $permission_array_len ))]};
+	;;
+	1)
+	    group=${group_array[$(( $RANDOM % $group_array_len ))]};
+	;;
+	2)
+	   file_size=${file_size_array[$(( $RANDOM % $file_size_array_len ))]};
+	;;
+	3)
+	   owner=${owner_array[$(( $RANDOM % $owner_array_len))]};
+	;;
+	esac
+#	read -r -a options_array <<< "$permission $owner $group $file_size";
+	echo "$permission $owner $group $file_size";
 }
 rm tmp/*;
 cd tmp;
-
+arr='';
 for ((i=0; i -lt directory_number; i++)){
     dirname=${dirname_arr[ $(( $RANDOM % $dirname_arr )) ]};
     chown 1007 "$dirname";
@@ -77,10 +97,10 @@ for ((i=0; i -lt directory_number; i++)){
             printf "%${}";
         elif [[ $j -eq $red_herring_file ]];
         then
-            printf""
+            read -r -a arr <<< $(red_herring_options)
         fi
-    }   
-    
+    }
+
 }
 
 
