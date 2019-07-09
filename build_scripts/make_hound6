@@ -4,3 +4,46 @@
 
 #TODO: Look into additional options.
 
+#Number of directories.
+directory_number=3;
+#number of files per directory
+file_number=5;
+filename_arr=('.-' '-~' '-.' '.~');
+filename_arr_len=${#filename_arr[*]};
+filename='';
+endname_arr=('filename' 'files' 'texts' 'flags');
+endname_arr_len=${#endname_arr[*]};
+suffix_arr=('.txt' '.dat' '.bin' '.hex' '.file' '.secrets');
+suffix_arr_len=${#suffix_arr[*]};
+dirname_arr=('.secrets' '.filthy_lucre' '.files' '.information' '.top_secret' '.hidden' '.mystery' '.hidden_treasures' '.maybeinhere');
+dirname_arr_len=${#dirname_arr[*]};
+#the permissions in numeric form.
+correct_permissions=751;
+permission_array=(750 777 760 755 701);
+
+file_type_arr=('binary' 'text');
+#the file size for the correct one7
+file_size_len=1337
+#padding string function printf "%<bytes_to_pad>s" <string>;
+file_size_array=(1338 1339 1340 1336);
+#the owner user id/name.
+#1007=hound6
+owner=1007
+owner_array=(1005 1006 1003 1000);
+#1006=hound5 group
+group=1006
+group_array=(1003 1004 1005 1007);
+#the amount of partial matches to include by default it's 1 per directory.
+#with the remaining files have random bits of the pattern correct.
+red_herrings=directory_number;
+#this assumes that file that is correct is counting from 0 like normal.
+#this is set for each directory as the file that will be correct.
+#the redherring will always be selected as a value that is this value +1 but then
+#it wraps around. 
+correct_file=$(( ($RANDOM % $file_number) ));
+red_herring_file=$correct_file+1;
+if [[ $red_herring_file -gt $(( $file_number - 1 )) ]];
+then
+$red_herring_file=0;
+fi
+
