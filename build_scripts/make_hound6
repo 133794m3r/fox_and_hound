@@ -3,7 +3,8 @@
 #Macarthur Inbody <mdi2455@email.vccs.edu> (C) 2019-
 
 #TODO: Look into additional options.
-
+HOUND6_FLAG=$( echo 'Phineas the Fox' | openssl dgst -sha1 -binary | base64 | tr -d '=');
+#HOUND6_FLAG l0pMty8KC2HxqKBni+XzWWm7jfk
 #Number of directories.
 directory_number=3;
 #number of files per directory
@@ -19,13 +20,13 @@ dirname_arr=('.secrets' '.filthy_lucre' '.files' '.information' '.top_secret' '.
 dirname_arr_len=${#dirname_arr[*]};
 #the permissions in numeric form.
 correct_permissions=751;
-permission_array=(750 777 760 755 701);
-
-file_type_arr=('binary' 'text');
+permission_array=(750 777 760 755 701 751);
+file_type_correct='text';
+file_type_arr=('binary' 'text' 'zeroes' 'null');
 #the file size for the correct one7
 file_size_len=1337
 #padding string function printf "%<bytes_to_pad>s" <string>;
-file_size_array=(1338 1339 1340 1336);
+file_size_array=(33 1336 1337 29);
 #the owner user id/name.
 #1007=hound6
 owner=1007
@@ -46,4 +47,11 @@ if [[ $red_herring_file -gt $(( $file_number - 1 )) ]];
 then
 $red_herring_file=0;
 fi
+
+
+
+
+#false flag function to make a string that looks like the legit one.
+#this is used for the redherring's if the length matches up.
+# $(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '='); 
 
