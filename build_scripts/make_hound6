@@ -4,6 +4,9 @@
 
 #TODO: Look into additional options.
 HOUND6_FLAG=$( echo 'Phineas the Fox' | openssl dgst -sha1 -binary | base64 | tr -d '=');
+HOUND6_STR='The flag is ';
+i=0;
+j=0;
 #HOUND6_FLAG l0pMty8KC2HxqKBni+XzWWm7jfk
 #Number of directories.
 directory_number=3;
@@ -18,22 +21,29 @@ suffix_arr=('.txt' '.dat' '.bin' '.hex' '.file' '.secrets');
 suffix_arr_len=${#suffix_arr[*]};
 dirname_arr=('.secrets' '.filthy_lucre' '.files' '.information' '.top_secret' '.hidden' '.mystery' '.hidden_treasures' '.maybeinhere');
 dirname_arr_len=${#dirname_arr[*]};
+dirname='';
 #the permissions in numeric form.
 correct_permissions=751;
 permission_array=(750 777 760 755 701 751);
 file_type_correct='text';
 file_type_arr=('binary' 'text' 'zeroes' 'null');
 #the file size for the correct one7
-file_size_len=1337
+correct_size=1337
 #padding string function $(printf "%${<bytes_to_pad>}s" "<string>");
 file_size_array=(33 1336 1337 29);
+file_size_array_len=${#file_size_array[*]};
+size=0;
 #the owner user id/name.
 #1007=hound6
-owner=1007
+correct_owner=1007
 owner_array=(1005 1006 1003 1000);
+owner_array_len=${#owner_array[*]};
+owner=0;
 #1006=hound5 group
-group=1006
+correct_group=1006
+group=0;
 group_array=(1003 1004 1005 1007);
+group_array_len=${#group_array_len[*]};
 #the amount of partial matches to include by default it's 1 per directory.
 #with the remaining files have random bits of the pattern correct.
 red_herrings=directory_number;
@@ -47,8 +57,21 @@ if [[ $red_herring_file -gt $(( $file_number - 1 )) ]];
 then
 $red_herring_file=0;
 fi
-
-
+rm tmp/*;
+cd tmp;
+for ((i=0; i -lt directory_number; i++)){
+    dirname=${dirname_arr[ $(( $RANDOM % $dirname_arr )) ]};
+    chown 1007 "$dirname";
+    cd "$dirname";
+    for((j=0;j -lt file_number; i++)){
+    size=$(( $RANDOM % $file_size_array_len ));
+        if [[ $j -eq $correct_file ]];
+        then
+            printf "%${
+        fi
+    }   
+    
+}
 
 
 #false flag function to make a string that looks like the legit one.
