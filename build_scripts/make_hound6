@@ -25,7 +25,7 @@ file_type_correct='text';
 file_type_arr=('binary' 'text' 'zeroes' 'null');
 #the file size for the correct one7
 file_size_len=1337
-#padding string function printf "%<bytes_to_pad>s" <string>;
+#padding string function $(printf "%${<bytes_to_pad>}s" "<string>");
 file_size_array=(33 1336 1337 29);
 #the owner user id/name.
 #1007=hound6
