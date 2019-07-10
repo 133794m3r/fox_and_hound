@@ -9,7 +9,7 @@ i=0;
 j=0;
 #HOUND6_FLAG l0pMty8KC2HxqKBni+XzWWm7jfk
 #Number of directories.
-directory_number=3;
+directory_number=10;
 #number of files per directory
 file_number=5;
 filename_arr=('.-' '-~' '-.' '.~');
@@ -25,7 +25,7 @@ dirname_arr_len=${#dirname_arr[*]};
 dirname='';
 #the permissions in numeric form.
 correct_permissions=751;
-permission_array=(750 777 760 755 701 751);
+permission_array=(750 777 760 755 701);
 permission_array_len=${#permission_array[*]};
 file_type_correct='text';
 file_type_arr=('binary' 'text' 'zero');
@@ -33,13 +33,13 @@ file_type_arr_len=${#file_type_arr[*]};
 #the file size for the correct one7
 correct_size=1337
 #padding string function $(printf "%${<bytes_to_pad>}s" "<string>");
-file_size_array=(33 1336  29 1338 1337);
+file_size_array=(33 1336  29 1338 1339);
 file_size_array_len=${#file_size_array[*]};
 size=0;
 #the owner user id/name.
 #1007=hound6
 correct_owner=1007
-owner_array=(1005 1006 1003 1000 1007);
+owner_array=(1005 1006 1003 1000 1001 1002 1003);
 owner_array_len=${#owner_array[*]};
 owner=0;
 #1006=hound5 group
@@ -54,20 +54,37 @@ red_herrings=directory_number;
 #this is set for each directory as the file that will be correct.
 #the redherring will always be selected as a value that is this value +1 but then
 #it wraps around.
-correct_file=$(( ($RANDOM % $file_number) ));
-red_herring_file=$(( $correct_file+1 ));
-if [[ $red_herring_file -gt $(( $red_herring_file - 1 )) ]];
+correct_file=$(( ($RANDOM % ($file_number*$directory_number)) ));
+l=0;
+red_herring_file=$(( $RANDOM % $file_number ));
+if [[ $red_herring_file -gt $(( $file_number - 1 )) ]];
 then
 red_herring_file=0;
+red_herring_file2=$(( $RANDOM % $file_number));
+fi
+
+if [[ $red_herring_file2 -gt $(( $file_number - 1 )) ]];
+then
+red_herring_file2=0;
+fi
+if [[ $red_herring_file2 -eq $red_herring_file ]];then
+    red_herring_file2=$(($red_herring_file+1));
+fi
+if [[ $red_herring_file2 -gt $(( $file_number - 1 )) ]];
+then
+red_herring_file2=0;
+fi
+if [[ $red_herring_file2 -eq $red_herring_file ]];then
+    red_herring_file2=$(($red_herring_file+1));
 fi
 function red_herring_options(){
-	local incorrect_file_metadata=$(( $RANDOM % 4));
+	incorrect_file_metadata=$(( $RANDOM % 4));
 	local permission=751;
 	local owner=1007;
 	local group=1006;
 	local file_size=1337;
 
-	case incorrect_file_metadata in
+	case $incorrect_file_metadata in
 	0)
 	    permission=${permission_array[$(( $RANDOM % $permission_array_len ))]};
 	;;
@@ -88,16 +105,15 @@ function make_false_file(){
 
     #local FILE_CONTENTS;
     local tmp_str=$(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
-    echo -e "$file_type\n size:$size \n$filename$j$suffix";
     case $file_type in
         'text')
             printf "%${size}s\n" "$HOUND6_STR $tmp_str" > "$filename$j$suffix";
         ;;
         'binary')
-            dd if=/dev/urandom bs=1 count=$size status=none > "$filename$j$suffix";
+            dd if=/dev/urandom bs=1 count=$size status=none of="$filename$j$suffix";
         ;;
         'zero')
-            dd if=/dev/zero bs=1 count=$size status=none > "$filename$j$suffix";
+            dd if=/dev/zero bs=1 count=$size status=none of="$filename$j$suffix";
             ;;
     esac
 }
@@ -112,6 +128,9 @@ random_number=$(( $RANDOM % $dirname_arr_len ));
 
 echo $correct_file;
 echo $red_herring_file;
+echo $red_herring_file2;
+tmp_herring=$red_herring_file;
+tmp_herring2=$red_herring_file2;
 for ((i=0; i < $directory_number; i++)){
     dirname=${dirname_arr[$(( $RANDOM % $dirname_arr_len )) ]};
     mkdir -v "$dirname$i";
@@ -124,23 +143,61 @@ for ((i=0; i < $directory_number; i++)){
     owner=${owner_array[$(( $RANDOM % $owner_array_len ))]};
     group=${group_array[$(( $RANDOM % $group_array_len ))]};
     permission=${permission_array[$(( $RANDOM % $permission_array_len))]};
-        if [ $j -eq $correct_file ]; then
+
+    echo $l;
+        if [ $l -eq $correct_file ]; then
             #FILE_CONTENTS=$(printf "%${correct_size}s\n" "$HOUND6_STR $HOUND6_FLAG");
             printf "%${correct_size}s\n" "$HOUND6_STR $HOUND6_FLAG" > "$filename$j$suffix";
-            owner=correct_owner; group=correct_group; permission=correct_permission;
+            echo 'correct_file'"$filename$j$suffix";
+            owner=$correct_owner; group=$correct_group; permission=$correct_permissions;
+            tmp_herring=$red_herring_file; tmp_herring2=$red_herring_file2;
+            if [[ $j -eq $red_herring_file ]]; then
+                tmp_herring=$(($tmp_herring+1));
+            elif [[ $j -eq $red_herring_file2 ]]; then
+                tmp_herring2=$(($tmp_herring2+1))
+            fi
+            if [[ $tmp_herring > $(( $file_number - 1 )) ]];then
+                tmp_herring=0;
+            fi
+            if [[ $tmp_herring -eq $tmp_herring2 ]];then
+                tmp_herring2=$(($tmp_herring2+1));
+            fi
+            if [[ $red_herring_file2 > $(( $file_number - 1 )) ]];then
+                tmp_herring2=0;
+            fi
+            if [[ $tmp_herring -eq $tmp_herring2 ]];then
+                tmp_herring2=$(($tmp_herring2+1));
+            fi
         elif [ $j -eq $red_herring_file ]; then
             read -r -a arr <<< $(red_herring_options);
+            echo 'rh1:'${arr[@]};
+            permission=${arr[0]}; owner=${arr[1]}; group=${arr[2]}; size=${arr[3]};
+            tmp_str=$(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
+            #FILE_CONTENTS=$(printf "%${size}s\n" "$HOUND6_STR $tmp_str");
+            printf "%${size}s\n" "$HOUND6_STR $tmp_str" > "$filename$j$suffix";
+        elif [[ $j -eq $tmp_herring_file2 ]]; then
+            read -r -a arr <<< $(red_herring_options);
+            echo 'rh2:'${arr[@]};
             permission=${arr[0]}; owner=${arr[1]}; group=${arr[2]}; size=${arr[3]};
             tmp_str=$(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
             #FILE_CONTENTS=$(printf "%${size}s\n" "$HOUND6_STR $tmp_str");
             printf "%${size}s\n" "$HOUND6_STR $tmp_str" > "$filename$j$suffix";
         else
+            echo 'other';
             file_type=${file_type_arr[$(($RANDOM % file_type_arr_len))]};
             #FILE_CONTENTS=$(make_false_file $file_size $file_type);
             make_false_file;
         fi
+
+        echo "$filename$j$suffix";
+        echo "$owner:$group";
+        chown "$owner:$group" ./"$filename$j$suffix";
+        echo "$permission";
+        chmod "$permission" ./"$filename$j$suffix";
+        l=$((l+1));
     }
     cd ..;
+
     #random_number=$(( $random_number+1 ));
     #if [[ $random_number -ge $dirname_arr_len ]];then
     #    random_number=0;
