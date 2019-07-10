@@ -1,0 +1,1 @@
+For shell scripts that need to be executed w/o actually having the ability to read them utilize shc to compile the shell script to c code then compile that c code into a binary. Rename the compiled shellscript from <shellscript.sh.x> to <shellscript> so that I can utilize it with the flags where it's going to hide information from the end user.
