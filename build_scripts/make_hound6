@@ -3,15 +3,21 @@
 #Macarthur Inbody <mdi2455@email.vccs.edu> (C) 2019-
 
 #TODO: Look into additional options.
+#all config variables are at the top of the file to make it easier to change.
 HOUND6_FLAG=$( echo 'Phineas the Fox' | openssl dgst -sha1 -binary | base64 | tr -d '=');
 HOUND6_STR='The flag is ';
+correct_owner=1007
+correct_permissions=751;
+correct_group=1006
+correct_size=1337
+file_type_correct='text';
 i=0;
 j=0;
 #HOUND6_FLAG l0pMty8KC2HxqKBni+XzWWm7jfk
 #Number of directories.
-directory_number=10;
+directory_number=20;
 #number of files per directory
-file_number=5;
+file_number=6;
 filename_arr=('.-' '-~' '-.' '.~');
 filename_arr_len=${#filename_arr[*]};
 filename='';
@@ -23,29 +29,30 @@ suffix='';
 dirname_arr=('.secrets' '.filthy_lucre' '.files' '.information' '.top_secret' '.hidden' '.mystery' '.hidden_treasures' '.maybeinhere' '.treasure_chest');
 dirname_arr_len=${#dirname_arr[*]};
 dirname='';
+
+#by default all the correct options are at the end.
+
 #the permissions in numeric form.
-correct_permissions=751;
+
 permission_array=(750 777 760 755 701);
 permission_array_len=${#permission_array[*]};
-file_type_correct='text';
+
 file_type_arr=('binary' 'text' 'zero');
 file_type_arr_len=${#file_type_arr[*]};
 #the file size for the correct one7
-correct_size=1337
+
 #padding string function $(printf "%${<bytes_to_pad>}s" "<string>");
-file_size_array=(1336 1336 29 1338 1339);
+file_size_array=(1336 1300 29 1338 1000 1337);
 file_size_array_len=${#file_size_array[*]};
 size=0;
 #the owner user id/name.
 #1007=hound6
-correct_owner=1007
-owner_array=(1005 1006 1003 1000 1001 1002 1003);
+owner_array=(1005 1003 1000 1001 1002 1003 1007);
 owner_array_len=${#owner_array[*]};
 owner=0;
 #1006=hound5 group
-correct_group=1006
 group=0;
-group_array=(1003 1004 1005 1007);
+group_array=(1003 1004 1005 1007 1006);
 group_array_len=${#group_array[*]};
 #the amount of partial matches to include by default it's 1 per directory.
 #with the remaining files have random bits of the pattern correct.
@@ -83,19 +90,33 @@ function red_herring_options(){
 	local owner=1007;
 	local group=1006;
 	local file_size=1337;
-
+#the arrays where it redoes it has to be made sure that
+#the index it uses _does not_ match the actual file size
+#by default the correct one is at the end.
 	case $incorrect_file_metadata in
 	0)
 	    permission=${permission_array[$(( $RANDOM % $permission_array_len ))]};
+        if [[ $permission -eq 751 ]]; then
+            permission=${permission_array[0]};
+        fi
 	;;
 	1)
 	    group=${group_array[$(( $RANDOM % $group_array_len ))]};
+        if [[ $group -eq 1006 ]]; then
+            group=${group_array[0]};
+        fi
 	;;
 	2)
 	   file_size=${file_size_array[$(( $RANDOM % $file_size_array_len ))]};
+        if [[ $file_size -eq 1337 ]]; then
+            file_size=${file_size_array[0]};
+        fi
 	;;
 	3)
 	   owner=${owner_array[$(( $RANDOM % $owner_array_len))]};
+        if [[ $owner -eq 1007 ]]; then
+            owner=${owner_array[0]};
+        fi
 	;;
 	esac
 #	read -r -a options_array <<< "$permission $owner $group $file_size";
