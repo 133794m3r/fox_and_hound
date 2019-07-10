@@ -1,6 +1,11 @@
 #!/bin/bash
 #Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
+args=$#;
+if [[ $args -eq 1 ]]; then
+if [ $1 == '../hounds' ]; then
 cd $1;
+#TODO: Make it so that the line is passed to a function to make it to the userid/groupid
+#but that's for a future revision for now it's gotta be set manually.
 ls > /tmp/dirs;
 shopt -s dotglob
 while read line;
@@ -15,3 +20,9 @@ do
    cd ..;
 done < /tmp/dirs
 shopt -u dotglob
+else
+    echo 'You did not include the correct directory';
+fi
+else
+    echo 'you did not include a directory'
+fi
