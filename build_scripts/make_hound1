@@ -8,8 +8,8 @@ filename_arr_len=${#filename_arr[*]};
 #This line removes the old flag and puts the new file in there.
 cd ../hounds/hound1/
 tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
-
-rm './'$( ls | egrep "($tmp)");
+echo "$tmp";
+rm -v './'$( ls -a | egrep "($tmp)");
 
 file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
 

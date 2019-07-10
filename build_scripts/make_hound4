@@ -50,5 +50,5 @@ pwd;
 cd ../../build_scripts || exit;
 mkdir ../hounds/hound4/"$dirname";
 chown -R 1005 bunch_dirs;
-cp -Rv bunch_dirs/* ../hounds/hound4/"$dirname";
+cp -Rv bunch_dirs/. ../hounds/hound4/"$dirname";
 rm -rv bunch_dirs;

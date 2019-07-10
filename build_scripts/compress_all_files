@@ -9,7 +9,9 @@ do
     pwd;
     echo "$1:";
     mkdir -p ../../"hounds_built/$line";
+    chmod 777 ../../"$hounds_built/$line";
     tar -cvJf ../../"hounds_built/$line/"challenge_file.txz *;
+    chmod 777 ../../"hounds_built/$line/"challenge_file.txz;
    cd ..;
 done < /tmp/dirs
 shopt -u dotglob
