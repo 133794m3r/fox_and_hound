@@ -33,7 +33,7 @@ file_type_arr_len=${#file_type_arr[*]};
 #the file size for the correct one7
 correct_size=1337
 #padding string function $(printf "%${<bytes_to_pad>}s" "<string>");
-file_size_array=(33 1336  29 1338 1339);
+file_size_array=(1336 1336 29 1338 1339);
 file_size_array_len=${#file_size_array[*]};
 size=0;
 #the owner user id/name.
@@ -197,13 +197,11 @@ for ((i=0; i < $directory_number; i++)){
         l=$((l+1));
     }
     cd ..;
-
-    #random_number=$(( $random_number+1 ));
-    #if [[ $random_number -ge $dirname_arr_len ]];then
-    #    random_number=0;
-    #fi
 }
-
+mkdir -vp ../../hounds/hound6;
+rm -Rv ../../hounds/hound6;
+pwd;
+cp -Rv . ../../hounds/hound6;
 
 #false flag function to make a string that looks like the legit one.
 #this is used for the redherring's if the length matches up.
