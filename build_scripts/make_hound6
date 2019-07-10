@@ -9,7 +9,7 @@ HOUND6_STR='The flag is ';
 correct_owner=1007
 correct_permissions=751;
 correct_group=1006
-correct_size=1337
+correct_size=1336
 file_type_correct='text';
 i=0;
 j=0;
@@ -17,7 +17,7 @@ j=0;
 #Number of directories.
 directory_number=20;
 #number of files per directory
-file_number=6;
+file_number=10;
 filename_arr=('.-' '-~' '-.' '.~');
 filename_arr_len=${#filename_arr[*]};
 filename='';
@@ -34,7 +34,7 @@ dirname='';
 
 #the permissions in numeric form.
 
-permission_array=(750 777 760 755 701);
+permission_array=(750 777 760 751);
 permission_array_len=${#permission_array[*]};
 
 file_type_arr=('binary' 'text' 'zero');
@@ -42,17 +42,17 @@ file_type_arr_len=${#file_type_arr[*]};
 #the file size for the correct one7
 
 #padding string function $(printf "%${<bytes_to_pad>}s" "<string>");
-file_size_array=(1336 1300 29 1338 1000 1337);
+file_size_array=(1335 29 1336);
 file_size_array_len=${#file_size_array[*]};
 size=0;
 #the owner user id/name.
 #1007=hound6
-owner_array=(1005 1003 1000 1001 1002 1003 1007);
+owner_array=(1005 1006 1007);
 owner_array_len=${#owner_array[*]};
 owner=0;
 #1006=hound5 group
 group=0;
-group_array=(1003 1004 1005 1007 1006);
+group_array=(1005 1007 1006);
 group_array_len=${#group_array[*]};
 #the amount of partial matches to include by default it's 1 per directory.
 #with the remaining files have random bits of the pattern correct.
@@ -89,7 +89,7 @@ function red_herring_options(){
 	local permission=751;
 	local owner=1007;
 	local group=1006;
-	local file_size=1337;
+	local file_size=1336;
 #the arrays where it redoes it has to be made sure that
 #the index it uses _does not_ match the actual file size
 #by default the correct one is at the end.
@@ -108,7 +108,7 @@ function red_herring_options(){
 	;;
 	2)
 	   file_size=${file_size_array[$(( $RANDOM % $file_size_array_len ))]};
-        if [[ $file_size -eq 1337 ]]; then
+        if [[ $file_size -eq 1336 ]]; then
             file_size=${file_size_array[0]};
         fi
 	;;
@@ -131,17 +131,17 @@ function make_false_file(){
             printf "%${size}s\n" "$HOUND6_STR $tmp_str" > "$filename$j$suffix";
         ;;
         'binary')
-            dd if=/dev/urandom bs=1 count=$size status=none of="$filename$j$suffix";
+            dd if=/dev/urandom bs=1 count=$(( $size+1 )) status=none of="$filename$j$suffix";
         ;;
         'zero')
-            dd if=/dev/zero bs=1 count=$size status=none of="$filename$j$suffix";
+            dd if=/dev/zero bs=1 count=$(( $size+1 )) status=none of="$filename$j$suffix";
             ;;
     esac
 }
 
-rm -Rvd tmp;
-mkdir tmp;
-cd tmp;
+rm -Rvdf /tmpdownload/tmp;
+mkdir /tmpdownload/tmp;
+cd /tmpdownload/tmp;
 arr='';
 tmp_str='';
 FILE_CONTENTS='';
@@ -206,11 +206,15 @@ for ((i=0; i < $directory_number; i++)){
         else
             echo 'other';
             file_type=${file_type_arr[$(($RANDOM % file_type_arr_len))]};
+            if [[ $permission -eq 751 && $file_type -eq 'text' && $size -eq 1336 && $owner -eq 1007 && $group -eq 1006 ]]; then
+                echo 'we have a hit';
+                permission=${permission_array[0]};
+            fi
             #FILE_CONTENTS=$(make_false_file $file_size $file_type);
             make_false_file;
         fi
 
-        echo "$filename$j$suffix";
+       echo "$filename$j$suffix";
         echo "$owner:$group";
         chown "$owner:$group" ./"$filename$j$suffix";
         echo "$permission";
@@ -219,10 +223,10 @@ for ((i=0; i < $directory_number; i++)){
     }
     cd ..;
 }
-mkdir -vp ../../hounds/hound6;
-rm -Rv ../../hounds/hound6;
+rm -Rv /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
+mkdir -p /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
 pwd;
-cp -Rv . ../../hounds/hound6;
+cp -Rav . /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
 
 #false flag function to make a string that looks like the legit one.
 #this is used for the redherring's if the length matches up.
