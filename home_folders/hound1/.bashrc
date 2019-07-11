@@ -115,4 +115,4 @@ mkdir -p /tmp/foxhunt/"$dirname";
 tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/$dirname;
 
-alias take_me_back="cd /tmp/foxhunt/$dirname";
+alias takemeback="cd /tmp/foxhunt/$dirname";

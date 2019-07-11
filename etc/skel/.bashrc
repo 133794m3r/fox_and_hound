@@ -116,5 +116,5 @@ dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr
 mkdir /tmp/foxhunt/"$dirname";
 tar -xvJ /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd $dirname;
-alias take_me_back="cd /tmp/foxhunt/$dirname";
+alias takemeback="cd /tmp/foxhunt/$dirname";
 
