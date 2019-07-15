@@ -1,5 +1,5 @@
 #!/bin/bash
-#Hound 6 requires them to write their first bash script to bruteforce a pin and then cat that data to a program which'll give them the data back. But it only accepts the pin as a base64 encoded file.
+#Hound 6 requires them to find a file from amonst many seperate files.
 #Macarthur Inbody <mdi2455@email.vccs.edu> (C) 2019-
 
 #TODO: Look into additional options.
