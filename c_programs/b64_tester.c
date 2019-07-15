@@ -40,11 +40,18 @@ int base64_encode(unsigned char *dest, const unsigned char *src, int srclen){
     }
     return 0;
 }
-void main(int argc,char **argv){
-    char *dest=malloc(8);;
-    char *src=argv[1];
+int main(int argc,char **argv){
+    char *dest=malloc(8);
+    char *help="-h";
+    if(argc > 1 && strncmp(argv[1],help,3) != 0){
+    char *src=malloc(4);
+    src=argv[1];
     unsigned int srclen=strlen(src);
-    base64_encode(dest,src,srclen);
-    printf("b64:%s\n",dest);
-
+    base64_encode((unsigned char*)dest,(unsigned char*)src,srclen);
+    printf("%s",dest);
+    }
+    else{
+        printf("This program reads in from the single input a string to encode with base64.\n It does not read from stdin. -h will show this help.\n");
+    }
+    return 0;
 }
