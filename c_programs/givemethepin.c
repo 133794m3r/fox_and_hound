@@ -55,9 +55,9 @@ int base64_encode(unsigned char *dest, unsigned char *src, int srclen){
 */
 int main(int argc, char **argv){
     char *correct_pin=malloc(3);
-    correct_pin="111";
-    //correct_pin="<correct_pin_placeholder>";
-    //char correct_pin_string[4]="MTUw";
+    //correct_pin="111";
+    correct_pin="<correct_pin_placeholder>";
+    //char correct_pin_string[4]="MTEx";
     char *correct_pin_string=malloc(4);
     char *flag_string="The flag is ";
     char *flag=malloc(28);
@@ -65,9 +65,9 @@ int main(int argc, char **argv){
     char *incorrect_flag2=malloc(28);
     
     
-    flag="<the_flag_placeholder>";
-    incorrect_flag1="<incorrect_flag_placeholder1>";
-    incorrect_flag2="<incorrect_flag_placeholder2>";
+    flag="9uusTDCfzE2MbhpT3tc0R9rwG5o";
+    incorrect_flag1="Nl5fo2fp3U1AwyPMvwZIj_6FIdg";
+    incorrect_flag2="xAWAIn1TsR7EXZsUrX4yr-f_FDI";
     /*
     flag="-vGvr4t.3xrfx-M56kZg5f-HyUw";
     incorrect_flag1="-vGvr4t.3xrfx-M56kZg5f-HyUy";
@@ -77,7 +77,7 @@ int main(int argc, char **argv){
         printf("This program doesn't take arguments.\n");
         return -1;
     }
-    base64_encode((unsigned char*)correct_pin_string,(unsigned char*)correct_pin,3);
+    base64_encode((unsigned char*)correct_pin_string,(unsigned char*)correct_pin,strlen(correct_pin));
     int str_compared=0;
     int return_value=0;
     fd_set read_file_descriptors;
