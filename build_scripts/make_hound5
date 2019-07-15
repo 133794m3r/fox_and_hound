@@ -10,7 +10,7 @@ endnames_len=${#endnames[*]};
 compression_options=('bz' 'gz' 'tgz' 'txz' 'tar' 'xz');
 compression_options_len=${#compression_options[*]};
 compression='';
-#FLAG_HOUND5=;
+#FLAG_HOUND5=UGhpbmVhcyBPciBGaW5ueSBGb3gK;
 FLAG_HOUND5=$(echo 'Phineas Or Finny Fox' | base64);
 FLAG_STR=$(echo "The password to the next level and the flag is $FLAG_HOUND5" |base64 |tr -d '\n');
 mkdir -p tmp;

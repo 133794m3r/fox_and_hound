@@ -1,0 +1,17 @@
+#!/bin/bash
+num_str='';
+#todo make sure that they write it so that it works with dash.
+#this results in a 50% speedup! huge as it saves a shitton of time.
+i=0;
+max=300;
+for (( i=0; i<=1000; i++)){
+#    num_str=$( base64 <<< $i );
+   echo -n $i | base64;
+#    num_str=$( printf "%x" $i);
+    #echo -n $num_str | ./givemethepin  2>&1 >/dev/null | grep -Ev '(pin|try)';
+#    num_str=$( php -r "echo base64_encode($i);");
+    #num_str='cmVhbAkwbTAuMDc0cwp1c2VyCTBtMC4wNTZzCnN5cwkgICAgMG0wLjAyNXMK';
+#    num_str=$( echo -n $num_str | base64 -d );
+#    echo -n $num_str > /dev/null
+}
+
