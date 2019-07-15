@@ -34,7 +34,7 @@ dirname='';
 
 #the permissions in numeric form.
 
-permission_array=(750 777 760 751);
+permission_array=(755 777 765 751);
 permission_array_len=${#permission_array[*]};
 
 file_type_arr=('binary' 'text' 'zero');
@@ -165,7 +165,7 @@ for ((i=0; i < $directory_number; i++)){
     group=${group_array[$(( $RANDOM % $group_array_len ))]};
     permission=${permission_array[$(( $RANDOM % $permission_array_len))]};
 
-    echo $l;
+#    echo $l;
         if [ $l -eq $correct_file ]; then
             #FILE_CONTENTS=$(printf "%${correct_size}s\n" "$HOUND6_STR $HOUND6_FLAG");
             printf "%${correct_size}s\n" "$HOUND6_STR $HOUND6_FLAG" > "$filename$j$suffix";
@@ -191,33 +191,35 @@ for ((i=0; i < $directory_number; i++)){
             fi
         elif [ $j -eq $red_herring_file ]; then
             read -r -a arr <<< $(red_herring_options);
-            echo 'rh1:'${arr[@]};
+            #echo 'rh1:'${arr[@]};
             permission=${arr[0]}; owner=${arr[1]}; group=${arr[2]}; size=${arr[3]};
             tmp_str=$(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
             #FILE_CONTENTS=$(printf "%${size}s\n" "$HOUND6_STR $tmp_str");
             printf "%${size}s\n" "$HOUND6_STR $tmp_str" > "$filename$j$suffix";
         elif [[ $j -eq $tmp_herring_file2 ]]; then
             read -r -a arr <<< $(red_herring_options);
-            echo 'rh2:'${arr[@]};
+           # echo 'rh2:'${arr[@]};
             permission=${arr[0]}; owner=${arr[1]}; group=${arr[2]}; size=${arr[3]};
             tmp_str=$(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
             #FILE_CONTENTS=$(printf "%${size}s\n" "$HOUND6_STR $tmp_str");
             printf "%${size}s\n" "$HOUND6_STR $tmp_str" > "$filename$j$suffix";
         else
-            echo 'other';
+          #  echo 'other';
             file_type=${file_type_arr[$(($RANDOM % file_type_arr_len))]};
             if [[ $permission -eq 751 && $file_type -eq 'text' && $size -eq 1336 && $owner -eq 1007 && $group -eq 1006 ]]; then
-                echo 'we have a hit';
+         #       echo 'we have a hit';
                 permission=${permission_array[0]};
             fi
             #FILE_CONTENTS=$(make_false_file $file_size $file_type);
             make_false_file;
         fi
-
-       echo "$filename$j$suffix";
-        echo "$owner:$group";
+        if [[ $owner -ne 1007 && $group -ne 1007 && $permission -ne 777 ]];then
+            permission=755;
+        fi
+       #echo "$filename$j$suffix";
+        #echo "$owner:$group";
         chown "$owner:$group" ./"$filename$j$suffix";
-        echo "$permission";
+        #echo "$permission";
         chmod "$permission" ./"$filename$j$suffix";
         l=$((l+1));
     }
@@ -226,8 +228,9 @@ for ((i=0; i < $directory_number; i++)){
 rm -Rv /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
 mkdir -p /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
 pwd;
-cp -Rav . /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
-
+cp -aR . /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
+#chmod 755 /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
+chown 1007:1007 /home/macarthur/misc_proj/fox_ctf/hounds/hound6/.*
 #false flag function to make a string that looks like the legit one.
 #this is used for the redherring's if the length matches up.
 # $(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '='); 
