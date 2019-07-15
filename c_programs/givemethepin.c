@@ -18,7 +18,7 @@
 * I'm using shifting so that it's a bit faster. also the table is the same as the
 * base64 program from bash so that they can actually give it the same thing.
 */
-int base64_encode(char *dest, char *src, int srclen){
+int base64_encode(unsigned char *dest, unsigned char *src, int srclen){
     const char table[64]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     unsigned int i=0;
     unsigned int j=0;
@@ -55,25 +55,29 @@ int base64_encode(char *dest, char *src, int srclen){
 */
 int main(int argc, char **argv){
     char *correct_pin=malloc(3);
-    //correct_pin="111";
-    correct_pin="<correct_pin_placeholder>";
+    correct_pin="111";
+    //correct_pin="<correct_pin_placeholder>";
     //char correct_pin_string[4]="MTUw";
     char *correct_pin_string=malloc(4);
     char *flag_string="The flag is ";
-    char flag="<the_flag_placeholder>";
-    char incorrect_flag1="<incorrect_flag_placeholder1>";
-    char incorrect_flag2="<incorrect_flag_placeholder2>";
-    //char flag[28]="-vGvr4t.3xrfx-M56kZg5f-HyUw";
-    //char incorrect_flag1[28]="-vGvr4t.3xrfx-M56kZg5f-HyUy";
-    //char incorrect_flag2[28]="-vGvr4t.3xrfx-M56kZg5f-HyUz";        
+    char *flag=malloc(28);
+    char *incorrect_flag1=malloc(28);
+    char *incorrect_flag2=malloc(28);
+    
+    
+    flag="<the_flag_placeholder>";
+    incorrect_flag1="<incorrect_flag_placeholder1>";
+    incorrect_flag2="<incorrect_flag_placeholder2>";
+    /*
+    flag="-vGvr4t.3xrfx-M56kZg5f-HyUw";
+    incorrect_flag1="-vGvr4t.3xrfx-M56kZg5f-HyUy";
+    incorrect_flag2="-vGvr4t.3xrfx-M56kZg5f-HyUz";        
+    */
     if(argc > 1){
         printf("This program doesn't take arguments.\n");
         return -1;
     }
-    base64_encode(correct_pin_string,correct_pin,3);
-    size_t len;
-    int bytes=0;
-    int read=0;
+    base64_encode((unsigned char*)correct_pin_string,(unsigned char*)correct_pin,3);
     int str_compared=0;
     int return_value=0;
     fd_set read_file_descriptors;
@@ -87,7 +91,7 @@ int main(int argc, char **argv){
     FD_SET(STDIN_FILENO,&read_file_descriptors);
     if(select(1,&read_file_descriptors,NULL,NULL,&never_wait)){
         scanf("%s",message);
-        str_compared=strcmp(correct_pin_string,message);
+        str_compared=strncmp(correct_pin_string,message,4);
         if(strlen(message) == 8){
             fprintf(stderr,"You should run it as `echo -n | base64` to make sure that newline isn't included.\n");
             fprintf(stdout,"You should run it as `echo -n | base64` to make sure that newline isn't included.");
