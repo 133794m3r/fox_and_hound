@@ -75,7 +75,7 @@ int main(int argc,char **argv){
     char *src;
     struct timeval never_wait;   
     never_wait.tv_sec = 0;
-    never_wait.tv_usec = 1;
+    never_wait.tv_usec = 4000;
     unsigned int srclen=0;     
     unsigned int outlen=0;
     fd_set read_file_descriptors;
