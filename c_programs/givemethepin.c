@@ -84,7 +84,7 @@ int main(int argc, char **argv){
     FD_ZERO(&read_file_descriptors);
     struct timeval never_wait;
     never_wait.tv_sec = 0;
-    never_wait.tv_usec = 0;
+    never_wait.tv_usec = 10000;
     char flag_msg[41];
     sprintf(flag_msg,"%s%s",flag_string,flag);
     char message[8];
