@@ -82,9 +82,9 @@ int main(int argc, char **argv){
     int return_value=0;
     fd_set read_file_descriptors;
     FD_ZERO(&read_file_descriptors);
-    struct timeval never_wait;
-    never_wait.tv_sec = 0;
-    never_wait.tv_usec = 10000;
+    struct timeval time_to_wait;
+    time_to_wait.tv_sec = 0;
+    time_to_wait.tv_usec = 75000;
     char flag_msg[41];
     sprintf(flag_msg,"%s%s",flag_string,flag);
     char message[8];
@@ -92,16 +92,15 @@ int main(int argc, char **argv){
     if(select(1,&read_file_descriptors,NULL,NULL,&never_wait)){
         scanf("%s",message);
         str_compared=strncmp(correct_pin_string,message,4);
-        if(strlen(message) == 8){
+        if(strlen(message) >= 8){
             fprintf(stderr,"You should run it as `echo -n | base64` to make sure that newline isn't included.\n");
-            fprintf(stdout,"You should run it as `echo -n | base64` to make sure that newline isn't included.");
+            fprintf(stdout,"You should run it as `echo -n | base64` to make sure that newline isn't included.\n");
         }
         else{
             if(str_compared == 0){
             /**
             * Flag1 will be replaced by string <false_flag1>
             * Flag 2 will be replaced by string <false_flag2>
-            * TODO:setup 2 false flags that are changed via the strings.
             * The false flags will just be data read from /dev/urandom that's base64 encoded.
             */
             fprintf(stdout,"The flag is %s\n",incorrect_flag1);
