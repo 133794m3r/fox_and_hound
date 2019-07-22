@@ -28,7 +28,7 @@ int base32_encode(char *dest, const char *src, unsigned int srclen, unsigned int
     unsigned char leftover_bytes=(srclen % 5);
     unsigned char replace_bytes=0;
     const char padding[1]="=";
-    unsigned int iters=(srclen / 5);
+    //unsigned int iters=(srclen / 5);
     while (i < srclen && j< outlen){
            
         a=i < srclen ? uchar(src[i++]) : 0;
@@ -75,7 +75,7 @@ int main(int argc,char **argv){
     char *src;
     struct timeval never_wait;   
     never_wait.tv_sec = 0;
-    never_wait.tv_usec = 4000;
+    never_wait.tv_usec = 5000;
     unsigned int srclen=0;     
     unsigned int outlen=0;
     fd_set read_file_descriptors;
@@ -88,7 +88,7 @@ int main(int argc,char **argv){
         outlen=outlen+(8-(outlen % 8 ));
         dest=malloc(outlen);        
         base32_encode(dest,src,srclen,outlen);
-        printf("%s",dest);
+        printf("%s\n",dest);
     }
     
     else if(select(1,&read_file_descriptors,NULL,NULL,&never_wait)){
@@ -102,14 +102,16 @@ int main(int argc,char **argv){
             strcat(total_buffer,src_buffer);
             src_buffer=NULL;            
         }
-       
+        else{
+            printf("got -1: read_bytes:%d",read_bytes);
+        }
             read_status = getline(&src_buffer, &len, stdin);
         }
         outlen=(read_bytes*8/5);
         outlen=outlen+(8-(outlen % 8 ));
         dest=malloc(outlen);
         base32_encode(dest,total_buffer,read_bytes,outlen);
-        printf("%s",dest);
+        printf("%s\n",dest);
     }
     else{
         printf("%s","If no arguments given it reads from stdin until it's at the end. Otherwise it reads the first argument passed to the program as a string to encode.\n");

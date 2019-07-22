@@ -1,0 +1,150 @@
+#!/bin/bash
+#Macarthur Inbody <mdi2455@email.vccs.edu> (C) 2019-
+#This will be a nano flag. It'll be 2 flags in one. Part will require them to find a 
+#specific string that will then tell them what the file name is that they have to
+#insert into their text file to then find the flag.
+cd ../text_shells/nano;
+#HOUND8_FLAG="$( echo "$(shuf -n 1 hound_dict)$HOUND_LEVEL" | openssl dgst -sha1 -binary | b32 )$HOUND_LEVEL";
+#currently it's ArticFox8
+HOUND8_FLAG='3ss6xebhdpn8je3xrjce6e6p4rqxmyt4';
+HOUND8_FALSE='1234567890ABCDEFG';
+SEARCH_STRING0='';
+SEARCH_STRING1='';
+SEARCH_STRING2='';
+FLAG_FILE='';
+tmp=0;
+rm -v nano_combined;
+rm -v nano_combined_built;
+INSTRUCTIONS0='Your next instructions are located after the string ';
+INSTRUCTIONS1='Now you need to read the file ';
+nano_files_arr=( $( ls ) );
+cat_str='.header ';
+nano_files_arr_len=${#nano_files_arr[*]};
+i=$(( $RANDOM % $nano_files_arr_len ));
+tmp=${nano_files_arr[$i]};
+cat_str=$tmp;
+i=$(( $i+1 ));
+if [[ $i -gt $(( $nano_files_arr_len - 1)) ]];then
+    i=0;
+fi
+cat_str=$cat_str' '${nano_files_arr[$i]};
+i=$(( $i +1 ));
+if [[ $i -gt $(( $nano_files_arr_len - 1)) ]];then
+    i=0;
+fi
+cat_str=$cat_str' '${nano_files_arr[$i]};
+echo $cat_str;
+cat $cat_str > nano_combined;
+nano_combined_lines=$(cat nano_combined |  wc -l );
+echo $nano_combined_lines;
+first_string_line_num=0;
+second_string_line_num=0;
+third_string_line_num=0;
+line_max=$(( $nano_combined_lines/3  ));
+echo $lines_max;
+first_string_line_num=$(( $RANDOM % $line_max ));
+line_max=$(( $line_max * 2 ));
+range=$(( $line_max - $first_string_line_num ));
+second_string_line_num=$(( ( $RANDOM % $range ) + $first_string_line_num ));
+line_max=$(( $nano_combined_lines - 50 ));
+range=$(( $lines_max - $second_string_line_num));
+third_string_line_num=$(( ($RANDOM % $range) + $second_string_line_num));
+line='';
+instruction_line=$(( $RANDOM % $nano_combined_lines ));
+while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
+    instruction_line=$(( $RANDOM % $nano_combined_lines));
+done
+echo "f:$first_string_line_num s:$second_string_line_num t:$third_string_line_num";
+SEARCH_STRING0=$( echo -n $RANDOM | b32 );
+SEARCH_STRING1=$( echo -n $RANDOM | b32 );
+SEARCH_STRING2=$( echo -n $RANDOM | b32 );
+FLAG_FILE=$( echo -n $RANDOM | b32 );
+
+tmp_num=$(($RANDOM % 3));
+tmp='';
+echo 'il:'$instruction_line;
+if [[ $tmp_num -eq 0 ]]; then
+    INSTRUCTIONS0="$INSTRUCTIONS0 $SEARCH_STRING0";
+    first_string_line_num=$(( $instruction_line + (($RANDOM % 50 ) + 30) ));
+    SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $FLAG_FILE"
+    tmp=$(echo -n $RANDOM | b32 );
+    printf '%20s' 'Your flag is the following base32 encoded string '$(printf '%20s'$HOUND8_FALSE$(( $RANDOM % 100  ))) > $tmp;      
+    SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $tmp";
+    tmp=$(echo -n $RANDOM | b32 );
+    printf '%20s' 'Your flag is the following base32 encoded string '$(printf '%20s'$HOUND8_FALSE$(( $RANDOM % 100  ))) > $tmp;      
+    SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $tmp";
+
+elif [[ $tmp_num -eq 1 ]];then
+    second_string_line_num=$(( $instruction_line + (( $RANDOM % 50 ) + 30) ));
+    INSTRUCTIONS0="$INSTRUCTIONS0 $SEARCH_STRING1";
+    SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $FLAG_FILE"
+    tmp=$(echo -n $RANDOM | b32 );
+    printf '%20s' 'Your flag is the following base32 encoded string '$(printf '%20s'$HOUND8_FALSE$(( $RANDOM % 100  ))) > $tmp;        
+    SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $tmp";
+    tmp=$(echo -n $RANDOM | b32 );
+    printf '%20s' 'Your flag is the following base32 encoded string '$(printf '%20s'$HOUND8_FALSE$(( $RANDOM % 100  ))) > $tmp;       
+    SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $tmp";
+    
+elif [[ $tmp_num -eq 2 ]];then
+    third_string_line_num=$(( $instruction_line + (($RANDOM % 50 ) + 30) ));
+    INSTRUCTIONS0="$INSTRUCTIONS0 $SEARCH_STRING2";
+    SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $FLAG_FILE"
+    tmp=$(echo -n $RANDOM | b32 );
+    $(printf '%20s' 'Your flag is the following base32 encoded string '$(printf '%20s'$HOUND8_FALSE$(( $RANDOM % 100  ))) > $tmp;      
+    SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $tmp";
+    tmp=$(echo -n $RANDOM | b32 );
+    echo 'Your flag is the following base32 encoded string '$(printf '%20s'$HOUND8_FALSE$(( $RANDOM % 100  ))) > $tmp;        
+    SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $tmp"
+    
+fi
+while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
+    instruction_line=$(( $RANDOM % $nano_combined_lines));
+done
+OUTPUT_FILE='nano_combined_built';
+#i=27;
+i=27;
+echo $INSTRUCTIONS0;
+#echo $SEARCH_STRING0;
+#echo $SEARCH_STRING1;
+#echo $SEARCH_STRING2;
+echo '' > $OUTPUT_FILE;
+while read line; do
+    if [[ $i -eq $first_string_line_num ]]; then
+        echo -e $SEARCH_STRING0 >> $OUTPUT_FILE;
+        echo 'fj:'$i;
+     #   let "j++";
+        let "i++";
+    elif [[ $i -eq $second_string_line_num ]]; then
+        echo -e $SEARCH_STRING1 >> $OUTPUT_FILE;
+        echo 'sj:'$i;
+        let "i++";
+#        let "i++";
+    elif [[ $i -eq $third_string_line_num ]]; then
+        echo -e $SEARCH_STRING2 >> $OUTPUT_FILE;
+        echo 'ti:'$i;
+  #      let "j++";
+        let "i++";
+    elif [[ $i -eq $instruction_line ]]; then
+        echo -e $INSTRUCTIONS0  >> $OUTPUT_FILE;
+        instruction_line1=$i;
+    #    echo 'ii:'$i;
+        echo 'ii:'$i;
+        let "i++"; 
+     #   let "i++";
+    fi
+    let "i++";
+    #let "j++";
+    echo -e "$line" >> $OUTPUT_FILE;
+done < nano_combined;
+cat '.header' $OUTPUT_FILE > "$OUTPUT_FILE-1";
+mv "$OUTPUT_FILE-1" "$OUTPUT_FILE";
+num_8=$( printf '%5s' 8);
+#padding=$( echo $instruction_line | wc -c );
+padding=$(( 18 - ${#instruction_line1}  ));
+format_str="%s%${padding}s";
+#echo "$(printf $format_str 13 '')";
+#echo "$( printf $format_str $instruction_line '' )";
+format_str="$(printf $format_str $instruction_line1 '')";
+sed -i "s/<instruction_line>/$format_str/g" $OUTPUT_FILE;
+sed -i "s/<num>/$num_8/g" $OUTPUT_FILE;
+echo "Your flag is the following base32 encoded string $HOUND8_FLAG" > $FLAG_FILE;
