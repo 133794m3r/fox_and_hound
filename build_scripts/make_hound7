@@ -12,8 +12,8 @@ pin_suffix='edited';
 c_program_src="givemethepin-$pin_suffix.c";
 c_program_srcdir="../c_programs"
 CORRECT_PIN=$(( $RANDOM % 150 ));
-THE_FLAG=$( hash 'Artic Fox' );
-#9uusTDCfzE2MbhpT3tc0R9rwG5o
+THE_FLAG=$( hash 'Finny Fox' );
+#zd1ojg4tj43yx7k5jkhfdtxe6u1b6kwr
 INCORRECT_FLAG1=$( hash $RANDOM );
 INCORRECT_FLAG2=$( hash $RANDOM );
 cp ../c_programs/'givemethepin.c' ../c_programs/givemethepin-$pin_suffix.c;

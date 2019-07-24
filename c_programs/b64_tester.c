@@ -15,7 +15,7 @@
 *
 */
 static inline unsigned char uchar(char chr){ return chr;};
-int base64_encode(unsigned char *dest, const unsigned char *src, int srclen){
+int base64_encode(char *dest, const char *src, int srclen){
     const char table[64]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     unsigned int i=0;
     unsigned int j=0;
@@ -25,6 +25,7 @@ int base64_encode(unsigned char *dest, const unsigned char *src, int srclen){
     unsigned int t=0;
     const char padding[1]="=";
     while (i < srclen){
+        //ternary's are used to save some sloc and b/c I'm lazy.       
         a=i < srclen ? uchar(src[i++]) : 0;
         b=i < srclen ? uchar(src[i++]) : 0;
         c=i < srclen ? uchar(src[i++]) : 0;
@@ -43,15 +44,18 @@ int base64_encode(unsigned char *dest, const unsigned char *src, int srclen){
     return 0;
 }
 int main(int argc,char **argv){
-    unsigned char *dest=malloc(14);
+    char *dest=malloc(14);
     char *help="-h";
     char *src_buffer=malloc(sizeof *src_buffer);
+    char *total_buffer=malloc(sizeof *total_buffer);    
     char *src;
     struct timeval never_wait;   
     never_wait.tv_sec = 0;
     never_wait.tv_usec = 0;
     unsigned int srclen=0;     
     char message[8];
+    int i=0;
+    int j=0;    
     fd_set read_file_descriptors;
     FD_ZERO(&read_file_descriptors);
     FD_SET(STDIN_FILENO,&read_file_descriptors);     
@@ -67,12 +71,19 @@ int main(int argc,char **argv){
         int read_status=0;
         size_t len=0;
         read_status = getline(&src_buffer, &len, stdin);    
-        while (read_status != -1){
-        read_status = getline(&src_buffer, &len, stdin);        
+        while (read_status >= 0){
+            i=0;
+            j=0;
+            //this should work as I did 100K iterations in bash with random data and it worked everytime
+            for(i=read_bytes;i<len;i++){
+                total_buffer[i]=src_buffer[j++];
+            }
+            read_bytes+=read_status;            
+
+
+            read_status = getline(&src_buffer, &len, stdin);
         }
-        src=src_buffer;
-        srclen=strlen(src);
-        base64_encode((unsigned char*)dest,(unsigned char*)src,srclen);
+        base64_encode(dest,src,read_bytes);
         printf("%s",dest);
     }
     else{
