@@ -9,6 +9,10 @@
 * 2019-
 * AGPLv3 or Later
 */
+
+//TODO: Figure out some way to handle NULL input at the front of  stdin buffer.
+// the chances of this happening are next to zero but it's still possible.
+// This is just a macro like thing to make it a little less to type.
 static inline unsigned char uchar(char chr){ return chr;};
 /**
 * This function encodes a string passed to it as a bas32 string.
@@ -31,6 +35,7 @@ int base32_encode(char *dest, const char *src, unsigned int srclen, unsigned int
     //unsigned int iters=(srclen / 5);
     while (i < srclen && j< outlen){
            
+        //ternary's are used to save some sloc and b/c I'm lazy.   
         a=i < srclen ? uchar(src[i++]) : 0;
         b=i < srclen ? uchar(src[i++]) : 0;
         c=i < srclen ? uchar(src[i++]) : 0;
@@ -73,8 +78,10 @@ int main(int argc,char **argv){
     char *src_buffer=malloc(sizeof *src_buffer);
     char *total_buffer=malloc(sizeof *total_buffer);
     char *src;
+    int i=0;
+    int j=0;
     struct timeval never_wait;   
-    never_wait.tv_sec = 0;
+    never_wait.tv_sec = 1;
     never_wait.tv_usec = 5000;
     unsigned int srclen=0;     
     unsigned int outlen=0;
@@ -91,22 +98,24 @@ int main(int argc,char **argv){
         printf("%s\n",dest);
     }
     
-    else if(select(1,&read_file_descriptors,NULL,NULL,&never_wait)){
+    else if(select(1,&read_file_descriptors,NULL,NULL,&never_wait) >=0){
         int read_bytes=0;
         int read_status=0;
         size_t len=0;
-        read_status = getline(&src_buffer, &len, stdin);    
-        while (read_status != -1){
-        if(read_status!=-1){
-            read_bytes+=read_status;
-            strcat(total_buffer,src_buffer);
-            src_buffer=NULL;            
-        }
-        else{
-            printf("got -1: read_bytes:%d",read_bytes);
-        }
+        read_status = getline(&src_buffer, &len, stdin);
+        while (read_status >= 0){
+            i=0;
+            j=0;
+//this should work as I did 100K iterations in bash with random data and it worked everytime            
+            for(i=read_bytes;i<len;i++){
+                total_buffer[i]=src_buffer[j++];
+            }
+            read_bytes+=read_status;            
+
+
             read_status = getline(&src_buffer, &len, stdin);
         }
+        //printf("bytes read:%d\n",read_bytes);
         outlen=(read_bytes*8/5);
         outlen=outlen+(8-(outlen % 8 ));
         dest=malloc(outlen);

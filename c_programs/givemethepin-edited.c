@@ -60,14 +60,14 @@ int main(int argc, char **argv){
     //char correct_pin_string[4]="MTEx";
     char *correct_pin_string=malloc(4);
     char *flag_string="The flag is ";
-    char *flag=malloc(28);
-    char *incorrect_flag1=malloc(28);
-    char *incorrect_flag2=malloc(28);
+    char *flag=malloc(33);
+    char *incorrect_flag1=malloc(33);
+    char *incorrect_flag2=malloc(33);
     
     
-    flag="9uusTDCfzE2MbhpT3tc0R9rwG5o";
-    incorrect_flag1="Nl5fo2fp3U1AwyPMvwZIj_6FIdg";
-    incorrect_flag2="xAWAIn1TsR7EXZsUrX4yr-f_FDI";
+    flag="zd1ojg4tj43yx7k5jkhfdtxe6u1b6kwr";
+    incorrect_flag1="ok8j5nka8ynwhsyxmf6n7btkmbm4rn7s";
+    incorrect_flag2="ozaiywhcf3dwxpj1wy39ns4xwt9ct7cz";
     /*
     flag="-vGvr4t.3xrfx-M56kZg5f-HyUw";
     incorrect_flag1="-vGvr4t.3xrfx-M56kZg5f-HyUy";
