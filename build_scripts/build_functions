@@ -1,0 +1,61 @@
+#!/bin/bash
+# Various Functions that I'm utilizing in the build scripts to simplify everything and keep it DRY.
+# Macarthur Inbody <mdi2455@email.vccs.edu>
+# 2019-
+
+# debug_random
+# arg=NULL.
+# This function is for debug purposes and starts the RNG always at 1 for the very start.
+function debug_random(){
+    RANDOM=1;
+}
+
+# seed_random
+# arg=<NUMERIC_VALUE_TO_SEED_WITH>
+# This functions seeds random with a value that's been given to it as an argument and is the first one.
+# this'll be utilized for when it's making tests and deciding how to seed it.
+function seed_random(){
+    RANDOM=$1;
+}
+
+# continue_random
+# arg=NULL;
+# this function makes random output more random numbers by seeding it with a random(ish) number.
+# it's primary use for when we're doing partial rebuilds/building tests.
+function continue_random(){
+# here we are setting the seed value to the current number of nanoseconds that are on the clock from date.
+# via it's format string, then capturing that input from the subshell, expanding it to a value and then we
+# are setting it to the variable seed. And since variables are global by default we are setting it as local
+# so that in case the variable seed is every set anywhere else it won't overwrite it.
+    local seed=$( date +%N );
+    RANDOM=$seed;
+}
+
+# this function is the hash maker which right now just outputs the b64 encoded sha1 hash.
+# also it reads from stdin, that's why there's nothing at the front it just starts going.
+function mk_hash(){
+# You can imagine an invisible `cat stdin |` operator at the front if it helps you realize what's going on here.
+    openssl dgst -sha1 -binary | base64 | tr -d '=' | tr '\/' '_' | tr '+' '-';
+}
+
+make_flag(){
+# The level will be hex-encodded to reduce character count and make easier to bruteforce the password(for now).
+    local hex_num=$( printf '%x' $1 );
+# the dictionary file right now it's not checking which set of flags are being built.
+# it will have a case switch for the dictionaries later.
+    local dict_file='../dict/hound_dict';
+# we get the number of lines from the file since it can change.
+    local max_line=$( cat $dict_file | wc -l);
+# we use random to select a random line and add one to it so that we get a valid range for sed.
+# since sed counts from 1 for whatever reason.
+    local rnd_line=$((  ( $RANDOM % $max_line )+1 ));
+# then we use sed in address mode to selct the line from the file, and including levelnum encoded
+# as hex previously.
+    local password=$( sed -n "$rnd_line p" $dict_file )$1; 
+# pass it to string to the hash function.    
+# then we b64 encode it, then we use tr to delete the trailing '='s and finally replace the characters to make
+# it safe for putting into directories. How it's captured is just by doing it like any other command it'd be something like.
+# <NAME><LEVEL>_FLAG=$( make_flag <NUMERIC_LEVEL>);
+    printf '%s' $password | mk_hash | base64 | tr -d '=' | tr '+\/' '-_';
+}
+

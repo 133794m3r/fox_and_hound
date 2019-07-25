@@ -5,9 +5,7 @@
 #insert into their text file to then find the flag.
 #this function will be called if a debug flag is passed to the program in the future.
 #it'll be called like so: seed_random <SEED_VALUE> So that random is deterministic.
-function seed_random(){
-    $RANDOM=$1;
-}
+
 cd ../text_shells/vim;
 #CORRECT_FLAG="$( echo "$(shuf -n 1 hound_dict)$HOUND_LEVEL" | openssl dgst -sha1 -binary | b32 )$HOUND_LEVEL";
 #currently it's Nick Wilde9
