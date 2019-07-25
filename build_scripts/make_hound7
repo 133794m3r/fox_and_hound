@@ -11,8 +11,11 @@ function sed_it(){
 pin_suffix='edited';
 c_program_src="givemethepin-$pin_suffix.c";
 c_program_srcdir="../c_programs"
-CORRECT_PIN=$(( $RANDOM % 150 ));
+CORRECT_PIN=$(( $RANDOM % 300 ));
 THE_FLAG=$( hash 'Finny Fox' );
+#b64 
+#uOUEm1FOsgf1W0q4UcXo9OQfKoQ
+#b32
 #zd1ojg4tj43yx7k5jkhfdtxe6u1b6kwr
 INCORRECT_FLAG1=$( hash $RANDOM );
 INCORRECT_FLAG2=$( hash $RANDOM );
