@@ -1,10 +1,18 @@
 #!/bin/bash
 #Hound 7 requires them to write their first bash script to bruteforce a pin and then cat that data to a program which'll give them the data back. But it only accepts the pin as a base64 encoded file.
 #Macarthur Inbody <mdi2455@email.vccs.edu> (C) 2019-
+level=2;
+#this reads in the functions that are in the library.
+source build_functions;
+#we seed $RANDOM with the current level value.
+seed_random $level;
+#we then make the flag by calling it.
+FLAG_HOUND=$( make_flag $level );
+#we continue by selecting things semi_randomly.
+#when we are in debug mode it'll be calling debug_random
+continue_random;
+# the old flag.
 
-function hash(){
-    printf '%s' $1 | openssl dgst -sha1 -binary | base64 | tr -d '=' | tr '\/' '_' | tr '+' '-';
-}
 function sed_it(){
     sed -i "s/$1/$2/" ../c_programs/givemethepin-$pin_suffix.c;
 }
@@ -12,7 +20,7 @@ pin_suffix='edited';
 c_program_src="givemethepin-$pin_suffix.c";
 c_program_srcdir="../c_programs"
 CORRECT_PIN=$(( $RANDOM % 300 ));
-THE_FLAG=$( hash 'Finny Fox' );
+THE_FLAG=$( mk_hash $level );
 #b64 
 #uOUEm1FOsgf1W0q4UcXo9OQfKoQ
 #b32
