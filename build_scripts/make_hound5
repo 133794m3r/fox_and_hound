@@ -25,21 +25,28 @@ compression_options=('bz' 'gz' 'tgz' 'txz' 'tar' 'xz');
 compression_options_len=${#compression_options[*]};
 compression='';
 
-FLAG_STR=$(printf '%s\n' "The password to the next level and the flag is $FLAG_HOUND5" | base64 |tr -d '\n');
+FLAG_STR=$(printf '%s\n' "The password to the next level and the flag is $FLAG_HOUND5");
 mkdir -p tmp;
 cd tmp;
 pwd;
 rm -v *;
-
+i=$(( $RANDOM % 2 ));
 filename=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
 filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
 #echo $filename;
-echo "$FLAG_STR" > "$filename";
-chown 1005 "$filename";
+
+#chown 1005 "$filename";
 if [[ "$filename2" == "$filename" ]]; then
     filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
 fi
-xxd $filename > $filename2;
+if [[ $i -eq 0 ]];then
+printf "$FLAG_STR" | base64 > "$filename";
+xxd -c 18 "$filename" > "$filename2";
+else
+printf "$FLAG_STR" | xxd -c 18 > "$filename";
+base64 "$filename" > "$filenam2";
+fi
+
 echo $filename;
 echo $filename2;
 cp $filename2 'test';
