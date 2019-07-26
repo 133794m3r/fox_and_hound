@@ -6,7 +6,7 @@
 #all config variables are at the top of the file to make it easier to change.
 #TODO: Make it so that the permissions, owner, group, and size all change randomly and it has a check to make sure that the user can read and execute it
 
-level=2;
+level=6;
 #this reads in the functions that are in the library.
 source build_functions;
 #we seed $RANDOM with the current level value.
@@ -18,12 +18,10 @@ FLAG_HOUND=$( make_flag $level );
 continue_random;
 # the old flag.
 #HOUND6_FLAG=$( echo 'Phineas the Fox' | openssl dgst -sha1 -binary | base64 | tr -d '=');
+
+
 HOUND6_STR='The flag is ';
-correct_owner=1007
-correct_permissions=751;
-correct_group=1006
-correct_size=1336
-file_type_correct='text';
+
 i=0;
 j=0;
 #HOUND6_FLAG l0pMty8KC2HxqKBni+XzWWm7jfk
@@ -47,7 +45,7 @@ dirname='';
 
 #the permissions in numeric form.
 
-permission_array=(755 777 765 751);
+permission_array=(755 777 765 744 751);
 permission_array_len=${#permission_array[*]};
 
 file_type_arr=('binary' 'text' 'zero');
@@ -67,6 +65,32 @@ owner=0;
 group=0;
 group_array=(1005 1007 1006);
 group_array_len=${#group_array[*]};
+
+#correct_owner=1007
+#correct_permissions=751;
+#correct_group=1006
+#correct_size=1336
+file_type_correct='text';
+
+#function's not needed.
+#function make_correct_metadata(){
+correct_owner=${owner_array[$(( $RANDOM % owner_array_len ))]};
+correct_group=${group_array[$(( $RANDOM % group_array_len ))]};    
+correct_permission=${permission_array[$(( $RANDOM % permission_array_len ))]};
+correct_size=${size_array[$(( $RANDOM % size_array_len ))]};
+if [[ $correct_permission = 751 && ( $correct_group -ne 1007 || $correct_owner -ne 1006 )]]; then
+    correct_permission=${permission_array[$(( $RANDOM % ( permission_array_len -1 ) ))]};
+fi
+#    return 0;
+#}
+#make_correct_me
+
+#we have to edit the .ssh/rc file in the home directory so that it contains this data.
+sed "s/permission\=.*/permission\=$correct_permission/" ../home_folders/hound6/.ssh/rc;
+sed "s/owner\=.*/owner\=$correct_owner/" ../home_folders/hound6/.ssh/rc;
+sed "s/group\=.*/group\=$correct_group/" ../home_folders/hound6/.ssh/rc;
+sed "s/size\=.*/size\=$correct_size/" ../home_folders/hound6/.ssh/rc;
+
 #the amount of partial matches to include by default it's 1 per directory.
 #with the remaining files have random bits of the pattern correct.
 red_herrings=directory_number;
@@ -229,7 +253,7 @@ for ((i=0; i < $directory_number; i++)); do
             #FILE_CONTENTS=$(make_false_file $file_size $file_type);
             make_false_file;
         fi
-        if [[ $owner -ne 1007 && $group -ne 1007 && ( $permission -ne 777 || $permission -ne 755 ) ]];then
+        if [[ $owner -eq $correct_owner && $group -eq $correct_group && $permission -eq $correct_permission  ]];then
             permission=755;
         fi
         #echo "$filename$j$suffix";
