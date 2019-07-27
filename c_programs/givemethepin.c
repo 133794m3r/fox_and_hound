@@ -89,7 +89,7 @@ int main(int argc, char **argv){
     sprintf(flag_msg,"%s%s",flag_string,flag);
     char message[8];
     FD_SET(STDIN_FILENO,&read_file_descriptors);
-    if(select(1,&read_file_descriptors,NULL,NULL,&never_wait)){
+    if(select(1,&read_file_descriptors,NULL,NULL,&time_to_wait)){
         scanf("%s",message);
         str_compared=strncmp(correct_pin_string,message,4);
         if(strlen(message) >= 8){

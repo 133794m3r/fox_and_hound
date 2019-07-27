@@ -12,19 +12,19 @@ source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level );
+FLAG_HOUND=$( make_flag $level 1);
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
 # the old flag.
-#HOUND6_FLAG=$( echo 'Phineas the Fox' | openssl dgst -sha1 -binary | base64 | tr -d '=');
+#FLAG_HOUND=$( echo 'Phineas the Fox' | openssl dgst -sha1 -binary | base64 | tr -d '=');
 
 
 HOUND6_STR='The flag is ';
 
 i=0;
 j=0;
-#HOUND6_FLAG l0pMty8KC2HxqKBni+XzWWm7jfk
+#FLAG_HOUND l0pMty8KC2HxqKBni+XzWWm7jfk
 #Number of directories.
 directory_number=20;
 #number of files per directory
@@ -74,22 +74,22 @@ file_type_correct='text';
 
 #function's not needed.
 #function make_correct_metadata(){
-correct_owner=${owner_array[$(( $RANDOM % owner_array_len ))]};
-correct_group=${group_array[$(( $RANDOM % group_array_len ))]};    
-correct_permission=${permission_array[$(( $RANDOM % permission_array_len ))]};
-correct_size=${size_array[$(( $RANDOM % size_array_len ))]};
+correct_owner=${owner_array[$(( $RANDOM % $owner_array_len ))]};
+correct_group=${group_array[$(( $RANDOM % $group_array_len ))]};    
+correct_permission=${permission_array[$(( $RANDOM % $permission_array_len ))]};
+correct_size=${file_size_array[$(( $RANDOM % $file_size_array_len ))]};
 if [[ $correct_permission = 751 && ( $correct_group -ne 1007 || $correct_owner -ne 1006 )]]; then
-    correct_permission=${permission_array[$(( $RANDOM % ( permission_array_len -1 ) ))]};
+    correct_permission=${permission_array[$(( $RANDOM % ( $permission_array_len -1 ) ))]};
 fi
 #    return 0;
 #}
 #make_correct_me
 
 #we have to edit the .ssh/rc file in the home directory so that it contains this data.
-sed "s/permission\=.*/permission\=$correct_permission/" ../home_folders/hound6/.ssh/rc;
-sed "s/owner\=.*/owner\=$correct_owner/" ../home_folders/hound6/.ssh/rc;
-sed "s/group\=.*/group\=$correct_group/" ../home_folders/hound6/.ssh/rc;
-sed "s/size\=.*/size\=$correct_size/" ../home_folders/hound6/.ssh/rc;
+sed -i "s/permission\=.*/permission\=$correct_permission/" ../home_folders/hound6/.ssh/rc;
+sed -i "s/owner\=.*/owner\=$correct_owner/" ../home_folders/hound6/.ssh/rc;
+sed -i "s/group\=.*/group\=$correct_group/" ../home_folders/hound6/.ssh/rc;
+sed -i "s/size\=.*/size\=$correct_size/" ../home_folders/hound6/.ssh/rc;
 
 #the amount of partial matches to include by default it's 1 per directory.
 #with the remaining files have random bits of the pattern correct.
@@ -133,7 +133,7 @@ function red_herring_options(){
 	case $incorrect_file_metadata in
 	0)
 	    permission=${permission_array[$(( $RANDOM % $permission_array_len ))]};
-        if [[ $permission -eq $correct_owner ]]; then
+        if [[ $permission -eq $correct_permission ]]; then
             permission=${permission_array[0]};
         fi
 	;;
@@ -176,9 +176,9 @@ function make_false_file(){
     esac
 }
 
-rm -Rvdf /tmpdownload/tmp;
-mkdir /tmpdownload/tmp;
-cd /tmpdownload/tmp;
+rm -Rvdf ../tmp;
+mkdir ../tmp;
+cd ../tmp;
 arr='';
 tmp_str='';
 FILE_CONTENTS='';
@@ -192,7 +192,7 @@ tmp_herring2=$red_herring_file2;
 
 for ((i=0; i < $directory_number; i++)); do
     dirname=${dirname_arr[$(( $RANDOM % $dirname_arr_len )) ]};
-    mkdir -v "$dirname$i";
+    mkdir "$dirname$i";
     chmod 777 "$dirname$i";
     cd "$dirname$i";
     filename=${filename_arr[$(($RANDOM % $filename_arr_len))]}${endname_arr[$(($RANDOM % $endname_arr_len))]};
@@ -204,12 +204,13 @@ for ((i=0; i < $directory_number; i++)); do
         group=${group_array[$(( $RANDOM % $group_array_len ))]};
         permission=${permission_array[$(( $RANDOM % $permission_array_len))]};
 
-        #echo $l;
+        #echo $j
         if [ $l -eq $correct_file ]; then
-            #FILE_CONTENTS=$(printf "%${correct_size}s\n" "$HOUND6_STR $HOUND6_FLAG");
-            printf "\n%${correct_size}s\n" "$HOUND6_STR $HOUND6_FLAG" > "$filename$j$suffix";
+            #FILE_CONTENTS=$(printf "%${correct_size}s\n" "$HOUND6_STR $FLAG_HOUND");
+            echo "hound6str: $FLAG_HOUND";
+            printf "\n%${correct_size}s\n" "$HOUND6_STR $FLAG_HOUND" > "$filename$j$suffix";
             echo 'correct_file'"$filename$j$suffix";
-            owner=$correct_owner; group=$correct_group; permission=$correct_permissions;
+            owner=$correct_owner; group=$correct_group; permission=$correct_permission;
             tmp_herring=$red_herring_file; tmp_herring2=$red_herring_file2;
             if [[ $j -eq $red_herring_file ]]; then
                 tmp_herring=$(($tmp_herring+1));
@@ -234,11 +235,13 @@ for ((i=0; i < $directory_number; i++)); do
             permission=${arr[0]}; owner=${arr[1]}; group=${arr[2]}; size=${arr[3]};
             tmp_str=$(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
             #FILE_CONTENTS=$(printf "%${size}s\n" "$HOUND6_STR $tmp_str");
+            #echo 'rh'$permission;
             printf "\n%${size}s\n" "$HOUND6_STR $tmp_str" > "$filename$j$suffix";
         elif [[ $j -eq $tmp_herring_file2 ]]; then
             read -r -a arr <<< $(red_herring_options);
            #echo 'rh2:'${arr[@]};
             permission=${arr[0]}; owner=${arr[1]}; group=${arr[2]}; size=${arr[3]};
+            #echo 'rh'$permission;
             tmp_str=$(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
             #FILE_CONTENTS=$(printf "%${size}s\n" "$HOUND6_STR $tmp_str");
             printf "\n%${size}s\n" "$HOUND6_STR $tmp_str" > "$filename$j$suffix";
@@ -246,7 +249,7 @@ for ((i=0; i < $directory_number; i++)); do
           #echo 'other';
             file_type=${file_type_arr[$(($RANDOM % file_type_arr_len))]};
             #            if [[ $permission -eq $correct_permission && $file_type -eq 'text' && $size -eq $correct_size && $owner -eq $correct_owner && $group -eq $correct_group ]]; then
-            if [[ $permission -eq $correct_permission && $file_type -eq 'text' && $size -eq 1336 && $owner -eq 1007 && $group -eq 1006 ]]; then
+            if [[ $permission -eq $correct_permission && $file_type -eq 'text' && $size -eq $correct_size && $owner -eq $correct_owner && $group -eq $correct_group ]]; then
             #echo 'we have a hit';
                 permission=${permission_array[0]};
             fi
@@ -266,12 +269,18 @@ for ((i=0; i < $directory_number; i++)); do
     
     cd ..;
 done;
-rm -Rv /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
-mkdir -p /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
+rm -Rv ../hounds/hound6/*;
+#mkdir -p ../hounds/hound6;
 pwd;
-cp -aR . /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
+cp -avR . ../hounds/hound6;
 #chmod 755 /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
-chown 1007:1007 /home/macarthur/misc_proj/fox_ctf/hounds/hound6/.*
+chown 1007:1007 ../hounds/hound6/.*
 #false flag function to make a string that looks like the legit one.
 #this is used for the redherring's if the length matches up.
 # $(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '='); 
+#we are doing level+1 since this _flag_ is the _password_ for the next level.
+let level++;
+#The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
+#in an automated fashion.
+rm -Rdv ../tmp;
+echo "hound$level:$FLAG_HOUND" >> ../build_scripts/the_flags;

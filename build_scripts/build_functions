@@ -39,6 +39,9 @@ function mk_hash(){
 }
 
 make_flag(){
+    if [ $# -ge 2 ];then
+        seed_random $level;
+    fi
 # The level will be hex-encodded to reduce character count and make easier to bruteforce the password(for now).
     local hex_num=$( printf '%x' $1 );
 # the dictionary file right now it's not checking which set of flags are being built.
@@ -49,13 +52,15 @@ make_flag(){
 # we use random to select a random line and add one to it so that we get a valid range for sed.
 # since sed counts from 1 for whatever reason.
     local rnd_line=$((  ( $RANDOM % $max_line )+1 ));
+
 # then we use sed in address mode to selct the line from the file, and including levelnum encoded
 # as hex previously.
-    local password=$( sed -n "$rnd_line p" $dict_file )$1; 
+    local password=$( sed -n "$rnd_line p" $dict_file )$1;
+    #sed -n "$rnd_line p" $dict_file;
 # pass it to string to the hash function.    
 # then we b64 encode it, then we use tr to delete the trailing '='s and finally replace the characters to make
 # it safe for putting into directories. How it's captured is just by doing it like any other command it'd be something like.
 # <NAME><LEVEL>_FLAG=$( make_flag <NUMERIC_LEVEL>);
-    printf '%s' $password | mk_hash | base64 | tr -d '=' | tr '+\/' '-_';
+    printf '%s' $password | mk_hash;
 }
 

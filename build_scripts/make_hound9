@@ -5,12 +5,22 @@
 #insert into their text file to then find the flag.
 #this function will be called if a debug flag is passed to the program in the future.
 #it'll be called like so: seed_random <SEED_VALUE> So that random is deterministic.
+level=9;
+#this reads in the functions that are in the library.
+source build_functions;
+#we seed $RANDOM with the current level value.
+seed_random $level;
+#we then make the flag by calling it.
+FLAG_HOUND=$( make_flag $level 1);
+#we continue by selecting things semi_randomly.
+#when we are in debug mode it'll be calling debug_random
+continue_random;
+# the old flag.
 
 cd ../text_shells/vim;
 #CORRECT_FLAG="$( echo "$(shuf -n 1 hound_dict)$HOUND_LEVEL" | openssl dgst -sha1 -binary | b32 )$HOUND_LEVEL";
 #currently it's Nick Wilde9
-#CORRECT_FLAG='g9oq56gksf8d33hkeaerxxheaoc9ce3b';
-CORRECT_FLAG='NxfXihbMovnLArUD2xrZXAC4ANs=';
+#CORRECT_FLAG='NxfXihbMovnLArUD2xrZXAC4ANs=';
 #the false flag is there to make it harder for them to bruteforce the answer.
 #FALSE_FLAG='6796tuphapyhj98c';
 FALSE_FLAG='YKFxhCq6B1sBgT5p';
@@ -151,9 +161,13 @@ if [[ $tmp_num -eq 0 ]]; then
 #the false flags are just the first FALSE_FLAG string(17chrs) appended with 0-999 and then expanded to 20 characters with spaces followed by b32 encoded.
 #by doing this the string is the same length as the real flag.
     echo "$FLAG_STRING"$(printf '%20s' $FALSE_FLAG$(( $RANDOM % 1000  )) | base64 ) > $false_file;      
+    #set the search string to a false file.
     SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $false_file";
+    #we set a new false fale and make sure $RANDOM is padded to 5 bytes.
     false_file=$(printf '%5s' $RANDOM | b32 );
+    #the flag string is outputted into this incorrect file.
     echo "$FLAG_STRING"$(printf '%20s' $FALSE_FLAG$(( $RANDOM % 1000  )) | base64 ) > $false_file;      
+    #we make sure to set the 3rd search string with the wrong data.
     SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
 #this time it's #1 is correct search string.
 
@@ -189,9 +203,11 @@ fi
 while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
     instruction_line=$(( $RANDOM % $vim_combined_lines));
 done
+#the file we're going to be outputting to.
 OUTPUT_FILE='vim_combined_built';
 #The start of the lines after header is appended.
 i=26;
+#debug information for me.
 echo $INSTRUCTIONS0;
 #echo $SEARCH_STRING0;
 #echo $SEARCH_STRING1;
@@ -203,7 +219,7 @@ while read line; do
 
 #if we hit the line number that matches the first search string we insert it to the file and appened it to the end.
     if [[ $i -eq $first_string_line_num ]]; then
-    
+    #the first string is outputted to the file.
         echo -e $SEARCH_STRING0 >> $OUTPUT_FILE;
         #echo this line's true number.
         echo 'fi:'$i;
@@ -212,26 +228,32 @@ while read line; do
         
 #Same as before but with the SEARCH_STRING1.
     elif [[ $i -eq $second_string_line_num ]]; then
-    
+    #the 2nd search string is appeneded to the output file.
         echo -e $SEARCH_STRING1 >> $OUTPUT_FILE;
+        #second string's linenumber.
         echo 'si:'$i;
-        let "i++";
+        #increment i since we added a line.
+        let i++;
 
 #Same as before but with the SEARCH_STRING2
     elif [[ $i -eq $third_string_line_num ]]; then
-    
+    #This time we put the 3rd search string's text into the output file.
         echo -e $SEARCH_STRING2 >> $OUTPUT_FILE;
+        #this is debug info for me to know which lines to look at to speed up things.
         echo 'ti:'$i;
-  #      let "j++";
-        let "i++";
+  #increment i as another line is appeneded to the file.
+        let i++;
 #Same as before but with the instructions to what string to search for from the user.      
     elif [[ $i -eq $instruction_line ]]; then
-    
+    #we put the instructions into the output file by appeneding it to the end of it.
         echo -e $INSTRUCTIONS0  >> $OUTPUT_FILE;
+        #we make sure that the first instruction line is set to this value.
         instruction_line1=$i;
 #the thing outputs the instruction line aka instruction <i> value.
         echo 'ii:'$i;
-        let "i++"; 
+  
+#let is used to increment the variable.
+        let i++; 
      
     fi
 #increments i as we added a line after a second.    
@@ -279,3 +301,9 @@ rm -v ../../../hounds/hound9/*
 #then we copy the files over to it.
 #we don't move it because I'm not trusting enough in my own coding ability to not mess up sometime.
 cp -v * ../../../hounds/hound9
+#cd build_scripts;
+cd ../../../build_scripts;
+#we increment the level counter because in this case it's being used as the level that the password is used
+#to login to.
+let level++;
+echo "hound$level:$FLAG_HOUND" >> the_flags;

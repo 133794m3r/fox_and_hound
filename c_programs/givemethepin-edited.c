@@ -56,18 +56,18 @@ int base64_encode(unsigned char *dest, unsigned char *src, int srclen){
 int main(int argc, char **argv){
     char *correct_pin=malloc(3);
     //correct_pin="111";
-    correct_pin="87";
+    correct_pin="261";
     //char correct_pin_string[4]="MTEx";
     char *correct_pin_string=malloc(4);
     char *flag_string="The flag is ";
-    char *flag=malloc(33);
-    char *incorrect_flag1=malloc(33);
-    char *incorrect_flag2=malloc(33);
+    char *flag=malloc(28);
+    char *incorrect_flag1=malloc(28);
+    char *incorrect_flag2=malloc(28);
     
     
-    flag="zd1ojg4tj43yx7k5jkhfdtxe6u1b6kwr";
-    incorrect_flag1="ok8j5nka8ynwhsyxmf6n7btkmbm4rn7s";
-    incorrect_flag2="ozaiywhcf3dwxpj1wy39ns4xwt9ct7cz";
+    flag="9uusTDCfzE2MbhpT3tc0R9rwG5o";
+    incorrect_flag1="Nl5fo2fp3U1AwyPMvwZIj_6FIdg";
+    incorrect_flag2="xAWAIn1TsR7EXZsUrX4yr-f_FDI";
     /*
     flag="-vGvr4t.3xrfx-M56kZg5f-HyUw";
     incorrect_flag1="-vGvr4t.3xrfx-M56kZg5f-HyUy";
@@ -82,26 +82,25 @@ int main(int argc, char **argv){
     int return_value=0;
     fd_set read_file_descriptors;
     FD_ZERO(&read_file_descriptors);
-    struct timeval never_wait;
-    never_wait.tv_sec = 0;
-    never_wait.tv_usec = 0;
+    struct timeval time_to_wait;
+    time_to_wait.tv_sec = 0;
+    time_to_wait.tv_usec = 75000;
     char flag_msg[41];
     sprintf(flag_msg,"%s%s",flag_string,flag);
     char message[8];
     FD_SET(STDIN_FILENO,&read_file_descriptors);
-    if(select(1,&read_file_descriptors,NULL,NULL,&never_wait)){
+    if(select(1,&read_file_descriptors,NULL,NULL,&time_to_wait)){
         scanf("%s",message);
         str_compared=strncmp(correct_pin_string,message,4);
-        if(strlen(message) == 8){
+        if(strlen(message) >= 8){
             fprintf(stderr,"You should run it as `echo -n | base64` to make sure that newline isn't included.\n");
-            fprintf(stdout,"You should run it as `echo -n | base64` to make sure that newline isn't included.");
+            fprintf(stdout,"You should run it as `echo -n | base64` to make sure that newline isn't included.\n");
         }
         else{
             if(str_compared == 0){
             /**
             * Flag1 will be replaced by string <false_flag1>
             * Flag 2 will be replaced by string <false_flag2>
-            * TODO:setup 2 false flags that are changed via the strings.
             * The false flags will just be data read from /dev/urandom that's base64 encoded.
             */
             fprintf(stdout,"The flag is %s\n",incorrect_flag1);
