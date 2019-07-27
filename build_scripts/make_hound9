@@ -1,6 +1,6 @@
 #!/bin/bash
 #Macarthur Inbody <mdi2455@email.vccs.edu> (C) 2019-
-#This will be a vim flag.
+#This will be the vim version the nano flag.
 #it's basicaly just the vim flag but modified for vim purposes.
 #insert into their text file to then find the flag.
 #this function will be called if a debug flag is passed to the program in the future.
@@ -8,7 +8,8 @@
 level=9;
 #this reads in the functions that are in the library.
 source build_functions;
-#we seed $RANDOM with the current level value.
+#we seed $RANDOM with the current level value. So that we can get determinstic
+# values for your flag string.
 seed_random $level;
 #we then make the flag by calling it.
 FLAG_HOUND=$( make_flag $level 1);
@@ -22,8 +23,7 @@ cd ../text_shells/vim;
 #currently it's Nick Wilde9
 #CORRECT_FLAG='NxfXihbMovnLArUD2xrZXAC4ANs=';
 #the false flag is there to make it harder for them to bruteforce the answer.
-#FALSE_FLAG='6796tuphapyhj98c';
-FALSE_FLAG='YKFxhCq6B1sBgT5p';
+FALSE_FLAG='';
 FLAG_STRING='Your flag is the following base64 encoded string ';
 #these are the 3 strings that are going to be inserted that they're going to be searching for but only
 #one of them is the correct one.
@@ -160,7 +160,7 @@ if [[ $tmp_num -eq 0 ]]; then
     false_file=$(printf '%5s' $RANDOM | b32 );
 #the false flags are just the first FALSE_FLAG string(17chrs) appended with 0-999 and then expanded to 20 characters with spaces followed by b32 encoded.
 #by doing this the string is the same length as the real flag.
-    echo "$FLAG_STRING"$(printf '%20s' $FALSE_FLAG$(( $RANDOM % 1000  )) | base64 ) > $false_file;      
+    echo "\n$FLAG_STRING"$(printf '%20s' $FALSE_FLAG$(( $RANDOM % 1000  )) | base64 )'\n' > $false_file;      
     #set the search string to a false file.
     SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $false_file";
     #we set a new false fale and make sure $RANDOM is padded to 5 bytes.
@@ -178,10 +178,12 @@ elif [[ $tmp_num -eq 1 ]];then
     SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $FLAG_FILE"
     
     false_file=$(printf '%5s' $RANDOM | b32 );
-    echo "$FLAG_STRING"$(printf '%20s' $FALSE_FLAG$(( $RANDOM % 1000  )) | base64 ) > $false_file;        
+    FALSE_FLAG=$( echo $RANDO | mk_hash );
+    echo "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;            
     SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $false_file";
     false_file=$(printf '%5s' $RANDOM | b32 );
-    echo "$FLAG_STRING"$(printf '%20s' $FALSE_FLAG$(( $RANDOM % 1000  )) | base64 ) > $false_file;       
+    FALSE_FLAG=$( echo $RANDO | mk_hash );
+    echo "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;      
     SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
     
 #and this time it's the 3rd string aka SEARCH_STRING2 all else is the same. 
@@ -189,13 +191,15 @@ elif [[ $tmp_num -eq 2 ]];then
 
     third_string_line_num=$(( $instruction_line + (($RANDOM % 50 ) + 30) ));
     INSTRUCTIONS0="$INSTRUCTIONS0 $SEARCH_STRING2";
-    SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $FLAG_FILE"
+    SEARCH_STRING2="\n$SEARCH_STRING2   $INSTRUCTIONS1 $FLAG_FILE\n"
     
     false_file=$(printf '%5s' $RANDOM | b32 );
-    echo "$FLAG_STRING"$(printf '%20s' $FALSE_FLAG$(( $RANDOM % 1000  )) | base64 ) > $false_file;      
+    FALSE_FLAG=$( echo $RANDO | mk_hash );
+    echo "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;       
     SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $false_file";
     false_file=$(printf '%5s' $RANDOM | b32 );
-    echo "$FLAG_STRING"$(printf '%20s' $FALSE_FLAG$(( $RANDOM % 1000  )) | base64 ) > $false_file;        
+    FALSE_FLAG=$( echo $RANDO | mk_hash );
+    echo "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;    
     SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $false_file"
     
 fi
@@ -291,9 +295,9 @@ sed -i "s/<instruction_line>/$format_str/g" $OUTPUT_FILE;
 #technically it's gonna be called text0 for class.
 sed -i "s/<num>/$hound_num/g" $OUTPUT_FILE;
 #finally set the real flag's file and we're done.
-echo "$FLAG_STRING$CORRECT_FLAG" > $FLAG_FILE;
+echo "$FLAG_STRING$FLAG_HOUND" > $FLAG_FILE;
 #remove the combined file as it's no longer needed.
-rm -v vim_combined;
+rm -v vim_combined vim_combined_built;
 mkdir -p ../../../hounds/hound9
 #then we make sure to remove all old files from this folder.
 #as this folder _only_ contains flag folders and is not the home folder it's safe.
