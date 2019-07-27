@@ -114,7 +114,7 @@ fi
 #this will set the directories and CD into it for us.
 dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_')
 mkdir /tmp/foxhunt/"$dirname";
-tar -xvJ /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
+tar -xvJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
