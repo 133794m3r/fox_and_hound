@@ -12,7 +12,7 @@ source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level );
+FLAG_HOUND=$( make_flag $level 1);
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
@@ -47,7 +47,7 @@ cd ../hounds/hound3;
 #this is the new onliner to simplify sloc that are executed.
 tmp=$( echo ${dirname_arr[*]} | tr ' ' '|' );
 #we remove the directory and the files and are verbose in output.
-rm -vdR $tmp;
+rm -vRf $( ls -a | egrep "($tmp)" );
 #ls -a | egrep "($tmp)"| tr '|' '\n'|xargs -d'\n' rm -vdR
 #'and this line; tr could be removed and it would just be a `ls | egrep "(\ )" | rm -v` that is it'.
 

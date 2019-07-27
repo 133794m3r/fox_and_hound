@@ -54,7 +54,8 @@ int main(int argc,char **argv){
     struct timeval never_wait;   
     never_wait.tv_sec = 0;
     never_wait.tv_usec = 1;
-    unsigned int srclen=0;     
+    unsigned int srclen=0;
+    unsigned int outlen=0;
     fd_set read_file_descriptors;
     FD_ZERO(&read_file_descriptors);
     FD_SET(STDIN_FILENO,&read_file_descriptors);     

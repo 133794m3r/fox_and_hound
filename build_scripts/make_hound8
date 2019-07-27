@@ -3,6 +3,18 @@
 #This will be a nano flag. It'll be 2 flags in one. Part will require them to find a 
 #specific string that will then tell them what the file name is that they have to
 #insert into their text file to then find the flag.
+
+level=8;
+#this reads in the functions that are in the library.
+source build_functions;
+#we seed $RANDOM with the current level value.
+seed_random $level;
+#we then make the flag by calling it.
+FLAG_HOUND=$( make_flag $level 1);
+#we continue by selecting things semi_randomly.
+#when we are in debug mode it'll be calling debug_random
+continue_random;
+
 cd ../text_shells/nano;
 #CORRECT_FLAG="$( echo "$(shuf -n 1 hound_dict)$HOUND_LEVEL" | openssl dgst -sha1 -binary | b32 )$HOUND_LEVEL";
 #currently it's ArticFox8
@@ -186,6 +198,7 @@ done < nano_combined;
 cat '../.header' $OUTPUT_FILE > "$OUTPUT_FILE-1";
 #then we move it back again.
 mv "$OUTPUT_FILE-1" 'nano_welcome_msg';
+
 num_8=$( printf '%5s%s' 8 '');
 
 #this makes sure that it's got the correct number of spaces to make it all
@@ -204,5 +217,10 @@ sed -i "s/<num>/$num_8/g" $OUTPUT_FILE;
 #finally set the real flag's file and we're done.
 echo -e "\n$FLAG_STRING$CORRECT_FLAG" > $FLAG_FILE;
 rm -v nano_combined;
+rm $OUTPUT_FILE;
 rm -v ../../../hounds/hound8/*;
 cp -v * ../../../hounds/hound8;
+cd ../../../build_scripts;
+let level++;
+
+echo "hound$level:$FLAG_HOUND" >> the_flags;

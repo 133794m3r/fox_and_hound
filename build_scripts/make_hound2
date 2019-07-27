@@ -8,7 +8,7 @@ source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level );
+FLAG_HOUND=$( make_flag $level 1);
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
@@ -23,18 +23,18 @@ cd ../hounds/hound2/
 #this is to make sure to deal with files that have spaces in their name as we're looking for certain ones
 #just in case there are ones in the home directory that do have spaces in their
 #names.
-tmp=${filename_arr[0]};
+tmp="${filename_arr[0]}";
 # this loop is no longer needed.
-#for (( i=1; i<$filename_arr_len; i++ ));do
-#    tmp="$tmp|${filename_arr[$i]}";
-#done
+for (( i=1; i<$filename_arr_len; i++ ));do
+    tmp="$tmp|${filename_arr[$i]}";
+done
 
 #instead we just echo the contents to tr!
-tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
+#tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
 
 #otherwise the above could would no be needed at all.
-#ls | egrep "($tmp)"| tr '|' '\n'|xargs -d'\n' rm -v
-rm -v './'$( ls -a | egrep "($tmp)");
+ls | egrep "($tmp)"| tr '|' '\n'|xargs -d'\n' rm -v
+#rm -v './'$( ls -a | egrep "($tmp)");
 
 file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
 
@@ -46,7 +46,8 @@ echo "$FLAG_HOUND" > "$file_name";
 
 #then we go back to the build scripts directory so that we can output to it our file that'll
 #hold the flag and the username for the next user.
-cd ../../../build_scripts
+
+cd ../../build_scripts
 #cd ../../build_scripts;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
 let level++;

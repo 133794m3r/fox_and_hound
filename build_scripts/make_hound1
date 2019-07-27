@@ -9,7 +9,7 @@ source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level );
+FLAG_HOUND=$( make_flag $level 1);
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
@@ -24,7 +24,7 @@ filename_arr_len=${#filename_arr[*]};
 #This line removes the old flag and puts the new file in there.
 cd ../hounds/hound1/
 tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
-echo "$tmp";
+#echo "$tmp";
 rm -v './'$( ls -a | egrep "($tmp)");
 
 file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
@@ -35,7 +35,7 @@ echo "The flag is $FLAG_HOUND" > ./$file_name;
 #chown 1002 ./"$file_name";
 #then we go back to the build scripts directory so that we can output to it our file that'll
 #hold the flag and the username for the next user.
-cd ../../../build_scripts
+cd ../../build_scripts
 #cd ../../build_scripts;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
 let level++;

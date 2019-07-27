@@ -2,13 +2,13 @@
 #Hound 5 is the one where they have to extract a lot of files from a hex dumped file.
 #Macarthur Inbody <mdi2455@email.vccs.edu> (C) 2019 - 
 
-level=7;
+level=5;
 #this reads in the functions that are in the library.
 source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level );
+FLAG_HOUND=$( make_flag $level 1);
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
@@ -25,7 +25,8 @@ compression_options=('bz' 'gz' 'tgz' 'txz' 'tar' 'xz');
 compression_options_len=${#compression_options[*]};
 compression='';
 
-FLAG_STR=$(printf '%s\n' "The password to the next level and the flag is $FLAG_HOUND5");
+FLAG_STR=$(printf '%s\n' "The password to the next level and the flag is $FLAG_HOUND");
+echo $FLAG_STR;
 mkdir -p tmp;
 cd tmp;
 pwd;
@@ -39,19 +40,19 @@ filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RAND
 if [[ "$filename2" == "$filename" ]]; then
     filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
 fi
-if [[ $i -eq 0 ]];then
-printf "$FLAG_STR" | base64 > "$filename";
-xxd -c 18 "$filename" > "$filename2";
-else
-printf "$FLAG_STR" | xxd -c 18 > "$filename";
-base64 "$filename" > "$filenam2";
-fi
+#if [[ $i -eq 0 ]];then
+printf "$FLAG_STR\n" | base64 -w 0 > "$filename";
+xxd  "$filename" > "$filename2";
+#else
+#printf "$FLAG_STR" | xxd -c 256 > "$filename";
+#base64 -w 0 "$filename" > "$filename2";
+#fi
 
 echo $filename;
 echo $filename2;
 cp $filename2 'test';
 mv -v $filename2 $filename;
-
+cat $filename;
 #rm -v $filename;
 
 function compress_file(){
@@ -78,7 +79,8 @@ function compress_file(){
         ;;
     esac
 #    rm -v $input_file;
-chown 1006 "$output_file";
+#chown 1006 "$output_file";
+chmod 755 "$output_file";
     return 0;
 }
 for (( i=0; i<compression_depth; i++)); do
@@ -98,8 +100,10 @@ for (( i=0; i<compression_depth; i++)); do
     filename="$filename2";
     
 done
+rm -v ../../hounds/hound5/*
 cp -v $filename ../../hounds/hound5
-
+cd ..;
+#rm -Rv tmp;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
 let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
