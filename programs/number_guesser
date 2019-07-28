@@ -1,0 +1,75 @@
+#!/bin/bash
+#This script will demonstrate a basic "guess the number" game.
+min=1;
+max=10;
+#The function declaration syntax.
+function get_random_number() {
+#local says the variable shouldn't be exposed outside of function
+local min=$1;
+local max=$2;
+#todo math you have to do it inside of a subshell $((<Expression> ))
+#we are returning a status code instead of to stdout to make it look more like a normal
+#program. Normally you'd echo the output and then capture it inside of a subshell.
+#also you can just use $RANDOM as the function to get a random number it's a bash builtin
+return $(( ($RANDOM % $max ) + $min ));
+}
+function lucky_number_guesser(){
+clear;
+echo "Let's get started $NAME";
+get_random_number $min $max;
+#to get the value you have to utilize $? as a hack.
+#really what the previous function did was output a return status. To make it output to
+#stdout then we'd have to make this block
+#random_number=$(( get_random_number 1 10));
+local random_number=$?;
+local your_number=0;
+local guesses=0;
+local guesses_max=15;
+while [[ $guesses -ne $guesses_max ]]; do
+echo "Enter your number from $min to $max.";
+read your_number
+if [[ "$your_number" -lt $random_number ]]; then
+echo 'Sorry your guess is too low.';
+elif [[ "$your_number" -gt $random_number ]]; then
+echo 'Sorry your guess is high.';
+elif [[ "$your_number" -eq $random_number ]]; then
+break;
+else
+echo 'Your guess was not in the valid range';
+fi
+guesses=$(( guesses+1 ));
+done;
+
+if [[ $your_number -eq $random_number ]];then
+echo "You are correct the lucky number was $random_number";
+fi
+return 0
+}
+
+function lucky_numbers(){
+clear;
+local do_it_again=1;
+while [[ $do_it_again -eq 1 ]]; do
+lucky_number_guesser;
+do_it_again=$?
+done
+echo -e "Goodbye,$NAME";
+return 0;
+}
+
+function main(){
+local answer='';
+echo 'What is your name?'
+read NAME;
+echo -e "Welcome $NAME.\nShall we play a game?";
+echo -n 'Y/N: ';
+read answer;
+case "$answer" in
+    'y'|'Y'|'Yes'|'yes')
+    lucky_numbers;;
+    *)
+    echo 'Maybe next time.';
+    echo "Goodbyte $NAME";;
+    esac;
+}
+main;

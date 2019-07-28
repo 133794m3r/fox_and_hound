@@ -35,7 +35,11 @@ function continue_random(){
 # also it reads from stdin, that's why there's nothing at the front it just starts going.
 function mk_hash(){
 # You can imagine an invisible `cat stdin |` operator at the front if it helps you realize what's going on here.
-    openssl dgst -sha1 -binary | base64 | tr -d '=' | tr '\/' '_' | tr '+' '-';
+    if [[ $# -eq 0 ]];then
+        openssl dgst -sha1 -binary | base64 | tr -d '=' | tr '\/+' '_-';
+    else
+        openssl dgst -sha1 -binary | b32 | tr -d '=';
+    fi
 }
 
 make_flag(){
