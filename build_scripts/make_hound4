@@ -64,12 +64,11 @@ cd bunch_dirs;
 name='';
 #the for loop that creates the files.
 for (( i=0; i<=$MAX; i++));do
-name=$i;
+    name=$i;
 #if it's <=9 it adds a '0' before the num to make it 2 digits.
-if(( $i <=9 ))
-then
-    name="0$i";
-fi
+    if [ $i -le 9 ];then
+        name="0$i";
+    fi
 #if it's the correct one we then write the file out.
 #adding an extra string at the end makes sure they all are in order.
     if [[ $i -eq $correct_flag ]];
@@ -95,7 +94,9 @@ cd ../hounds/hound4;
 #done
 tmp=$( echo ${dirname_arr[*]} | tr ' ' '|' );
 #delete them.
-rm -vdR $tmp;
+#echo $tmp;
+#echo $( ls -a | grep -E "($tmp)");
+rm -vdRf $( ls -a | grep -E "($tmp)");
 #otherwise the above could would not be needed at all.
 #ls -a | egrep "($tmp)"| tr '|' '\n'|xargs -d'\n' rm -vdR
 #make sure I'm where I think I am a remnance of debugging my directory traversal scripts.

@@ -198,6 +198,8 @@ for ((i=0; i < $directory_number; i++)); do
     filename=${filename_arr[$(($RANDOM % $filename_arr_len))]}${endname_arr[$(($RANDOM % $endname_arr_len))]};
     suffix=${suffix_arr[$(($RANDOM % $suffix_arr_len))]};
     
+    echo "We're at $i";
+    
     for (( j=0; j < file_number; j++ )); do
         size=${file_size_array[$(( $RANDOM % $file_size_array_len ))]};
         owner=${owner_array[$(( $RANDOM % $owner_array_len ))]};

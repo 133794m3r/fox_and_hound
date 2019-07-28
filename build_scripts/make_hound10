@@ -5,26 +5,34 @@
 #insert into their text file to then find the flag.
 #this function will be called if a debug flag is passed to the program in the future.
 #it'll be called like so: seed_random <SEED_VALUE> So that random is deterministic.
-level=9;
+level=10;
 #this reads in the functions that are in the library.
 source build_functions;
+function mk_b32_string(){
+    printf '%5s' $1 | b32;
+}
+function sed_it(){
+    sed -i "s/$1/$2/" ../c_programs/$3;
+}
 #we seed $RANDOM with the current level value. So that we can get determinstic
 # values for your flag string.
 seed_random $level;
 #we then make the flag by calling it.
 FLAG_HOUND=$( make_flag $level 1);
+
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
 # the old flag.
-
+CORRECT_STRING=$( mk_b32_string $(( $RANDOM+$level )) );
 cd ../text_shells/vim;
 #CORRECT_FLAG="$( echo "$(shuf -n 1 hound_dict)$HOUND_LEVEL" | openssl dgst -sha1 -binary | b32 )$HOUND_LEVEL";
 #currently it's Nick Wilde9
 #CORRECT_FLAG='NxfXihbMovnLArUD2xrZXAC4ANs=';
 #the false flag is there to make it harder for them to bruteforce the answer.
 FALSE_FLAG='';
-FLAG_STRING='Your flag is the following base64 encoded string ';
+FALSE_STRING='';
+FLAG_STRING='First you need to open a shell from the vim commands.\nBut your current shell variable is set to /usr/local/bin/vim-shell.\nAnd you cannot edit the global configuration! So you need to set it for your local version.\nSome help would be to read the man pages, or search how to set vim variables! Then you need to pass the following string to the program givmethestring: ';
 #these are the 3 strings that are going to be inserted that they're going to be searching for but only
 #one of them is the correct one.
 SEARCH_STRING0='';
@@ -140,15 +148,16 @@ SEARCH_STRING1=$( printf '%5s' $RANDOM | b32 );
 SEARCH_STRING2=$( printf '%5s' $RANDOM | b32 );
 #file to put the flag in it's the same as before just a new name.
 FLAG_FILE=$( printf '%5s' $RANDOM | b32 );
-
+FALSE_FILE0='';
+FALSE_FILE1='';
 tmp_num=$(($RANDOM % 3));
 false_file='';
 echo 'il:'$instruction_line;
 #here we get the instruction line printed to the screen so it can be grepped out.
 #we also select which of the 3 search strings are the correct one. 1,2 or 3.
-if [[ $tmp_num -eq 0 ]]; then
+if [[ $tmp_num -eq 0 ]];then
 #This is the INSTRUCTION String with the search string This is the first string
-#it is the one that says "search for this string" more or less.
+#it is the one that says search for this string more or less.
     INSTRUCTIONS0="$INSTRUCTIONS0 $SEARCH_STRING0";
     #we set the first string to be at least 30 lines past the first search string,
     #but up to 80 lines.
@@ -157,18 +166,21 @@ if [[ $tmp_num -eq 0 ]]; then
     #since it's all inside of a "" all variables are expanded.
     SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $FLAG_FILE"
     #the false file using method above expanded to 5 characters than b32 encoded.
-    false_file=$(printf '%5s' $RANDOM | b32 );
+    false_file=$(printf '%5s' $RANDOM | b32 );   
 #the false flags are just the first FALSE_FLAG string(17chrs) appended with 0-999 and then expanded to 20 characters with spaces followed by b32 encoded.
 #by doing this the string is the same length as the real flag.
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf  "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;      
+    FALSE_FLAG0=$( echo $RANDOM | mk_hash 1 );
+    FALSE_STRING0=$( printf '%5s' $RANDOM | b32 ); 
+    printf  "\n$FLAG_STRING $FALSE_STRING0\n\n" > $false_file;   
+          
     #set the search string to a false file.
     SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $false_file";
     #we set a new false fale and make sure $RANDOM is padded to 5 bytes.
     false_file=$(printf '%5s' $RANDOM | b32 );
+    FALSE_STRING1=$( printf '%5s' $RANDOM | b32 );    
     #the flag string is outputted into this incorrect file.
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;        
+    FALSE_FLAG1=$( echo $RANDOM | mk_hash 1 );
+    printf  "\n$FLAG_STRING $FALSE_STRING1\n\n" > $false_file;      
     #we make sure to set the 3rd search string with the wrong data.
     SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
 #this time it's #1 is correct search string.
@@ -180,12 +192,15 @@ elif [[ $tmp_num -eq 1 ]];then
     SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $FLAG_FILE"
     
     false_file=$(printf '%5s' $RANDOM | b32 );
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;            
-    SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $false_file";
+    FALSE_STRING0=$( printf '%5s' $RANDOM | b32 );    
+    FALSE_FLAG0=$( echo $RANDOM | mk_hash 1 );
+    printf  "\n$FLAG_STRING $FALSE_STRING0\n\n" > $false_file;        
+    
+    SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $false_file";
     false_file=$(printf '%5s' $RANDOM | b32 );
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;      
+    FALSE_FLAG1=$( echo $RANDOM | mk_hash 1 );
+    FALSE_STRING1=$( printf '%5s' $RANDOM | b32 );      
+    printf  "\n$FLAG_STRING $FALSE_STRING1\n\n" > $false_file;   
     SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
     
 #and this time it's the 3rd string aka SEARCH_STRING2 all else is the same. 
@@ -194,20 +209,38 @@ elif [[ $tmp_num -eq 2 ]];then
     third_string_line_num=$(( $instruction_line + (($RANDOM % 50 ) + 30) ));
     INSTRUCTIONS0="$INSTRUCTIONS0 $SEARCH_STRING2";
     SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $FLAG_FILE"
-    
+    FALSE_STRING0=$( printf '%5s' $RANDOM | b32 );
     false_file=$(printf '%5s' $RANDOM | b32 );
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;       
+    FALSE_FLAG0=$( echo $RANDO | mk_hash 1 );
+    printf  "\n$FLAG_STRING $FALSE_STRING0\n\n" > $false_file;      
+      
     SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $false_file";
     false_file=$(printf '%5s' $RANDOM | b32 );
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;    
+    FALSE_STRING1=$( printf '%5s' $RANDOM | b32 );    
+    FALSE_FLAG1=$( echo $RANDO | mk_hash 1 );
+    printf  "\n$FLAG_STRING $FALSE_STRING1\n\n" > $false_file;  
     SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $false_file"
     
 fi
 #We make sure that nothing is the same _again_.
 while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
     instruction_line=$(( $RANDOM % $vim_combined_lines));
+done
+j=0;
+echo $FALSE_STRING0;
+echo $CORRECT_STRING;
+echo $FALSE_STRING1
+while [[ "$FALSE_STRING0" = "$CORRECT_STRING"  ||  "$FALSE_STRING1" = "$CORRECT_STRING"  ]];do
+    CORRECT_STRING=$( mk_b32_string $(( $RANDOM+$level )) );
+    echo $j;
+    let j++;
+done;
+echo $FLAG_FILE;
+echo $false_file;
+while [ "$FLAG_FILE" = "$false_file" ];do
+    FLAG_FILE=$( printf '%5s' $(( $RANDOM + $level )) | b32 );
+    echo $j;
+    let j++;
 done
 #the file we're going to be outputting to.
 OUTPUT_FILE='vim_combined_built';
@@ -290,6 +323,7 @@ format_str="%s%${padding}s";
 #we including a '' at the end ot make it insert nothing and then pad it with spaces.
 format_str="$(printf $format_str $instruction_line1 '')";
 echo $format_str;
+
 #the final editing of the file.
 #this line is to modify the line the instruction are at.
 sed -i "s/<instruction_line>/$format_str/g" $OUTPUT_FILE;
@@ -297,19 +331,37 @@ sed -i "s/<instruction_line>/$format_str/g" $OUTPUT_FILE;
 #technically it's gonna be called text0 for class.
 sed -i "s/<num>/$hound_num/g" $OUTPUT_FILE;
 #finally set the real flag's file and we're done.
-echo "$FLAG_STRING $FLAG_HOUND" > $FLAG_FILE;
+printf "\n$FLAG_STRING $CORRECT_STRING\n\n" > $FLAG_FILE;
 #remove the combined file as it's no longer needed.
 rm -v vim_combined vim_combined_built;
-mkdir -p ../../../hounds/hound9
+
+false_file=$( printf '%5s' $RANDOM | b32 );
+echo $false_file;
+echo -e "\nThe flag is $FALSE_FLAG0\n" > $false_file;
+false_file=$( printf '%5s' $RANDOM | b32 );
+echo $false_file;
+echo -e "\nThe flag is $FALSE_FLAG1\n" > $false_file;
+
+mkdir -p ../../../hounds/hound$level
 #then we make sure to remove all old files from this folder.
 #as this folder _only_ contains flag folders and is not the home folder it's safe.
-rm -v ../../../hounds/hound9/*
+rm -v ../../../hounds/hound$level/*
 #then we copy the files over to it.
 #we don't move it because I'm not trusting enough in my own coding ability to not mess up sometime.
-cp -v * ../../../hounds/hound9
+cp -v * ../../../hounds/hound$level
 #cd build_scripts;
 cd ../../../build_scripts;
 #we increment the level counter because in this case it's being used as the level that the password is used
 #to login to.
+
+prog_suffix='edited';
+c_program_src='givemethestring.c';
+c_program_src_edited="givemethestring-$prog_suffix.c";
+c_program_srcdir="../c_programs"
+
+cp ../c_programs/"$c_program_src" ../c_programs/"$c_program_src_edited";
+#We had to sed the flags to the file itself including false flags.
+sed_it '<correct_string_placeholder>' "$CORRECT_STRING" "$c_program_src_edited";
+sed_it '<flag_placeholder_string>' "$FLAG_HOUND" "$c_program_src_edited";
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;

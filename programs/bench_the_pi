@@ -1,0 +1,6 @@
+#!/bin/bash
+#sysbench --num-threads=1 --test=cpu --cpu-max-prime=45000 --validate run
+time sysbench --num-threads=4 --test=cpu --cpu-max-prime=45000 --validate run
+sysbench --num-threads=1 --test=memory --memory-total-size=1G
+sysbench --num-threads=4 --test=memory --memory-total-size=1G
+memtester 256M 1
