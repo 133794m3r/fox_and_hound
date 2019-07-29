@@ -75,7 +75,7 @@ for (( i=0; i<=$MAX; i++));do
     then
         #echo $FLAG_HOUND4 > '-file'"$name";
         #the flag is outputted to the file. The name is something like '-.texts'
-        echo $FLAG_HOUND4 > "$filename$name"
+        echo $FLAG_HOUND > "$filename$name"
     else
     	#dd if=/dev/random bs=1 count=29 status=none > "-file$name";
     	#otherwise we read from /dev/random and pipe the output to that file.

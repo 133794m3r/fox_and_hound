@@ -31,13 +31,13 @@ INCORRECT_FLAG2=$( echo $RANDOM | mk_hash );
 cp ../c_programs/'givemethepin.c' ../c_programs/givemethepin-$pin_suffix.c;
 #We had to sed the flags to the file itself including false flags.
 sed_it '<correct_pin_placeholder>' "$CORRECT_PIN";
-sed_it '<the_flag_placeholder>' "$THE_FLAG"
-sed_it '<incorrect_flag_placeholder1 > ' "$INCORRECT_FLAG1"
-sed_it '<incorrect_flag_placeholder2 > ' "$INCORRECT_FLAG2"
+sed_it '<the_flag_placeholder>' "$FLAG_HOUND"
+sed_it '<incorrect_flag_placeholder1>' "$INCORRECT_FLAG1"
+sed_it '<incorrect_flag_placeholder2>' "$INCORRECT_FLAG2"
 #cross-compile the program
 #comment out the lines that don't have armlinux and comment the arm-linux to do a native build.
 arm-linux-gnueabihf-gcc-8 -g1 -O3 -Wall -Werror -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/$c_program_src" -o "$c_program_srcdir/built/givemethepin";
-arm-linux-gnueabihf-gcc-8 -g1 -O3 -Wall -Werror -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/b64_encoder.c" -o "$c_program_srcdir/built/b64";
+#arm-linux-gnueabihf-gcc-8 -g1 -O3 -Wall -Werror -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/b64_encoder.c" -o "$c_program_srcdir/built/b64";
 #gcc -march=native -mtune=native -g1 -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/$c_program_src" -o "$c_program_srcdir/built/givemethepin";
 #gcc -march=native -mtune=native -g1 -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/b64_tester" -o "$c_program_srcdir/built/b64";
 #The group only has execute permissions to avoid them reading the file in and trying to debug it. Plus every other use has no permissions to avoid them from wasting cpucycles on the rpi.

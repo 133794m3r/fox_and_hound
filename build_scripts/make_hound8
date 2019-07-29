@@ -225,7 +225,7 @@ cat '../.header' $OUTPUT_FILE > "$OUTPUT_FILE-1";
 #then we move it back again.
 mv "$OUTPUT_FILE-1" 'nano_welcome_msg';
 
-num_8=$( printf '%5s%s' 8 '');
+num_8=$( printf '%s%4s' 8 '');
 
 #this makes sure that it's got the correct number of spaces to make it all
 #aligned the right way.
@@ -236,10 +236,10 @@ format_str="$(printf $format_str $instruction_line1 '')";
 
 #the final editing of the file.
 #this line is to modify the line the instruction are at.
-sed -i "s/<instruction_line>/$format_str/g" $OUTPUT_FILE;
+sed -i "s/<instruction_line>/$format_str/g" nano_welcome_msg;
 #this line is there to set the level for the flag. Right now it's just 8 but
 #technically it's gonna be called text0 for class.
-sed -i "s/<num>/$num_8/g" $OUTPUT_FILE;
+sed -i "s/<num>/$num_8/g" nano_welcome_msg;
 #finally set the real flag's file and we're done.
 echo -e "\n$FLAG_STRING $FLAG_HOUND" > $FLAG_FILE;
 rm -v nano_combined;

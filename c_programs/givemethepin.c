@@ -65,9 +65,9 @@ int main(int argc, char **argv){
     char *incorrect_flag2=malloc(28);
     
     
-    flag="9uusTDCfzE2MbhpT3tc0R9rwG5o";
-    incorrect_flag1="Nl5fo2fp3U1AwyPMvwZIj_6FIdg";
-    incorrect_flag2="xAWAIn1TsR7EXZsUrX4yr-f_FDI";
+    flag="<the_flag_placeholder>";
+    incorrect_flag1="<incorrect_flag_placeholder1>";
+    incorrect_flag2="<incorrect_flag_placeholder2>";
     /*
     flag="-vGvr4t.3xrfx-M56kZg5f-HyUw";
     incorrect_flag1="-vGvr4t.3xrfx-M56kZg5f-HyUy";
