@@ -278,7 +278,7 @@ cat '../.header' $OUTPUT_FILE > "$OUTPUT_FILE-1";
 mv "$OUTPUT_FILE-1" 'vim_welcome_msg'
 #this sets the number for the flags and is easy to replace via sed later on.
 #also it pads it as per is normal.
-hound_num=$( printf '%s%4s' 9 '');
+hound_num=$( printf '%s%4s' $level '');
 
 #this makes sure that it's got the correct number of spaces to make it all
 #aligned the right way.
@@ -290,6 +290,7 @@ format_str="%s%${padding}s";
 #we including a '' at the end ot make it insert nothing and then pad it with spaces.
 format_str="$(printf $format_str $instruction_line1 '')";
 echo $format_str;
+OUTPUT_FILE='vim_welcome_msg';
 #the final editing of the file.
 #this line is to modify the line the instruction are at.
 sed -i "s/<instruction_line>/$format_str/g" $OUTPUT_FILE;
@@ -300,13 +301,13 @@ sed -i "s/<num>/$hound_num/g" $OUTPUT_FILE;
 echo "$FLAG_STRING $FLAG_HOUND" > $FLAG_FILE;
 #remove the combined file as it's no longer needed.
 rm -v vim_combined vim_combined_built;
-mkdir -p ../../../hounds/hound9
+mkdir -p ../../../hounds/hound$level
 #then we make sure to remove all old files from this folder.
 #as this folder _only_ contains flag folders and is not the home folder it's safe.
-rm -v ../../../hounds/hound9/*
+rm -v ../../../hounds/hound$level/*
 #then we copy the files over to it.
 #we don't move it because I'm not trusting enough in my own coding ability to not mess up sometime.
-cp -v * ../../../hounds/hound9
+cp -v * ../../../hounds/hound$level
 #cd build_scripts;
 cd ../../../build_scripts;
 #we increment the level counter because in this case it's being used as the level that the password is used

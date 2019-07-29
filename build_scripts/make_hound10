@@ -326,10 +326,10 @@ echo $format_str;
 
 #the final editing of the file.
 #this line is to modify the line the instruction are at.
-sed -i "s/<instruction_line>/$format_str/g" $OUTPUT_FILE;
+sed -i "s/<instruction_line>/$format_str/g" vim_welcome_msg;
 #this line is there to set the level for the flag. Right now it's just 8 but
 #technically it's gonna be called text0 for class.
-sed -i "s/<num>/$hound_num/g" $OUTPUT_FILE;
+sed -i "s/<num>/$hound_num/g" vim_welcome_msg;
 #finally set the real flag's file and we're done.
 printf "\n$FLAG_STRING $CORRECT_STRING\n\n" > $FLAG_FILE;
 #remove the combined file as it's no longer needed.
