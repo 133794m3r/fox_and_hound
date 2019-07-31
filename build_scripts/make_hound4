@@ -22,12 +22,15 @@ continue_random;
 # the old flag.
 #FLAG_HOUND4='3h9GplLdLnj9e6uYVToiNMBLFcY';
 
-#this is how many= files each directory holds. It's set at 15
-#which means 15 files to sift through. They are _all_ the same length so they can't rely
+#this is how many= files each directory holds. It's set at 30
+#which means 30 files to sift through. They are _all_ the same length so they can't rely
 #upon that and the file name changes each time. So _only_ find or grep will get the right answer.
-MAX=15;
+#further I'll include some "semi" ascii files to really mess up those who use grep only in a 
+#future version.
+MAX=54;
 #we select _which_ of the files will hold the flag. The rest will be binary data.
-correct_flag=$(( $RANDOM % MAX ));
+START=$(( $MAX / 3 ));
+correct_flag=$(( ($RANDOM % ($MAX-$START)) + ($START+1)  ));
 #the filename we're going to use. It's an empty string by default.
 filename='';
 #The prefixes for the files

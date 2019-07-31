@@ -8,15 +8,19 @@
 # This script creates the flag for hound level 0. This level requires the student
 # to utilize basic linux commands to read the file. To make sure that they have to
 # utilize ls to see the list of files the filename is randomized.
-
-#this is the level that this flag is going to be identified as.
-level=0;
+if [[ $# -lt 1 ]];then
+    #this is the level that this flag is going to be identified as.
+    level=0;
+else
+    level=$1;
+fi
 #this reads in the functions that are in the library.
 source build_functions;
 #we seed $RANDOM with the current level value.
+#next version during testing will use this information.
 seed_random $level;
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level 1);
+FLAG_HOUND=$( make_flag 1);
 #echo $( make_flag $level 1 );
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random

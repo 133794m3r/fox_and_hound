@@ -48,8 +48,7 @@ int base64_encode(char *dest, const char *src, int srclen){
 int main(int argc,char **argv){
     char *dest=malloc(sizeof *dest);
     char *help="-h";
-    char *src_buffer=malloc(sizeof *src_buffer);
-    char *total_buffer=malloc(sizeof *total_buffer);
+
     char *src;
     struct timeval never_wait;   
     never_wait.tv_sec = 0;
@@ -64,27 +63,33 @@ int main(int argc,char **argv){
         srclen=strlen(src);
         outlen=(srclen*4/3);
         outlen=outlen+(4-(outlen % 4 ));
-        dest=malloc(outlen);           
+        dest=malloc(outlen);   
         base64_encode(dest,src,srclen);
         printf("%s",dest);
     }
     
     else if(select(1,&read_file_descriptors,NULL,NULL,&never_wait)){
+        //a line of text should never be more than 4KiB.    
+        char *src_buffer==malloc(4096);
+        //right now we're not allowing them to do more than ~4MiB of total data piped to it.        
+        char *total_buffer=total_buffer=malloc(4096*1024);  
+        
         int read_bytes=0;
         int read_status=0;
-        size_t len=0;
+        size_t len=0;     
         read_status = getline(&src_buffer, &len, stdin);    
         while (read_status != -1){
-        if(read_status!=-1){
-            read_bytes+=read_status;
-            strcat(total_buffer,src_buffer);
-            src_buffer=NULL;            
-        }
+            if(read_status!=-1){
+                read_bytes+=read_status;
+                strcat(total_buffer,src_buffer);
+                src_buffer=NULL;            
+            }
        
             read_status = getline(&src_buffer, &len, stdin);
         }
-        outlen=(read_bytes*8/5);
-        outlen=outlen+(8-(outlen % 8 ));
+        realloc(total_buffer,read_bytes);
+        outlen=(read_bytes*4/3);
+        outlen=outlen+(4-(outlen % 4 ));
         dest=malloc(outlen);        
         base64_encode(dest,total_buffer,read_bytes);
         printf("%s",dest);
