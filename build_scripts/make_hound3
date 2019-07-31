@@ -12,7 +12,7 @@ source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level 1);
+FLAG_HOUND=$( make_flag 1);
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;

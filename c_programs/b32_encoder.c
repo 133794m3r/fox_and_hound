@@ -75,8 +75,6 @@ int base32_encode(char *dest, const char *src, unsigned int srclen, unsigned int
 int main(int argc,char **argv){
     char *dest=malloc(sizeof *dest);
     char *help="-h";
-    char *src_buffer=malloc(sizeof *src_buffer);
-    char *total_buffer=malloc(sizeof *total_buffer);
     char *src;
     int i=0;
     int j=0;
@@ -99,9 +97,17 @@ int main(int argc,char **argv){
     }
     
     else if(select(1,&read_file_descriptors,NULL,NULL,&never_wait) >=0){
+        char *src_buffer=malloc(sizeof *src_buffer);
+        char *total_buffer=malloc(sizeof *total_buffer);
+        
         int read_bytes=0;
         int read_status=0;
+        
         size_t len=0;
+        //a line of text should never be more than 4KiB.
+        src_buffer=malloc(4096);
+        //right now we're not allowing them to do more than ~4MiB of total data piped to it.
+        total_buffer=malloc(4096*1024);
         read_status = getline(&src_buffer, &len, stdin);
         while (read_status >= 0){
             i=0;

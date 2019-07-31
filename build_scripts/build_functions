@@ -35,13 +35,41 @@ function continue_random(){
 # also it reads from stdin, that's why there's nothing at the front it just starts going.
 function mk_hash(){
 # You can imagine an invisible `cat stdin |` operator at the front if it helps you realize what's going on here.
-    if [[ $# -eq 0 ]];then
-        openssl dgst -sha1 -binary | base64 | tr -d '=' | tr '\/+' '_-';
+    if ! [ $HASH_ENCODING ]; then
+        openssl dgst -sha1 -binary | base64 | tr '\/+' '_-';
+    elif [ $HASH_ENCODING = 'b32' ]; then
+        openssl dgst -sha1 -binary | b32;
     else
-        openssl dgst -sha1 -binary | b32 | tr -d '=';
+        openssl dgst -sha1 -binary | base64;
     fi
 }
+function get_random_word(){
+#eventually add the option to make the word be a set length which'll be this command.
+#sed -ne '/.\{8\}$/p' /usr/share/dict/american-english  | sed -n '<LINE_NUM> p';
 
+    if [ $# -ge 3 ]; then
+        if [ $3 = 1 ]; then
+        seed_random $level;
+        fi
+    fi
+    local dict=$1;
+    local dict_len=$2;
+    local rnd_line=$((  ( $RANDOM % $dict_len )+1 ));
+    #local password=$( sed -n "$rnd_line p" $dict_file );
+    #printf $password;
+    sed -n "$rnd_line p" $dict;
+}
+function make_false_flag(){
+    if [ $# -ge 3 ]; then
+        seed_random $level;
+    fi
+
+    local dict=$1;
+    local dict_len=$2;
+    local rnd_line=$((  ( $RANDOM % $dict_len )+1 ));
+    local password=$( sed -n "$rnd_line p" $dict );
+    printf $password | mk_hash;
+}
 make_flag(){
     if [ $# -ge 2 ];then
         seed_random $level;
@@ -67,4 +95,8 @@ make_flag(){
 # <NAME><LEVEL>_FLAG=$( make_flag <NUMERIC_LEVEL>);
     printf '%s' $password | mk_hash;
 }
-
+#this function will eventually actually do something.
+#it'll select a random element from an array but for now it does nothing.
+function get_random_element(){
+    return 0
+}
