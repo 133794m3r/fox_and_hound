@@ -7,15 +7,19 @@
 # that is ASCII-Text but nothing else.
 # they can also utilize grep(though this is a secret option) with the -I option to ignore
 # binary files and look for an empty string.
-
+HASH_ENCODING='b32';
 #the level we're at.
 level=4;
 #this reads in the functions that are in the library.
+
+
+
 source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level 1);
+FLAG_HOUND=$( make_flag 1);
+FLAG_FALSE=$( shuff -n 1 /usr/share/dict/american-english | mk_hash );
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
@@ -27,10 +31,16 @@ continue_random;
 #upon that and the file name changes each time. So _only_ find or grep will get the right answer.
 #further I'll include some "semi" ascii files to really mess up those who use grep only in a 
 #future version.
-MAX=54;
+MAX=30;
 #we select _which_ of the files will hold the flag. The rest will be binary data.
 START=$(( $MAX / 3 ));
 correct_flag=$(( ($RANDOM % ($MAX-$START)) + ($START+1)  ));
+false_flag=$(( ($RANDOM % ($MAX-$START)) + ($START+1)  ));
+
+while [ $false_flag -eq $correct_flag ];do
+    false_flag=$(( ($RANDOM % ($MAX-$START)) + ($START+1)  ));
+done
+
 #the filename we're going to use. It's an empty string by default.
 filename='';
 #The prefixes for the files
@@ -74,15 +84,16 @@ for (( i=0; i<=$MAX; i++));do
     fi
 #if it's the correct one we then write the file out.
 #adding an extra string at the end makes sure they all are in order.
-    if [[ $i -eq $correct_flag ]];
-    then
+    if [ $i -eq $correct_flag ]; then
         #echo $FLAG_HOUND4 > '-file'"$name";
         #the flag is outputted to the file. The name is something like '-.texts'
-        echo $FLAG_HOUND > "$filename$name"
+        printf "The flag is $FLAG_HOUND\r\n" > "$filename$name"
+    elif [ $i = $false_flag ]; then
+        echo -e "The fl\u0430g is $FLAG_FALSE" > "$filename$name";
     else
     	#dd if=/dev/random bs=1 count=29 status=none > "-file$name";
     	#otherwise we read from /dev/random and pipe the output to that file.
-    	dd if=/dev/random bs=1 count=28 status=none > "$filename$name";
+    	dd if=/dev/random bs=1 count=46 status=none > "$filename$name";
     fi
 done
 echo 'done';

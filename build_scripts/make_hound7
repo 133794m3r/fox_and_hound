@@ -1,0 +1,112 @@
+#!/bin/bash
+# Macarthur Inbody <mdi2455@email.vccs.edu>
+# AGPLv3
+# 2019 - 
+#
+# Hound7 AKA the one where they use join to find the password for a certain user.
+# they could obviously do this by just opening the files but it's not very easy todo.
+#this script can also be used to make fake passwd and shadow files.
+
+
+#the dictionary file that we're using to get our words from.
+#this will be set to a global variable DICTIONARY from the main script once the whole
+#build system is done.
+dictionary='/usr/share/dict/american-english';
+#get the length of the dictionary file.
+#in the future this'll be calculated once from the main build script and then the string
+#DICTIONARY_LEN will be set to this value.
+dictionary_len=$( wc -l '/usr/share/dict/american-english' );
+#set the encoding. In future versions this'll be hardcoded from the main script.
+#this is to make sure tha all hashes are b32 encoded.
+HASH_ENCODING='b32';
+#the current level we're on.
+level=7;
+
+#this reads in the functions that are in the library.
+source build_functions;
+
+#the filename we're going to use. It's an empty string by default.
+filename='';
+#The prefixes for the files
+filename_arr=('.-' '-~' '-.' '.~' 'this file has spaces' 'spaces in the name' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET');
+#we get the length of the files.
+filename_arr_len=${#filename_arr[*]};
+#the first filename we're going to be sending data to.
+filename_1=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
+#the second file data is going to be sent to.
+filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
+#to make sure that they're not equal to eachother a quick while loop to pick another one randomly.
+while [ "$filename_2" = "$filename_1" ];do
+    #placeholder.
+    filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
+done
+
+#number of users to insert into the passwd and shadow file.
+#the passwords are going to be b32 encoded instead of the normal format. Plus they're not sha256crypted. They are plain sha1.
+USERS=15;
+#how many lines the original file had.
+max_lines=42;
+#basically we're making mock shadow and passwd files and are going to join them so that we can "crack" the passwords.
+#but the users are going to stop short of that for the linux class. This is just teaching them how to do that via
+# a simple join.
+#the userid that we're starting with.
+uid=1000;
+#the groupid to start off with.
+guid=1000;
+#set the username to an empty string.
+username='';
+#the line we're going to be inserting to.
+insert_line=0;
+#the string to be inserted.
+insert_string='';
+#the base files and the ones that they're going to be built into.
+passwd_base=../base_files/passwd_base;
+passwd_built=../base_files/passwd_built;
+shadow_base=../base_files/shadow_base;
+shadow_built=../base_files/shadow_built;
+#remove the old ones.
+rm $shadow_built $passwd_built;
+#we do the first one outside of the normal route because we have to move the output to a new file to start off with.
+insert_line=$(( ($RANDOM % $max_lines) +1 ));
+username=$( get_certain_words $dictionary 8 | shuf -n 1 | tr -d "'");
+password=$( printf $username | mk_hash );
+#the passwd string.
+insert_string="$username\:x\:$uid\:$guid\:"$( perl -e "print ucfirst $username" )"\,\,\,\:\/home\/$username\:\/bin\/bash";
+sed "$insert_line i$insert_string" $passwd_base > $passwd_built;
+insert_line=$(( $RANDOM % $max_lines ));
+#the shadow string.
+insert_string="$username\:$password\:18062\:0\:99999\:7\:\:\:";
+sed "$insert_line i$insert_string" $shadow_base > $shadow_built;
+
+
+for ((i=1;i<5;i++));do
+    insert_line=$(( ($RANDOM % $max_lines) + 1 ));
+    username=$( get_certain_words $dictionary 8 | shuf -n 1 | tr -d "'");
+    password=$( printf $username | mk_hash );
+    #the passwd string.
+    insert_string="$username\:x\:$uid\:$guid\:"$( perl -e "print ucfirst $username" )"\,\,\,\:\/home\/$username\:\/bin\/bash";
+    sed -i "$insert_line i $insert_string" $passwd_built
+    insert_line=$(( $RANDOM % $max_lines ));
+    #the shadow string.
+    insert_string="$username\:$password\:18062\:0\:99999\:7\:\:\:";
+    sed -i "$insert_line i $insert_string" $shadow_built;
+done
+
+#get all of the filenames converted to arguments to be sent to rm.
+#we start with sending all elements of the aray piped to tr. Then we replace the space characters with a pipe.
+#so that it can be used with egrep as an OR operator. This is then expanded out and using command substituion the final string is set to the variable
+#tmp
+tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
+#remove the old file.
+#it doesthe following. First we list all of the files in the directory. Then we pipe it to egrep and search for all of the keys that we have chosen.
+#then it sends those values to xargs and we tell it to replace all instances of {} with the argument. Then we use printf to insert into the final
+#string utilizing printf to make each instance of the file as ./<filename> so that it can be rmed more easily. Finally the shell expands the value
+#converts it to a string, this string is then converted into a set of arguments to be utilized by rm. This way there are no errors about a file not
+#being found as rm only sees existing files because we only pass those that have been grepped.
+rm $( ls -a ../hounds/hound7 | egrep "($tmp)" | xargs -i{} printf ' ./{}' );
+
+cp -v $passwd_built ../hounds/hound7/"$filename_1";
+
+cp -v $shadow_built ../hounds/hound7/"$filename_2";
+
+echo "hound$level:$FLAG_HOUND" >> the_flags;
