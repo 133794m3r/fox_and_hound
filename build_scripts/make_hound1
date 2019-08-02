@@ -2,12 +2,16 @@
 #Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
 #the flag will be exported later so that it can be read from a file.
 
+
 #this is the level that this flag is going to be identified as.
 level=1;
 #this reads in the functions that are in the library.
 source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
+
+HASH_ENCODING='b32';
+
 #we then make the flag by calling it.
 FLAG_HOUND=$( make_flag 1);
 #we continue by selecting things semi_randomly.
@@ -15,6 +19,8 @@ FLAG_HOUND=$( make_flag 1);
 continue_random;
 # the old flag.
 #FLAG_HOUND1='k3uLis-bFoOtxl8wBllZsKapwqM';
+
+HASH_ENCODING='b32';
 
 #The prefixes for the files. Since they are having to deal with special characters it is stored
 #as strings to make it easier but it's no necessary for normal strings.

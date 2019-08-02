@@ -43,6 +43,11 @@ function mk_hash(){
         openssl dgst -sha1 -binary | base64;
     fi
 }
+
+function get_certain_words(){
+    awk 'length($0) == '"$2"'' "$1" | grep  -P -v '[^\x00-\x7f]'
+}
+
 function get_random_word(){
 #eventually add the option to make the word be a set length which'll be this command.
 #sed -ne '/.\{8\}$/p' /usr/share/dict/american-english  | sed -n '<LINE_NUM> p';

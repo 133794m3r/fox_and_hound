@@ -1,59 +1,43 @@
 #!/bin/bash
-#hound5 aka the one where they're grepping the password that appears after the certain string.
-#also combines it with strings as the file is full of binary data.
+# Macarthur Inbody <mdi2455@email.vccs.edu>
+# AGPLv3
+# 2019 - 
+#
+# Hound5 AKA the one where they use diff to find the one line that's different
+# between two files.
+# It's a simple diff thing but since there's a ton of lines they can do this two
+# ways. The first is to just do `diff file1 file2`.
+# Other is to do `cat file1 file2 |sort |uniq -u`
+# diff is way easier and the correct way.
+
+#the dictionary file that we're using to get our words from.
+#this will be set to a global variable DICTIONARY from the main script once the whole
+#build system is done.
+dictionary='/usr/share/dict/american-english';
+#get the length of the dictionary file.
+#in the future this'll be calculated once from the main build script and then the string
+#DICTIONARY_LEN will be set to this value.
+dictionary_len=$( wc -l '/usr/share/dict/american-english' );
+#set the encoding. In future versions this'll be hardcoded from the main script.
+#this is to make sure tha all hashes are b32 encoded.
+HASH_ENCODING='b32';
+#the current level we're on.
 level=5;
+
 #this reads in the functions that are in the library.
 source build_functions;
-#we seed $RANDOM with the current level value.
-seed_random $level;
-HASH_ENCODING='b32';
-#we then make the flag by calling it.
-FLAG_HOUND=$( make_flag 1);
-CORRECT_WORD='';
-#we continue by selecting things semi_randomly.
-#when we are in debug mode it'll be calling debug_random
-continue_random;
-the_word_len=$( cat '/usr/share/dict/american-english' | wc -l  );
-echo "$the_word_len";
-correct_word=$( get_random_word '/usr/share/dict/american-english' $the_word_len );
-echo 'here';
-FILE_NUM_LINES=10;
-CORRECT_LINE_NUM=$(( $RANDOM % (FILE_NUM_LINES/2) + 1 ));
-cd ../hounds/hound$level;
 
-filename_arr=('somfile' 'something' 'thisfile' '.-' '-~' '-' '.~');
+#the filename we're going to use. It's an empty string by default.
+filename='';
+#The prefixes for the files
+filename_arr=('.-' '-~' '-.' '.~' 'this file has spaces' 'spaces in the name' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET');
+#we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
-extension_arr=('.secrets' '.filthy_lucre' '.files' '.information' '.top_secret' '.hidden' '.mystery' '.txt' '.flag');
-extension_arr_len=${#extension_arr[*]};
-tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
-rm $( ls -a | egrep "($tmp)" | xargs -i{} printf ' ./{}' );
-
-
-output_file="${filename_arr[$(( $RANDOM % $filename_arr_len ))]}${extension_arr[$(( $RANDOM % $extension_arr_len ))]}";
-false_flag_num=5;
-false_flag_line=$(( $RANDOM % ($FILE_NUM_LINES /10 ) ));
-echo 'here';
-echo '' > "$output_file";
-for ((i=0; i<FILE_NUM_LINES;i++)); do
-    the_word=$( get_random_word '/usr/share/dict/american-english' $the_word_len );
-        echo $i;
-    if [[ $i -eq $CORRECT_LINE_NUM ]]; then
-        printf  '\n%s %s\n' $the_word $FLAG_HOUND >> "$output_file";
-        CORRECT_WORD=$the_word;
-    else
-        dd if=/dev/urandom status=none bs=1 count=139 >> "$output_file";
-        true;
-    fi
-    if [[ $i -eq $false_flag_line ]]; then
-        if [[ $j -eq 0 ]]; then
-            false_flag_line=$(( ($RANDOM % 5) + $CORRECT_LINE_NUM ));
-        else
-            false_flag_line=$(( $false_flag_line + ($RANDOM  % ($FILE_NUM_LINE/10)) ));
-            j=1;
-        fi
-        printf  '\n%s %s\n' $the_word $( make_false_flag '/usr/share/dict/american-english' $the_word_len ) >> "$output_file";
-        true;
-    fi
-    #echo $i;
+#the first filename we're going to be sending data to.
+filename_1=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
+#the second file data is going to be sent to.
+filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
+#to make sure that they're not equal to eachother a quick while loop to pick another one randomly.
+while [ "$filename_2" = "$filename_1" ];do
+    filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
 done
-echo $CORRECT_WORD;
