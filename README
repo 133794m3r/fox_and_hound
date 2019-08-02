@@ -9,6 +9,7 @@ fox<level>
 The basic progress will be hound<0-n> and then the fox<0-n> with the different fox
 species being named for each type of wargame that's being utilized.
 
+Some of the C Programs are ones I've wrote that I may need in a future version I don't know if I will or not but to be safe I am including them now. They are licensed under the LGPLv3.
 The scripts are licensed under AGPLv3 and the data contained herein is licensed
 under CC-BY.
 
