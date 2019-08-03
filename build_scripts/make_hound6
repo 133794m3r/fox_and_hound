@@ -57,6 +57,7 @@ false_flag_line=$(( $RANDOM % ($FILE_NUM_LINES /10 ) ));
 #this while loop is to make sure that they are never the same value ever. Since the chance of a collision is really loop. We should be able
 #to avoid collisions. Since the second value is going to be a number between 0-3 but the first one is 0-21 hopefully this won't be an infinite loop.
 while [ $false_flag_line = $CORRECT_LINE_NUM ];do
+    #keep trying for another one until the files overwith.
     false_flag_line=$(( $RANDOM % ($FILE_NUM_LINES /10 ) ));
 done
 

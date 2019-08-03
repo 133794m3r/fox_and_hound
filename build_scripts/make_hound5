@@ -10,6 +10,12 @@
 # Other is to do `cat file1 file2 |sort |uniq -u`
 # diff is way easier and the correct way.
 
+
+#this reads in the functions that are in the library.
+source build_functions;
+
+seed_random $level;
+
 #the dictionary file that we're using to get our words from.
 #this will be set to a global variable DICTIONARY from the main script once the whole
 #build system is done.
@@ -17,20 +23,21 @@ dictionary='/usr/share/dict/american-english';
 #get the length of the dictionary file.
 #in the future this'll be calculated once from the main build script and then the string
 #DICTIONARY_LEN will be set to this value.
-dictionary_len=$( wc -l '/usr/share/dict/american-english' );
+dictionary_len=$( wc -l '/usr/share/dict/american-english' | cut -d' ' -f1);
 #set the encoding. In future versions this'll be hardcoded from the main script.
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
 #the current level we're on.
 level=5;
 
-#this reads in the functions that are in the library.
-source build_functions;
 
+#make the correct flag string. It's going to be the only file that's different between the two files.
+FLAG_HOUND=$( make_flag 1);
+continue_random;
 #the filename we're going to use. It's an empty string by default.
 filename='';
 #The prefixes for the files
-filename_arr=('.-' '-~' '-.' '.~' 'this file has spaces' 'spaces in the name' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET');
+filename_arr=('.-' '-~' '-.' '.~' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET');
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
 #the first filename we're going to be sending data to.
@@ -41,3 +48,41 @@ filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
 while [ "$filename_2" = "$filename_1" ];do
     filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
 done
+
+#get all of the filenames converted to arguments to be sent to rm.
+#we start with sending all elements of the aray piped to tr. Then we replace the space characters with a pipe.
+#so that it can be used with egrep as an OR operator. This is then expanded out and using command substituion the final string is set to the variable
+#tmp
+tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
+#remove the old file.
+#it doesthe following. First we list all of the files in the directory. Then we pipe it to egrep and search for all of the keys that we have chosen.
+#then it sends those values to xargs and we tell it to replace all instances of {} with the argument. Then we use printf to insert into the final
+#string utilizing printf to make each instance of the file as ./<filename> so that it can be rmed more easily. Finally the shell expands the value
+#converts it to a string, this string is then converted into a set of arguments to be utilized by rm. This way there are no errors about a file not
+#being found as rm only sees existing files because we only pass those that have been grepped.
+cd ../hounds;
+pwd;
+rm $( ls -a hound$level | egrep "($tmp)" | xargs -i{} printf "hound$level/{} " );
+
+#the lines that each file's going to contain.
+total_lines=40;
+cd "hound$level";
+FILE_STRING_CONTENTS='';
+for ((i=0;i<total_lines;i++)); do
+    str=$( make_false_flag $dictionary $dictionary_len );
+    #make_false_flag $dictionary $dictionary_len;
+    #echo 'str '$str' end';
+    FILE_STRING_CONTENTS="$FILE_STRING_CONTENTS$str\n";
+
+done
+echo $FLAG_HOUND;
+echo -en "$FILE_STRING_CONTENTS" > ./"$filename_1";
+echo "$filename_1 $filename_2"
+#echo $( printf "$FLAG_HOUND\n$FILE_STRING_CONTENTS" | shuf ) | tr ' ' '\n' > ./"$filename_2";
+
+line_to_delete=$(( ($RANDOM % $total_lines) + 1 ));
+#echo "$line_to_delete!p; \$a$FLAG_HOUND";
+#sed "$line_to_delete d; \$a$FLAG_HOUND" ./"$filename_1" > ./"$filename_2";
+sed "$line_to_delete i $FLAG_HOUND" ./"$filename_1" > ./"$filename_2";
+# "$FLAG_HOUND" >>
+diff ./"$filename_1" ./"$filename_2"

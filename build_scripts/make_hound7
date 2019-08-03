@@ -41,6 +41,7 @@ while [ "$filename_2" = "$filename_1" ];do
     filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
 done
 
+FLAG_HOUND=$( make_flag 1);
 #number of users to insert into the passwd and shadow file.
 #the passwords are going to be b32 encoded instead of the normal format. Plus they're not sha256crypted. They are plain sha1.
 USERS=15;
@@ -69,15 +70,18 @@ rm $shadow_built $passwd_built;
 #we do the first one outside of the normal route because we have to move the output to a new file to start off with.
 insert_line=$(( ($RANDOM % $max_lines) +1 ));
 username=$( get_certain_words $dictionary 8 | shuf -n 1 | tr -d "'");
-password=$( printf $username | mk_hash );
+#password=$( printf $username | mk_hash );
+password=$FLAG_HOUND;
+echo $username;
 #the passwd string.
 insert_string="$username\:x\:$uid\:$guid\:"$( perl -e "print ucfirst $username" )"\,\,\,\:\/home\/$username\:\/bin\/bash";
 sed "$insert_line i$insert_string" $passwd_base > $passwd_built;
-insert_line=$(( $RANDOM % $max_lines ));
+insert_line=$(( ($RANDOM % $max_lines) +1 ));
 #the shadow string.
 insert_string="$username\:$password\:18062\:0\:99999\:7\:\:\:";
 sed "$insert_line i$insert_string" $shadow_base > $shadow_built;
-
+let 'uid++';
+let 'guid++';
 
 for ((i=1;i<5;i++));do
     insert_line=$(( ($RANDOM % $max_lines) + 1 ));
@@ -86,10 +90,12 @@ for ((i=1;i<5;i++));do
     #the passwd string.
     insert_string="$username\:x\:$uid\:$guid\:"$( perl -e "print ucfirst $username" )"\,\,\,\:\/home\/$username\:\/bin\/bash";
     sed -i "$insert_line i $insert_string" $passwd_built
-    insert_line=$(( $RANDOM % $max_lines ));
+    insert_line=$(( ($RANDOM % $max_lines )+1 ));
     #the shadow string.
     insert_string="$username\:$password\:18062\:0\:99999\:7\:\:\:";
     sed -i "$insert_line i $insert_string" $shadow_built;
+    let uid++;
+    let guid++;
 done
 
 #get all of the filenames converted to arguments to be sent to rm.
@@ -103,7 +109,7 @@ tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
 #string utilizing printf to make each instance of the file as ./<filename> so that it can be rmed more easily. Finally the shell expands the value
 #converts it to a string, this string is then converted into a set of arguments to be utilized by rm. This way there are no errors about a file not
 #being found as rm only sees existing files because we only pass those that have been grepped.
-rm $( ls -a ../hounds/hound7 | egrep "($tmp)" | xargs -i{} printf ' ./{}' );
+ls -a ../hounds/hound7 | egrep "($tmp)" | xargs -i{} rm -v '../hounds/hound7/'"{}";
 
 cp -v $passwd_built ../hounds/hound7/"$filename_1";
 
