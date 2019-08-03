@@ -10,8 +10,11 @@ Estimated Average Number of Developers (Effort/Schedule)  = 1.35
 Total Estimated Cost to Develop                           = $ 80,392
 
 COCOMO II
-9.2 Person-months
-Schedule is 7.6 Months
-Estimated Cost is $525,510
-
+18.7 Person-months
+Schedule is 12.5 Months
+Estimated Cost is $88,520
+I was previously doing person-month cost as person-year cost woops.
+The reality of the timeframe thusfar is ~1mo of person-effort @ 13hr/wk.
+COCOMO person-month = 152hrs. I've done ~52hrs/person-month. So I guess I am a 20x programmer in terms of time effeciency.
 Total cost for the school thusfar ~$377 work-study grant money.
+

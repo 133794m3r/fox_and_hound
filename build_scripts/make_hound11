@@ -1,5 +1,8 @@
 #!/bin/bash
-#Macarthur Inbody <mdi2455@email.vccs.edu> (C) 2019-
+#Vim flag 0 aka let's use some basic vim commands.
+# Macarthur Inbody <mdi2455@email.vccs.edu>
+# AGPLv3
+# 2019 -
 #This will be the vim version the nano flag.
 #it's basicaly just the vim flag but modified for vim purposes.
 #insert into their text file to then find the flag.
