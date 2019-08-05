@@ -37,31 +37,42 @@ function mk_hash(){
 # You can imagine an invisible `cat stdin |` operator at the front if it helps you realize what's going on here.
     if ! [ $HASH_ENCODING ]; then
         openssl dgst -sha1 -binary | base64 | tr '\/+' '_-';
+        #if it's set to b32
     elif [ $HASH_ENCODING = 'b32' ]; then
         openssl dgst -sha1 -binary | b32;
     else
+        #default case.
         openssl dgst -sha1 -binary | base64;
     fi
 }
-
+#this function gets words of a certain length that are valid ASCII I include control characters in the grepping for simplicity's sake.
 function get_certain_words(){
+#the ake command makes sure that the length of the file it's reading line by line column $0=first columnt is equal to the
+#second argument's length then we grep all ASCIi characters it could've been a single command.
+# \x00-\x7f=0-127 aka valid ASCII characters.
     awk 'length($0) == '"$2"'' "$1" | grep  -P -v '[^\x00-\x7f]'
 }
-
+#this selects a random word from the dictionary that's passed to it as argument 1, argument 2 is that dictionaries length.
+#argument 3 is whether it's going to chose the same for testing purposes.
 function get_random_word(){
 #eventually add the option to make the word be a set length which'll be this command.
 #sed -ne '/.\{8\}$/p' /usr/share/dict/american-english  | sed -n '<LINE_NUM> p';
 
+#if arguments are greater than or equal to 3 and the third argument is true/1.
     if [ $# -ge 3 ]; then
         if [ $3 = 1 ]; then
+            #seed random with the global variable $level
         seed_random $level;
         fi
     fi
+    #local variables ot make it easier to read.
     local dict=$1;
     local dict_len=$2;
+    #get lines  1-file_length as sed is 1 index based.
     local rnd_line=$((  ( $RANDOM % $dict_len )+1 ));
     #local password=$( sed -n "$rnd_line p" $dict_file );
     #printf $password;
+    #use sed in address mode.
     sed -n "$rnd_line p" $dict;
 }
 function make_false_flag(){
@@ -94,7 +105,7 @@ make_flag(){
 # as hex previously.
     local password=$( sed -n "$rnd_line p" $dict_file )$1;
     #sed -n "$rnd_line p" $dict_file;
-# pass it to string to the hash function.    
+# pass it to string to the hash function.
 # then we b64 encode it, then we use tr to delete the trailing '='s and finally replace the characters to make
 # it safe for putting into directories. How it's captured is just by doing it like any other command it'd be something like.
 # <NAME><LEVEL>_FLAG=$( make_flag <NUMERIC_LEVEL>);
