@@ -1,0 +1,17 @@
+#!/bin/sh
+# Macarthur Inbody <mdi2455@email.vccs.edu>
+# 2019 -
+# AGPLv3 Or later
+#Get all ASCII lines that are length n.
+if [ $# -ge 2 ];then
+    file_to_search=$1;
+    length=$2;
+elif [ $# eq 1 && $1 -ne '-h' ]
+    file_to_search=$1;
+    length=8;
+else
+    echo "Example Usage is getmethelines <file_to_search> <line_length>";
+    exit;
+fi
+awk 'length($0) == '"$2"'' "$1" | grep  -P -v '[^\x00-\x7f]'
+

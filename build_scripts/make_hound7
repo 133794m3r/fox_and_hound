@@ -3,7 +3,8 @@
 # AGPLv3
 # 2019 - 
 #
-# Hound7 AKA the one where they use join to find the password for a certain user.
+# Hound7 AKA I am the master of joining. All connection are known instantly.
+# the one where they use join to find the password for a certain user.
 # they could obviously do this by just opening the files but it's not very easy todo.
 #this script can also be used to make fake passwd and shadow files.
 
@@ -11,19 +12,28 @@
 #the dictionary file that we're using to get our words from.
 #this will be set to a global variable DICTIONARY from the main script once the whole
 #build system is done.
-dictionary='/usr/share/dict/american-english';
+#dictionary='/usr/share/dict/american-english';
+dictionary='../dict/8char_word_dict';
 #get the length of the dictionary file.
 #in the future this'll be calculated once from the main build script and then the string
 #DICTIONARY_LEN will be set to this value.
-dictionary_len=$( wc -l '/usr/share/dict/american-english' );
+#dictionary_len=$( wc -l '/usr/share/dict/american-english' );
+dictionary_len=11802;
 #set the encoding. In future versions this'll be hardcoded from the main script.
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
+CORRECT_USER='';
+if [[ $# -lt 1 ]];then
 #the current level we're on.
-level=7;
-
+    level=7;
+else
+    level=$1;
+fi
 #this reads in the functions that are in the library.
 source build_functions;
+
+#we seed $RANDOM with the current level value.
+seed_random $level;
 
 #the filename we're going to use. It's an empty string by default.
 filename='';
@@ -42,9 +52,12 @@ while [ "$filename_2" = "$filename_1" ];do
 done
 
 FLAG_HOUND=$( make_flag 1);
+
+continue_random
+
 #number of users to insert into the passwd and shadow file.
 #the passwords are going to be b32 encoded instead of the normal format. Plus they're not sha256crypted. They are plain sha1.
-USERS=15;
+USERS=30;
 #how many lines the original file had.
 max_lines=42;
 #basically we're making mock shadow and passwd files and are going to join them so that we can "crack" the passwords.
@@ -66,27 +79,37 @@ passwd_built=../base_files/passwd_built;
 shadow_base=../base_files/shadow_base;
 shadow_built=../base_files/shadow_built;
 #remove the old ones.
-rm $shadow_built $passwd_built;
+#rm $shadow_built $passwd_built;
+cp $passwd_base $passwd_built;
+cp $shadow_base $shadow_built;
+CORRECT_UID=$(( ($RANDOM % $USERS) ));
 #we do the first one outside of the normal route because we have to move the output to a new file to start off with.
-insert_line=$(( ($RANDOM % $max_lines) +1 ));
-username=$( get_certain_words $dictionary 8 | shuf -n 1 | tr -d "'");
+#insert_line=$(( ($RANDOM % $max_lines) +1 ));
+#username=$( get_random_word $dictionary $dictionary_len )
 #password=$( printf $username | mk_hash );
-password=$FLAG_HOUND;
-echo $username;
+#password=$FLAG_HOUND;
+#echo $username;
+#CORRECT_USER=$username;
 #the passwd string.
-insert_string="$username\:x\:$uid\:$guid\:"$( perl -e "print ucfirst $username" )"\,\,\,\:\/home\/$username\:\/bin\/bash";
-sed "$insert_line i$insert_string" $passwd_base > $passwd_built;
-insert_line=$(( ($RANDOM % $max_lines) +1 ));
+#insert_string="$username\:x\:$uid\:$guid\:"$( perl -e "print ucfirst $username" )"\,\,\,\:\/home\/$username\:\/bin\/bash";
+#sed "$insert_line i$insert_string" $passwd_base > $passwd_built;
+#insert_line=$(( ($RANDOM % $max_lines) +1 ));
 #the shadow string.
-insert_string="$username\:$password\:18062\:0\:99999\:7\:\:\:";
-sed "$insert_line i$insert_string" $shadow_base > $shadow_built;
-let 'uid++';
-let 'guid++';
-
-for ((i=1;i<5;i++));do
+#insert_string="$username\:$password\:18062\:0\:99999\:7\:\:\:";
+#sed "$insert_line i$insert_string" $shadow_base > $shadow_built;
+#let 'uid++';
+#let 'guid++';
+#':true
+for ((i=0;i<$USERS;i++));do
     insert_line=$(( ($RANDOM % $max_lines) + 1 ));
-    username=$( get_certain_words $dictionary 8 | shuf -n 1 | tr -d "'");
-    password=$( printf $username | mk_hash );
+    echo '$i'$i' ';
+    username=$( get_random_word $dictionary $dictionary_len )
+    if [[ $i -eq $CORRECT_UID ]];then
+        password=$FLAG_HOUND;
+        CORRECT_USER=$username;
+    else
+        password=$( printf $username | mk_hash );
+    fi
     #the passwd string.
     insert_string="$username\:x\:$uid\:$guid\:"$( perl -e "print ucfirst $username" )"\,\,\,\:\/home\/$username\:\/bin\/bash";
     sed -i "$insert_line i $insert_string" $passwd_built
@@ -109,10 +132,13 @@ tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
 #string utilizing printf to make each instance of the file as ./<filename> so that it can be rmed more easily. Finally the shell expands the value
 #converts it to a string, this string is then converted into a set of arguments to be utilized by rm. This way there are no errors about a file not
 #being found as rm only sees existing files because we only pass those that have been grepped.
-ls -a ../hounds/hound7 | egrep "($tmp)" | xargs -i{} rm -v '../hounds/hound7/'"{}";
+ls -a ../hounds/hound$level | egrep "($tmp)" | xargs -i{} rm -v '../hounds/hound7/'"{}";
 
-cp -v $passwd_built ../hounds/hound7/"$filename_1";
+join -t':' <(sort -k1 -t':' $passwd_built) <(sort -k1 -t':' $shadow_built) | grep $CORRECT_USER | cut -d':' -f8
+echo $FLAG_HOUND;
+cp -v $passwd_built ../hounds/hound$level/"$filename_1";
+cp -v $shadow_built ../hounds/hound$level/"$filename_2";
 
-cp -v $shadow_built ../hounds/hound7/"$filename_2";
+sed -i "s/UID\=.*/UID\='$CORRECT_WORD'/" ../home_folders/hound$level/.ssh/rc;
 
 echo "hound$level:$FLAG_HOUND" >> the_flags;

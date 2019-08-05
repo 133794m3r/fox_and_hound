@@ -1,0 +1,19 @@
+#!/bin/bash
+#this might work, I'm probably going to have to run it from .bashrc and then have the
+#person use the vim command `let keepalive=1` and then it'll check it.
+
+#this comparision function is to see if the variable is set.
+if [[ -z ${keepalive+x} ]];then
+    nodie=0;
+    echo 'notset'
+fi
+if [[ $nodie -eq 0 ]];then
+    echo 'killme';
+    echo $nodie;
+    #kill -9 $PPID;
+    vim    
+fi
+#the parent process id. But I still feel like I should be able to get it to work.
+#basically  what we'll do is we'll kill the parent bash process to exit at the end of
+#this script it'll kill them if it reaches that point.
+echo $PPID;

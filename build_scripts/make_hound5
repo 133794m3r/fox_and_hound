@@ -3,14 +3,19 @@
 # AGPLv3
 # 2019 - 
 #
-# Hound5 AKA the one where they use diff to find the one line that's different
+# Hound5 AKA I can spot the most minute differences!
+# the one where they use diff to find the one line that's different
 # between two files.
 # It's a simple diff thing but since there's a ton of lines they can do this two
 # ways. The first is to just do `diff file1 file2`.
 # Other is to do `cat file1 file2 |sort |uniq -u`
 # diff is way easier and the correct way.
-
-
+if [[ $# -lt 1 ]];then
+#the current level we're on.
+    level=5;
+else
+    level=$1;
+fi
 #this reads in the functions that are in the library.
 source build_functions;
 
@@ -27,8 +32,7 @@ dictionary_len=$( wc -l '/usr/share/dict/american-english' | cut -d' ' -f1);
 #set the encoding. In future versions this'll be hardcoded from the main script.
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
-#the current level we're on.
-level=5;
+
 
 
 #make the correct flag string. It's going to be the only file that's different between the two files.

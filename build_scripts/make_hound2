@@ -1,8 +1,13 @@
 #!/bin/bash
-#Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
+# Hound 2 Build Script
+# Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
+# Hound 2 aka Spaces! Why did it have to be spaces. You darned dirty spaces!
 # Hound flag that involves dealing with spaces in the file name.
-
-level=2;
+if [[ $# -lt 1 ]];then
+    level=2;
+else
+    level=$1;
+fi
 #this reads in the functions that are in the library.
 source build_functions;
 #we seed $RANDOM with the current level value.
