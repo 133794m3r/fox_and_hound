@@ -1,5 +1,5 @@
 #!/bin/bash
-# Hound4: AKA The Hound must find a file that's ASCII Text in type.
+# Hound4: AKA I don't need no UTF8, ASCII is enough for me!
 # Macarthur Inbody <mdi2455@email.vccs.edu> 
 # 2019- 
 # AGPLv3
@@ -8,12 +8,14 @@
 # they can also utilize grep(though this is a secret option) with the -I option to ignore
 # binary files and look for an empty string.
 HASH_ENCODING='b32';
+if [[ $# -lt 1 ]];then
 #the level we're at.
-level=4;
+    level=4;
+else
+    level=$1;
+fi
+
 #this reads in the functions that are in the library.
-
-
-
 source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;

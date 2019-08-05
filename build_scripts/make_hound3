@@ -1,12 +1,17 @@
 #!/bin/bash
 #Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
 #
-# Hound3: AKA working with hidden files.
+# Hound3: AKA You think you can hide me? I am a master of detection!
+# working with hidden files.
 # This flag requires the user to find a hidden file
 #then read the contents of the file. As they previously
 #had to read a file with spaces this is a hearken back to that moment.
+if [[ $# -lt 1 ]];then
+    level=3;
+else
+    level=$1;
+fi
 
-level=3;
 #this reads in the functions that are in the library.
 source build_functions;
 #we seed $RANDOM with the current level value.

@@ -1,9 +1,17 @@
 #!/bin/bash
-#hound5 aka the one where they're grepping the password that appears after the certain string.
-#also combines it with strings as the file is full of binary data.
-level=6;
+#hound5 aka No obfusication can escape my watchful eye. I *grep* it all!
+# the one where they're grepping the password that appears after the certain string.
+# also combines it with strings as the file is full of binary data.
+if [[ $# -lt 1 ]];then
+#the level we're on.
+    level=6;
+else
+    level=$1;
+fi
+
 #this reads in the functions that are in the library.
 source build_functions;
+
 #we seed $RANDOM with the current level value.
 seed_random $level;
 HASH_ENCODING='b32';
@@ -14,12 +22,16 @@ CORRECT_WORD='';
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
+
+dictionary='../dict/8char_word_dict';
 #I could just use the following command.
 # $( nl `file` | cut -f1 | tail -n1 )
 #this gives me the length fo the file. It'll be cached when the full build system actually starts.
-the_word_len=$( cat '/usr/share/dict/american-english' | wc -l  );
+#dictionary_len=$( cat '/usr/share/dict/american-english' | wc -l  );
 #the word we're going to use that's correct.
-correct_word=$( get_random_word '/usr/share/dict/american-english' $the_word_len );
+dictionary_len=11802;
+correct_word=$( get_random_word $dictionary $dictionary_len );
+dictionary="../../dict/8char_word_dict";
 #The num of lines for the output file to contain.
 FILE_NUM_LINES=40;
 #the correct line number to put the real file in there. It'll be placed no more than 1/2 of the way through the file.
@@ -67,7 +79,7 @@ echo -n '' > "$output_file";
 for ((i=0; i<FILE_NUM_LINES;i++)); do
     #we get a random word from the /usr/share/dict/american-english. We pass it the length to save time as it's precalculated.
     #this way we don't have to recalculate it each time. The value is already cached.
-    the_word=$( get_random_word '/usr/share/dict/american-english' $the_word_len );
+    the_word=$( get_random_word $dictionary $dictionary_len );
     #if we've hit the correct line num we then output it.
     if [[ $i -eq $CORRECT_LINE_NUM ]]; then
         #printf the correct word and the flag on this line.
@@ -102,5 +114,9 @@ for ((i=0; i<FILE_NUM_LINES;i++)); do
 done
 #The correct word that we're going to be grepping to.
 echo $CORRECT_WORD;
+cd ../../build_scripts;
+
+#we edit the file with the new and correct word. It's actually possible to do this entirely through sed, but strings is there incase they want to do it that way.
+sed -i "s/string\=.*/string\='$CORRECT_WORD'/" ../home_folders/hound$level/.ssh/rc;
 #we put it into the flags file so that we can use it to the file that we're going to use to make sure that everything works.
 echo "hound$level:$FLAG_HOUND" >> the_flags;
