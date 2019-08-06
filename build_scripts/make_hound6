@@ -23,15 +23,17 @@ CORRECT_WORD='';
 #when we are in debug mode it'll be calling debug_random
 continue_random;
 
-dictionary='../dict/8char_word_dict';
+dictionary='../dict/names_dict';
 #I could just use the following command.
 # $( nl `file` | cut -f1 | tail -n1 )
 #this gives me the length fo the file. It'll be cached when the full build system actually starts.
 #dictionary_len=$( cat '/usr/share/dict/american-english' | wc -l  );
 #the word we're going to use that's correct.
-dictionary_len=11802;
+dictionary_len=29687;
+
 correct_word=$( get_random_word $dictionary $dictionary_len );
-dictionary="../../dict/8char_word_dict";
+passwords_dictionary="../../dict/passwords_dict";
+passwords_dictionary_len=2007;
 #The num of lines for the output file to contain.
 FILE_NUM_LINES=40;
 #the correct line number to put the real file in there. It'll be placed no more than 1/2 of the way through the file.
@@ -100,7 +102,7 @@ for ((i=0; i<FILE_NUM_LINES;i++)); do
             j=1;
         fi
         #we put the string into the file by appending it to the file. like before we include a new line before and after to make it easier to read.
-        printf  '\n%s %s\n' $the_word $( printf $the_word ) >> "$output_file";        
+        printf  '\n%s %s\n' $the_word $( make_false_flag $password_dictionary $password_dictionary_len ) >> "$output_file";
     else
         #if we're just doing a binary line we make sure that it adds the correct line length of pure random data.
         #the options chosen are explained as follows. if=<where to read from> here it's /dev/urandom since it's a non-blocking source of randomness

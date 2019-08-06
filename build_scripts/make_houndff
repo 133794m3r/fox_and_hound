@@ -23,29 +23,32 @@ seed_random $level;
 #the dictionary file that we're using to get our words from.
 #this will be set to a global variable DICTIONARY from the main script once the whole
 #build system is done.
-dictionary='/usr/share/dict/american-english';
+password_dict='../dict/passwords_dict';
 #get the length of the dictionary file.
 #in the future this'll be calculated once from the main build script and then the string
 #DICTIONARY_LEN will be set to this value.
-dictionary_len=$( wc -l '/usr/share/dict/american-english' | cut -d' ' -f1);
+password_dict_len=2007;
 #set the encoding. In future versions this'll be hardcoded from the main script.
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
-NUM_LINES=$(( ($RANDOM % 20) + 40 ));
+#make the correct flag string. It's going to be b32 encoded right now. Also right now the flag is always going to be the same string.
+FLAG_HOUND=$( make_flag 1);
+#continue the RNG;
+continue_random;
+
+NUM_LINES=$(( ($RANDOM % 20) + 30 ));
 correct_line=$(( ($NUM_LINES % 30) + 10 ));
 false_line=$(( $correct_line + ($RANDOM  % 20 )))
 #the prefix string. The false flag there'll just be one that's the correct length but also has a ':' or a ',' in it.
 #the string will be padded to a certain length and that's what they're using awk for.
 FLAG_STRING='your flag is';
-#make the correct flag string. It's going to be b32 encoded right now. Also right now the flag is always going to be the same string.
-FLAG_HOUND=$( make_flag 1);
+
 #the strings will be padded with extra spaces at the end of the line.
 #The correct one will also be chosen randomly.
 max_spaces=25;
 correct_spaces=$(( $RANDOM % $max_spaces ));
 num_spaces=0;
-#continue the RNG;
-continue_random;
+
 
 #the filename we're going to use. It's an empty string by default.
 filename='';
@@ -55,24 +58,28 @@ filename_arr=('.-' '-~' '-.' '.~' '.mystery' '.hidden_file' 'INHERE' 'README' 'I
 filename_arr_len=${#filename_arr[*]};
 filename=${filename_arr[$(( $RANDOM % $filename_arr_len))]};
 extra_str=':';
+echo '' > tmp;
+echo 'correct_spaces:'$(( $correct_spaces + 45 ));
+printf "$FLAG_STRING $FLAG_HOUND%${correct_spaces}s\n" '' | wc -c;
+printf "$FLAG_STRING $FLAG_HOUND\n";
 
 for((i=0;i<NUM_LINES;++i)){
-    str=$( make_false_flag $dictionary $dictionary_len );
+    str=$( make_false_flag $password_dict $password_dict_len );
     num_spaces=$(( $RANDOM % $max_spaces));
 
-    while (( $num_spaces = $correct_spaces ));do
-        num_spaces=$(( $RANDOM % $max_spaces))
+    while [[ $num_spaces -eq $correct_spaces ]];do
+        num_spaces=$(( $RANDOM % $max_spaces ))
     done
 
+
     if [[ $i = $correct_line ]];then
-        printf "$FLAG_STRING $FLAG_HOUND%${correct_spaces}s" '';
+        printf "$FLAG_STRING $FLAG_HOUND%${correct_spaces}s\n" '' >> tmp;
     elif [[ $i = $false_line ]];then
-        printf "$FLAG_STRING:$str%${correct_spaces}s" ''
+        printf "$FLAG_STRING:$str%${correct_spaces}s\n" '' >> tmp;
     elif [[ $(( $num_spaces & 1 )) = 1 ]];then
-        printf "$FLAG_STRING $str%${num_spaces}s" '';
+        printf "$FLAG_STRING $str%${num_spaces}s\n" '' >> tmp;
     else
-        printf "$FLAG_STRING:$str%${num_spaces}s" '';
+        printf "$FLAG_STRING:$str%${num_spaces}s\n" '' >> tmp;
     fi
 
 }
-

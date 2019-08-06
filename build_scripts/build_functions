@@ -87,7 +87,7 @@ function make_false_flag(){
     printf $password | mk_hash;
 }
 make_flag(){
-    if [ $# -ge 2 ];then
+    if [ $# -ge 1 ];then
         seed_random $level;
     fi
 # The level will be hex-encodded to reduce character count and make easier to bruteforce the password(for now).
