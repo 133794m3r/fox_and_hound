@@ -1,1 +1,6 @@
-For shell scripts that need to be executed w/o actually having the ability to read them utilize shc to compile the shell script to c code then compile that c code into a binary. Rename the compiled shellscript from <shellscript.sh.x> to <shellscript> so that I can utilize it with the flags where it's going to hide information from the end user.
+decompression flag information.
+Going to set a variable then literally run it. It'll be something like
+$var | 'file -';
+until we get ascii-text then we'll do xxd and then base64.
+with var having a '|' prepended before the string.
+The rest of the flags will utilize awk to make sure that it works by getting data string from the filename after getting contents given to it by the script.
