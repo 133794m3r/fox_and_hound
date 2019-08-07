@@ -1,327 +1,85 @@
 #!/bin/bash
-# Hound 11 aka `I'm not stuck, I'm just generating entropy for the NSA! Plz send help.`
+# Hound 11 aka `I write scripts _in_ my scripts! *INCEPTION SOUND*`
 # Macarthur Inbody <mdi2455@email.vccs.edu>
 # AGPLv3
 # 2019 -
-#This will be the vim version the nano flag.
-#it's basicaly just the vim flag but modified for vim purposes.
-#insert into their text file to then find the flag.
-#this function will be called if a debug flag is passed to the program in the future.
-#it'll be called like so: seed_random <SEED_VALUE> So that random is deterministic.
-
+# This flag requires them find a string that is a certain number of characters in length.
+# They can use either awk/sed to get the answer here. Then they'll have to select the one
+# that does not have some special character in it. There'll only be 2 flags that are the
+# correct length as the code to get the right answer is way too complex for a flag
+#awk "$0 ~ /^[a-zA-Z]*$/ && length($0) == $LENGTH {print };" `<FILENAME>`;
+#sed -n "/.\{$LENGTH,$LENGTH\}/p" `<FILENAME>` | grep -v "[^a-zA-Z]"
+#One note is that UPPER_CASE files are meant to be constants that aren't changed after being set.
+#lowercase can cahnge whenever.
 if [[ $# -lt 1 ]];then
-    level=9;
+    level=11;
 else
     level=$1;
 fi
-#this reads in the functions that are in the library.
+#the library of build functions.
 source build_functions;
 
-#we seed $RANDOM with the current level value. So that we can get determinstic
-# values for your flag string.
 seed_random $level;
-
-#we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level 1);
-
-#we continue by selecting things semi_randomly.
-#when we are in debug mode it'll be calling debug_random
+#the dictionary file that we're using to get our words from.
+#this will be set to a global variable DICTIONARY from the main script once the whole
+#build system is done.
+password_dict='../dict/passwords_dict';
+#get the length of the dictionary file.
+#in the future this'll be calculated once from the main build script and then the string
+#DICTIONARY_LEN will be set to this value.
+password_dict_len=2007;
+#set the encoding. In future versions this'll be hardcoded from the main script.
+#this is to make sure tha all hashes are b32 encoded.
+HASH_ENCODING='b32';
+#make the correct flag string. It's going to be b32 encoded right now. Also right now the flag is always going to be the same string.
+FLAG_HOUND=$( make_flag 1);
+#continue the RNG;
 continue_random;
 
+NUM_LINES=$(( ($RANDOM % 20) + 30 ));
+correct_line=$(( ($NUM_LINES % 30) + 10 ));
+false_line=$(( $correct_line + ($RANDOM  % 20 )))
+#the prefix string. The false flag there'll just be one that's the correct length but also has a ':' or a ',' in it.
+#the string will be padded to a certain length and that's what they're using awk for.
+FLAG_STRING='your flag is';
 
-cd ../text_shells/vim;
-#CORRECT_FLAG="$( echo "$(shuf -n 1 hound_dict)$HOUND_LEVEL" | openssl dgst -sha1 -binary | b32 )$HOUND_LEVEL";
-#currently it's Nick Wilde9
-#CORRECT_FLAG='NxfXihbMovnLArUD2xrZXAC4ANs=';
-#the false flag is there to make it harder for them to bruteforce the answer.
-FALSE_FLAG='';
-FLAG_STRING='Your flag is the following base64 encoded string ';
-#these are the 3 strings that are going to be inserted that they're going to be searching for but only
-#one of them is the correct one.
-SEARCH_STRING0='';
-SEARCH_STRING1='';
-SEARCH_STRING2='';
-#the name of the file we're going to use.
-FLAG_FILE='';
-#a simple temp variable.
-tmp=0;
-#making the directory. -p makes it permissive.
-mkdir -p built_files;
-#we remove all files from within the directory if it already exists.
-rm -v built_files/*;
-#the array with instructions to be searched for. Right now it's just 2 options but in the future it'll be more so that they cannot just
-#simply search for a guaranteed string of text to look for.
-INSTRUCTIONS_0_ARR=('Your next instructions are located after the string ' 'The instructions are immediately after the string ');
-#the first instance of the temp variable selecting a value
-tmp=$(( $RANDOM % ${#INSTRUCTIONS_0_ARR[*]} ));
-#tmp is used to select an element from the array for this instruction.
-INSTRUCTIONS0=${INSTRUCTIONS_0_ARR[$tmp]};
-#instruction 1 is the array containing the pretext for what the file is that the'yre going to have to read in.
-INSTRUCTIONS_1_ARR=('Now you need to read the file ' 'You must read ' 'The flag is in ');
-#same as above, first we get the length of the array, and then we get a value from 0-(2^15-1) modulo that value.
-# we then use it to select which element we're going to use.
-tmp=$(( $RANDOM % ${#INSTRUCTIONS_1_ARR[*]} ));
-INSTRUCTIONS1=${INSTRUCTIONS_1_ARR[$tmp]};
-#this gets all of the files in the top directory, and then it does an inverse
-#grep to remove the .header file from the list of files that are shown. It then
-#puts this output into an array.
-vim_files_arr=( $(ls | grep -v 'built_files' ) );
-#this gives the length of the array the [*]=all items. And doing ${#var} gets you
-#the length of the var.
-vim_files_arr_len=${#vim_files_arr[*]};
+#the strings will be padded with extra spaces at the end of the line.
+#The correct one will also be chosen randomly.
+max_spaces=25;
+correct_spaces=$(( $RANDOM % $max_spaces ));
+num_spaces=0;
 
-#gets a random number between $RANDOM and n-1.
 
-i=$(( $RANDOM % $vim_files_arr_len ));
-#selects a random item from the array.
-tmp=${vim_files_arr[$i]};
-#starts the string with the value.
-cat_str=$tmp;
-#increments the value.
-i=$(( $i+1 ));
-#checks if we've overflowed.
-#we're using a subshell to get the length of the files_arr minus one. But in the
-#future likely just going to set another variable since it's reused so much.
+#the filename we're going to use. It's an empty string by default.
+filename='';
+#The prefixes for the files
+filename_arr=('.-' '-~' '-.' '.~' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET');
+#we get the length of the files.
+filename_arr_len=${#filename_arr[*]};
+filename=${filename_arr[$(( $RANDOM % $filename_arr_len))]};
+extra_str=':';
+echo '' > tmp;
+echo 'correct_spaces:'$(( $correct_spaces + 45 ));
+printf "$FLAG_STRING $FLAG_HOUND%${correct_spaces}s\n" '' | wc -c;
+printf "$FLAG_STRING $FLAG_HOUND\n";
 
-#TODO: set a variable called vim_files_arr_len_1=vim_files_arr_len-1;
-if [[ $i -gt $(( $vim_files_arr_len - 1)) ]];then
-    i=0;
-fi
-#selects the element pointed to by i from the vim_files_arra and appeneds it to the string
-#making sure to include a space so that it can be catted.
-cat_str=$cat_str' '${vim_files_arr[$i]};
-#redo the whole thing again.
-i=$(( $i +1 ));
-if [[ $i -gt $(( $vim_files_arr_len - 1)) ]];then
-    i=0;
-fi
+for((i=0;i<NUM_LINES;++i)){
+    str=$( make_false_flag $password_dict $password_dict_len );
+    num_spaces=$(( $RANDOM % $max_spaces));
 
-cat_str=$cat_str' '${vim_files_arr[$i]};
-#the final complete string to be catted.
-echo $cat_str;
-#this sends the files to the built_files dir and the combined file.
-cat $cat_str > built_files/vim_combined;
-#changing directory to the directory.
-cd built_files;
-#then we get the current line-count for the combined file. Right now it can be
-#just cached but since I may add files in the future it's easier to just do it 
-#like this. Also I could just $( wc -l vim_combined ); and get the same result.
-vim_combined_lines=$(cat vim_combined |  wc -l );
-#printing to the console the thinking man's information passer for debugging.
-echo $vim_combined_lines;
-#the 1st, 2nd, and 3rd lines for the search strings.
-first_string_line_num=0;
-second_string_line_num=0;
-third_string_line_num=0;
-#we first set the max line to the total number of lines from the combined file
-#divided by 3.
-line_max=$(( $vim_combined_lines/3  ));
-#echoing that value to make sure it's correct.
-echo $lines_max;
-#modulo again to get a random number in the range of 0-line_max-1
-first_string_line_num=$(( $RANDOM % $line_max ));
-#then we change it to be 2/3 of the total lines.
-line_max=$(( $line_max * 2 ));
-#modulo repeat.
-range=$(( $line_max - $first_string_line_num ));
-second_string_line_num=$(( ( $RANDOM % $range ) + $first_string_line_num ));
-#finally the final line has a range of 0-(total_lines-50)
-line_max=$(( $vim_combined_lines - 50 ));
-#make sure that we have a minimum line so that we're no overwriting line #2.
-range=$(( $lines_max - $second_string_line_num));
-third_string_line_num=$(( ($RANDOM % $range) + $second_string_line_num));
-line='';
-#the instruction line number.
-instruction_line=$(( $RANDOM % $vim_combined_lines ));
-#while loop to make sure that instruction line isn't on the same line as any of the
-#other files. If other ones are right together that's "ok" but not great.
-while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
-    instruction_line=$(( $RANDOM % $vim_combined_lines));
-done
-#debug information which'll be used later by the debug script that'll be looking for this stuff.
-#right now it lets me quickly sed my way through the program to make sure that the strings are
-#where it says it is via sed address mode. AKA sed -n '<LINE_START_NUMBER>,<LINE_END_NUMBER>p' <FILE>
-#or in this case sed -n '<LINE_NUMBER>,<LINE_NUMBERp' <COMBINED FILE>
-echo "f:$first_string_line_num s:$second_string_line_num t:$third_string_line_num";
-#we make sure that each string is actually 5 bytes via padding since that's only true for numbers
-#that are greater than 9999. We pad it with white space than b32 encode it giving us a 8 byte string
-#without any '=' padding.
-SEARCH_STRING0=$( printf '%5s' $RANDOM | b32 );
-SEARCH_STRING1=$( printf '%5s' $RANDOM | b32 );
-SEARCH_STRING2=$( printf '%5s' $RANDOM | b32 );
-#file to put the flag in it's the same as before just a new name.
-FLAG_FILE=$( printf '%5s' $RANDOM | b32 );
+    while [[ $num_spaces -eq $correct_spaces ]];do
+        num_spaces=$(( $RANDOM % $max_spaces ))
+    done
 
-tmp_num=$(($RANDOM % 3));
-false_file='';
-echo 'il:'$instruction_line;
-#here we get the instruction line printed to the screen so it can be grepped out.
-#we also select which of the 3 search strings are the correct one. 1,2 or 3.
-if [[ $tmp_num -eq 0 ]]; then
-#This is the INSTRUCTION String with the search string This is the first string
-#it is the one that says "search for this string" more or less.
-    INSTRUCTIONS0="$INSTRUCTIONS0 $SEARCH_STRING0";
-    #we set the first string to be at least 30 lines past the first search string,
-    #but up to 80 lines.
-    first_string_line_num=$(( $instruction_line + (($RANDOM % 50 ) + 30) ));
-    #The first SEARCH String which in this case is correct as it includes FLAG_FILE in it.
-    #since it's all inside of a "" all variables are expanded.
-    SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $FLAG_FILE"
-    #the false file using method above expanded to 5 characters than b32 encoded.
-    false_file=$(printf '%5s' $RANDOM | b32 );
-#the false flags are just the first FALSE_FLAG string(17chrs) appended with 0-999 and then expanded to 20 characters with spaces followed by b32 encoded.
-#by doing this the string is the same length as the real flag.
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf  "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;      
-    #set the search string to a false file.
-    SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $false_file";
-    #we set a new false fale and make sure $RANDOM is padded to 5 bytes.
-    false_file=$(printf '%5s' $RANDOM | b32 );
-    #the flag string is outputted into this incorrect file.
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;        
-    #we make sure to set the 3rd search string with the wrong data.
-    SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
-#this time it's #1 is correct search string.
 
-elif [[ $tmp_num -eq 1 ]];then
-
-    second_string_line_num=$(( $instruction_line + (( $RANDOM % 50 ) + 30) ));
-    INSTRUCTIONS0="$INSTRUCTIONS0 $SEARCH_STRING1";
-    SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $FLAG_FILE"
-    
-    false_file=$(printf '%5s' $RANDOM | b32 );
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;            
-    SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $false_file";
-    false_file=$(printf '%5s' $RANDOM | b32 );
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;      
-    SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
-    
-#and this time it's the 3rd string aka SEARCH_STRING2 all else is the same. 
-elif [[ $tmp_num -eq 2 ]];then
-
-    third_string_line_num=$(( $instruction_line + (($RANDOM % 50 ) + 30) ));
-    INSTRUCTIONS0="$INSTRUCTIONS0 $SEARCH_STRING2";
-    SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $FLAG_FILE"
-    
-    false_file=$(printf '%5s' $RANDOM | b32 );
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;       
-    SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $false_file";
-    false_file=$(printf '%5s' $RANDOM | b32 );
-    FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;    
-    SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $false_file"
-    
-fi
-#We make sure that nothing is the same _again_.
-while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
-    instruction_line=$(( $RANDOM % $vim_combined_lines));
-done
-#the file we're going to be outputting to.
-OUTPUT_FILE='vim_combined_built';
-#The start of the lines after header is appended.
-i=26;
-#debug information for me.
-echo $INSTRUCTIONS0;
-#echo $SEARCH_STRING0;
-#echo $SEARCH_STRING1;
-#echo $SEARCH_STRING2;
-#empty the output file incase it's not already been deleted.
-echo '' > $OUTPUT_FILE;
-#loop to read through all of the lines.
-while read line; do
-
-#if we hit the line number that matches the first search string we insert it to the file and appened it to the end.
-    if [[ $i -eq $first_string_line_num ]]; then
-    #the first string is outputted to the file.
-        echo -e $SEARCH_STRING0 >> $OUTPUT_FILE;
-        #echo this line's true number.
-        echo 'fi:'$i;
-        #This increments i as we just added a line.
-        let "i++";
-        
-#Same as before but with the SEARCH_STRING1.
-    elif [[ $i -eq $second_string_line_num ]]; then
-    #the 2nd search string is appeneded to the output file.
-        echo -e $SEARCH_STRING1 >> $OUTPUT_FILE;
-        #second string's linenumber.
-        echo 'si:'$i;
-        #increment i since we added a line.
-        let i++;
-
-#Same as before but with the SEARCH_STRING2
-    elif [[ $i -eq $third_string_line_num ]]; then
-    #This time we put the 3rd search string's text into the output file.
-        echo -e $SEARCH_STRING2 >> $OUTPUT_FILE;
-        #this is debug info for me to know which lines to look at to speed up things.
-        echo 'ti:'$i;
-  #increment i as another line is appeneded to the file.
-        let i++;
-#Same as before but with the instructions to what string to search for from the user.      
-    elif [[ $i -eq $instruction_line ]]; then
-    #we put the instructions into the output file by appeneding it to the end of it.
-        echo -e $INSTRUCTIONS0  >> $OUTPUT_FILE;
-        #we make sure that the first instruction line is set to this value.
-        instruction_line1=$i;
-#the thing outputs the instruction line aka instruction <i> value.
-        echo 'ii:'$i;
-  
-#let is used to increment the variable.
-        let i++; 
-     
+    if [[ $i = $correct_line ]];then
+        printf "$FLAG_STRING $FLAG_HOUND%${correct_spaces}s\n" '' >> tmp;
+    elif [[ $i = $false_line ]];then
+        printf "$FLAG_STRING:$str%${correct_spaces}s\n" '' >> tmp;
+    elif [[ $(( $num_spaces & 1 )) = 1 ]];then
+        printf "$FLAG_STRING $str%${num_spaces}s\n" '' >> tmp;
+    else
+        printf "$FLAG_STRING:$str%${num_spaces}s\n" '' >> tmp;
     fi
-#increments i as we added a line after a second.    
-    let "i++";
-    
-#make sure echo the line to the file.
-    echo "$line" >> $OUTPUT_FILE;
-    
-#vim_combined is the file that we're piping in via stdin to the loop as per usual in bash.    
-done < vim_combined;
 
-
-#this is because cat will complain if we try to redirect to the same file.
-cat '../.header' $OUTPUT_FILE > "$OUTPUT_FILE-1";
-#then we move it back again.
-mv "$OUTPUT_FILE-1" 'vim_welcome_msg'
-#this sets the number for the flags and is easy to replace via sed later on.
-#also it pads it as per is normal.
-hound_num=$( printf '%s%4s' $level '');
-
-#this makes sure that it's got the correct number of spaces to make it all
-#aligned the right way.
-#we have 18 characters total for this line left so we subtract the length of the line number
-#from it and then use that for the padding string informatino.
-padding=$(( 18 - ${#instruction_line1}  ));
-#the format string is the string we're sending to it here it's separated for basic ease of use things.
-format_str="%s%${padding}s";
-#we including a '' at the end ot make it insert nothing and then pad it with spaces.
-format_str="$(printf $format_str $instruction_line1 '')";
-echo $format_str;
-OUTPUT_FILE='vim_welcome_msg';
-#the final editing of the file.
-#this line is to modify the line the instruction are at.
-sed -i "s/<instruction_line>/$format_str/g" $OUTPUT_FILE;
-#this line is there to set the level for the flag. Right now it's just 8 but
-#technically it's gonna be called text0 for class.
-sed -i "s/<num>/$hound_num/g" $OUTPUT_FILE;
-#finally set the real flag's file and we're done.
-echo "$FLAG_STRING $FLAG_HOUND" > $FLAG_FILE;
-#remove the combined file as it's no longer needed.
-rm -v vim_combined vim_combined_built;
-mkdir -p ../../../hounds/hound$level
-#then we make sure to remove all old files from this folder.
-#as this folder _only_ contains flag folders and is not the home folder it's safe.
-rm -v ../../../hounds/hound$level/*
-#then we copy the files over to it.
-#we don't move it because I'm not trusting enough in my own coding ability to not mess up sometime.
-cp -v * ../../../hounds/hound$level
-#cd build_scripts;
-cd ../../../build_scripts;
-#we increment the level counter because in this case it's being used as the level that the password is used
-#to login to.
-let level++;
-echo "hound$level:$FLAG_HOUND" >> the_flags;
+}

@@ -1,7 +1,6 @@
 #!/bin/bash
-#Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
-#
 # Hound3: AKA You think you can hide me? I am a master of detection!
+#Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
 # working with hidden files.
 # This flag requires the user to find a hidden file
 #then read the contents of the file. As they previously

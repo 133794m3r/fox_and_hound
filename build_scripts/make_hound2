@@ -1,7 +1,6 @@
 #!/bin/bash
-# Hound 2 Build Script
-# Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
 # Hound 2 aka Spaces! Why did it have to be spaces. You darned dirty spaces!
+# Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
 # Hound flag that involves dealing with spaces in the file name.
 if [[ $# -lt 1 ]];then
     level=2;
