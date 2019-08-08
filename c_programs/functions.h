@@ -1,8 +1,8 @@
 /*!
 *    Various functions that I have written or have came across to make my life easier.
-*    
+*
 *     Copyright 2011, Macarthur Inbody
-*    
+*
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the Lesser GNU General Public License as published by
 *   the Free Software Foundation, either version 3 of the License, or
@@ -15,9 +15,9 @@
 *
 *   You should have received a copy of the Lesser GNU General Public License
 *   along with this program.  If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
-*     
+*
 *   2011-06-20 06:03:57 PM -0400
-*    
+*
 *   These functions work by any input that is provided. For a function demonstrating it.
 *    Please look at the second source file at the post of the question on stack overflow.
 *    It also includes an answer for implenting it using recursion if that is your favored
@@ -43,4 +43,3 @@
 #include <stdarg.h>
 #include <assert.h>
 #include <string.h>
-#include "p99/p99.h"
