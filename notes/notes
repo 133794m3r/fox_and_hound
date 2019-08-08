@@ -4,3 +4,24 @@ $var | 'file -';
 until we get ascii-text then we'll do xxd and then base64.
 with var having a '|' prepended before the string.
 The rest of the flags will utilize awk to make sure that it works by getting data string from the filename after getting contents given to it by the script.
+
+The word arrays.
+
+flag_num:0 WORD_ARRAY=(16 0 1 17 18 2 19)
+flag_num:1 WORD_ARRAY=(20 3 4 21 5 6 22)
+flag_num:2 WORD_ARRAY=(23 7 8 9 10 11 12)
+flag_num:3 WORD_ARRAY=(13 14 15 24 25 26 27)
+flag_num:4 WORD_ARRAY=(28 29 30 31 32 33 34)
+flag_num:5 WORD_ARRAY=(35 36 37 38 39 40 41)
+flag_num:6 WORD_ARRAY=(42 43 44 45 46 47 47)
+flag_num:7 WORD_ARRAY=(46 45 44 43 42 41 40)
+flag_num:8 WORD_ARRAY=(39 38 37 36 35 34 33)
+flag_num:9 WORD_ARRAY=(32 31 30 29 28 27 26)
+flag_num:10 WORD_ARRAY=(25 24 23 22 21 20 19)
+flag_num:11 WORD_ARRAY=(18 17 16 15 14 13 12)
+flag_num:12 WORD_ARRAY=(11 10 9 8 7 6 5)
+flag_num:13 WORD_ARRAY=(4 3 2 1 0 47 46)
+flag_num:14 WORD_ARRAY=(45 44 43 42 41 40 39)
+flag_num:15 WORD_ARRAY=(38 37 36 35 34 33 32)
+flag_num:16 WORD_ARRAY=(31 30 29 28 27 26 25)
+flag_num:17 WORD_ARRAY=(24 23 22 21 20 19 18)

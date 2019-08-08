@@ -1,8 +1,8 @@
 /*!
 *    Various functions that I have written or have came across to make my life easier.
-*    
+*
 *     Copyright 2011, Macarthur Inbody
-*    
+*
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the Lesser GNU General Public License as published by
 *   the Free Software Foundation, either version 3 of the License, or
@@ -15,9 +15,9 @@
 *
 *   You should have received a copy of the Lesser GNU General Public License
 *   along with this program.  If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
-*     
+*
 *   2011-06-20 06:03:57 PM -0400
-*    
+*
 *   These functions work by any input that is provided. For a function demonstrating it.
 *    Please look at the second source file at the post of the question on stack overflow.
 *    It also includes an answer for implenting it using recursion if that is your favored
@@ -30,38 +30,8 @@
 *
 *
 */
-#define count(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
 #include "functions.h"
-
-// notes to self.
-// reverse the range so that it starts small and gets big.
-// after that, do the multiplication the same as you were.
-// this will make it so that you don't have to perform
-// a mergesort.
-/*
-s=sum
-n=number of items
-x=sides
-(s-n)/x
- SUM  (-1)^k * C(n,k) * C(s-x*k-1,n-1)
- k=0
-*/
-//#define round(x) ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
-float chance_calc_single(float min, float max, float amount, float desired_result){
-	printf("%f\n",desired_result);	
-    float range=(max-min)+1;
-    float series=ceil((desired_result-amount)/range);
-	float i;
-	--amount;
-	long double chances=0.0;
-	printf("range=%f",range);
-	for(i=0;i<=series;++i){
-		chances=pow((-1),i)*m_product_cf(amount,i)*m_product_cf(desired_result-(range*i)-1,amount)+chances;
-		printf("\nm_product(desired_result)=%E\n",m_product_cf(desired_result-(range*i)-1,amount));
-	}
-	return chances;
-}
-
+#define count(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))));
 
 
 unsigned long microtime(void){
@@ -80,7 +50,7 @@ int match(const char *string, char *pattern) {
   status = regexec(&re, string, (size_t)0, NULL, 0);
   regfree(&re);
   if(status != 0) {
-    return 0; 
+    return 0;
    }
 
   return 1;
