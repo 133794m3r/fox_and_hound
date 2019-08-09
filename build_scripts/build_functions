@@ -116,3 +116,81 @@ make_flag(){
 function get_random_element(){
     return 0
 }
+
+function select_regex(){
+    # the options for the regex. It sets the regex pattern for the string.
+    # 0=all lowercase characters. 1=starts with uppercase. 2=starts with number. 3=starts with special character.
+    # 4=ends with a number. 5=ends with a special character. 6=ends with a capital character. 7=ends with a lowercase letter.
+    regex_case=$(( $RANDOM & 7 ));
+    regex_str='';
+    tmp=0;
+    case $regex_case in
+        0)
+            regex_str='s/\(.*\)/\L\1/';
+        ;;
+        1)
+            regex_str='s/\(^[a-z]\)/\U\1/';
+        ;;
+        2)
+            tmp=$(( $RANDOM & 9 ));
+            regex_str="s/\(^[a-z]\)/$tmp\1/";
+        ;;
+        3)
+            tmp=$(( $RANDOM & 4 ));
+            case $tmp in
+                0)
+                    tmp='\.';
+                ;;
+                1)
+                    tmp='\#';
+                ;;
+                2)
+                    tmp='\@';
+                ;;
+                3)
+                    tmp='\:';
+                ;;
+                4)
+                    tmp='\_';
+                ;;
+            esac;
+            regex_str="s/\(^[a-z]\)/$tmp\1/";
+        ;;
+        4)
+            tmp=$(( $RANDOM & 9 ));
+            regex_str="s/\(.*$\)/\1 $tmp/";
+        ;;
+        5)
+            tmp=$(( $RANDOM & 4 ));
+            case $tmp in
+                0)
+                    tmp='\.';
+                ;;
+                1)
+                    tmp='\#';
+                ;;
+                2)
+                    tmp='\@';
+                ;;
+                3)
+                    tmp='\:';
+                ;;
+                4)
+                    tmp='\_';
+                ;;
+            esac;
+            regex_str="s/\(.*\)/\1$tmp/";
+        ;;
+        6)
+            tmp=$(( ($RANDOM  & 25 ) + 65 ));
+            tmp=$( perl -e "printf '%c',$tmp;" );
+            regex_str="s/\(.*\)/\1 $tmp/";
+        ;;
+        7)
+            tmp=$(( ($RANDOM  & 25 ) + 97 ));
+            tmp=$( perl -e "printf '%c',$tmp;" );
+            regex_str="s/\(.*\)/\1 $tmp/";
+        ;;
+    esac
+    echo "$regex_str";
+}
