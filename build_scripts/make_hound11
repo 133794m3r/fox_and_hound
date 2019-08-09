@@ -6,7 +6,10 @@
 # This flag requires them find a string that is a certain number of characters in length.
 # They can use either awk/sed to get the answer here. Then they'll have to select the one
 # that does not have some special character in it. There'll only be 2 flags that are the
-# correct length as the code to get the right answer is way too complex for a flag
+# correct length as the code to get the right answer is way too complex for a flag.
+# This one will require them to run some regex on the file and the regex strings will of course
+# be changing so one time it'll be field that ends in a '.' or some other character. or starts with it
+# along with the standard regex things to make this a lot more random in the future.
 #awk "$0 ~ /^[a-zA-Z]*$/ && length($0) == $LENGTH {print };" `<FILENAME>`;
 #sed -n "/.\{$LENGTH,$LENGTH\}/p" `<FILENAME>` | grep -v "[^a-zA-Z]"
 #One note is that UPPER_CASE files are meant to be constants that aren't changed after being set.
@@ -36,17 +39,22 @@ FLAG_HOUND=$( make_flag 1);
 #continue the RNG;
 continue_random;
 
-NUM_LINES=$(( ($RANDOM % 20) + 30 ));
-correct_line=$(( ($NUM_LINES % 30) + 10 ));
-false_line=$(( $correct_line + ($RANDOM  % 20 )))
+NUM_LINES=$(( ($RANDOM & 30) + 50 ));
+correct_line=$(( ($NUM_LINES & 30 ) + 15 ));
+false_line=$(( $correct_line + ($RANDOM  & 15 )));
+false_line2=$(( $correct_line - ($RANDOM & 15) ));
+while [[ $correct_line -eq $false_line ]];do
+    correct_line=$(( ($NUM_LINES & 30 ) + 15 ));
+done
 #the prefix string. The false flag there'll just be one that's the correct length but also has a ':' or a ',' in it.
 #the string will be padded to a certain length and that's what they're using awk for.
 FLAG_STRING='your flag is';
-
+regex_str=$( select_regex );
+false_regex_str=$( select_regex );
 #the strings will be padded with extra spaces at the end of the line.
 #The correct one will also be chosen randomly.
 max_spaces=25;
-correct_spaces=$(( $RANDOM % $max_spaces ));
+correct_spaces=$(( ($RANDOM % $max_spaces)+1 ));
 num_spaces=0;
 
 
@@ -58,11 +66,14 @@ filename_arr=('.-' '-~' '-.' '.~' '.mystery' '.hidden_file' 'INHERE' 'README' 'I
 filename_arr_len=${#filename_arr[*]};
 filename=${filename_arr[$(( $RANDOM % $filename_arr_len))]};
 extra_str=':';
-echo '' > tmp;
-echo 'correct_spaces:'$(( $correct_spaces + 45 ));
-printf "$FLAG_STRING $FLAG_HOUND%${correct_spaces}s\n" '' | wc -c;
-printf "$FLAG_STRING $FLAG_HOUND\n";
-
+echo -n '' > tmp;
+echo 'regex_pattern:'$regex_case;
+echo 'regex_str:'"$regex_str";
+tmp_str='';
+echo "$FLAG_HOUND";
+echo 'cl:'$correct_line;
+echo 'fl:'$false_line;
+echo 'len:'$( printf "%s%${correct_spaces}s\n" "$FLAG_STRING $FLAG_HOUND" | wc -c );
 for((i=0;i<NUM_LINES;++i)){
     str=$( make_false_flag $password_dict $password_dict_len );
     num_spaces=$(( $RANDOM % $max_spaces));
@@ -71,15 +82,16 @@ for((i=0;i<NUM_LINES;++i)){
         num_spaces=$(( $RANDOM % $max_spaces ))
     done
 
-
     if [[ $i = $correct_line ]];then
-        printf "$FLAG_STRING $FLAG_HOUND%${correct_spaces}s\n" '' >> tmp;
+        printf "%s%${correct_spaces}s\n" "$( printf "$FLAG_STRING $FLAG_HOUND" | sed -e "$regex_str" )" ''>> tmp;
     elif [[ $i = $false_line ]];then
-        printf "$FLAG_STRING:$str%${correct_spaces}s\n" '' >> tmp;
-    elif [[ $(( $num_spaces & 1 )) = 1 ]];then
-        printf "$FLAG_STRING $str%${num_spaces}s\n" '' >> tmp;
+        printf "%s%${num_spaces}s\n" "$( printf "$FLAG_STRING $str" | sed -e "$regex_str" )" ''>> tmp;
+    elif [[ $i = $false_line2 ]];then
+       printf "%s%${correct_spaces}s\n" "$( printf "$FLAG_STRING:$str" | sed -e "$false_regex_str" )" ''>> tmp;
     else
-        printf "$FLAG_STRING:$str%${num_spaces}s\n" '' >> tmp;
+       printf "%s%${num_spaces}s\n" "$( printf "$FLAG_STRING $str" | sed -e "$false_regex_str" )" ''>> tmp;
     fi
 
 }
+tmp=$( printf "%s%${correct_spaces}s " "$( printf "$FLAG_STRING $FLAG_HOUND" | sed -e "$regex_str" )"  | wc -c );
+echo 'cc:'$(( $tmp - 1 ));

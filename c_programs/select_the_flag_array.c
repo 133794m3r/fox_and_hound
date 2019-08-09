@@ -17,20 +17,22 @@ unsigned int get_least_used_word(unsigned int *prev_selected_words,unsigned int 
     unsigned int i=0;
     unsigned int start_index=xor_32(0,num_words);
     unsigned int j=start_index;
-    for(i=0;i<=num_words;i++){
+    for(i=0;i<num_words;i++){
         current_freq=word_freq[j];
-        if(j==0){
+        if(i==0){
             min_freq=current_freq;
         }
-        if(current_freq == 0 ){
-            return j;
-        }
-        if( (current_freq <= min_freq)){
+        if( current_freq < min_freq ){
             min_index=j;
             min_freq=current_freq;
         }
-        j++;
-        if( j>num_words ){
+        if(min_freq == 0 ){
+            return j;
+        }
+        if( j < num_words ){
+            j++;
+        }
+        else{
             j=0;
         }
     }
@@ -58,7 +60,7 @@ int main(int argc, char **argv){
     unsigned int total_lines=num_lines_file("../dict/hound_dict");
     unsigned int *word_freq=malloc(4*total_lines);
     memset(word_freq,0,4*total_lines);
-    unsigned char num_flags=17;
+    unsigned char num_flags=19;
     unsigned char num_words_per_flag=7;
     unsigned int i=0;
     unsigned int j=0;
@@ -69,9 +71,10 @@ int main(int argc, char **argv){
     for(j=0;j<=num_flags;j++){
         for(i=0;i<num_words_per_flag;i++){
             min_word=get_least_used_word(prev_selected_words,word_freq,total_lines);
-            word_freq[min_word]+=1;
+            printf("wf:%u\n",word_freq[min_word]);
+            word_freq[min_word]=word_freq[min_word]+1;
             prev_selected_words[min_word]+=1;
-            word_array[j][i]=min_word;
+            word_array[j][i]=(min_word+1);
         }
     }
 
@@ -88,6 +91,9 @@ unsigned int the_word=0;
             }
         }
         printf(")\n");
+    }
+    for(j=0;j<total_lines;j++){
+        printf("wfi:%u freq:%u\n",j,word_freq[j]);
     }
     return 0;
 }

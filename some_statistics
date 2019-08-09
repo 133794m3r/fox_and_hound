@@ -1,20 +1,18 @@
 Current version.
 The biggest thing is that this _does not_ include any comments that I've included in my
 code. So this is actual code that's being written.
-Total Physical Source Lines of Code (SLOC)                = 2,825
-Development Effort Estimate, Person-Years (Person-Months) = 0.60 (7.14)
+Total Physical Source Lines of Code (SLOC)                = 3,299
+Development Effort Estimate, Person-Years (Person-Months) = 0.7 (8.40)
  (Basic COCOMO model, Person-Months = 2.4 * (KSLOC**1.05))
-Schedule Estimate, Years (Months)                         = 0.44 (5.28)
+Schedule Estimate, Years (Months)                         = 0.47 (5.62)
  (Basic COCOMO model, Months = 2.5 * (person-months**0.38))
-Estimated Average Number of Developers (Effort/Schedule)  = 1.35
-Total Estimated Cost to Develop                           = $ 80,392
+Estimated Average Number of Developers (Effort/Schedule)  = 1.6
+Total Estimated Cost to Develop                           = $ 94,530
+
 
 COCOMO II
-18.7 Person-months
-Schedule is 12.5 Months
-Estimated Cost is $88,520
-I was previously doing person-month cost as person-year cost woops.
-The reality of the timeframe thusfar is ~1mo of person-effort @ 13hr/wk.
-COCOMO person-month = 152hrs. I've done ~52hrs/person-month. So I guess I am a 20x programmer in terms of time effeciency.
-Total cost for the school thusfar ~$377 work-study grant money.
+Effort = 20.1 Person-months
+Schedule = 9.9 Months
+Cost = $116,706
 
+Total time is ~13-20hrs per week. 1mo=52hrs. Schedule is now at 20.1mo and sitting at 1.5mo of personal-effort.
