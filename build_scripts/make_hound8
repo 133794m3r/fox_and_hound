@@ -26,6 +26,48 @@ continue_random;
 # the old flag.
 #FLAG_HOUND=$( echo 'Phineas the Fox' | openssl dgst -sha1 -binary | base64 | tr -d '=');
 
+#right now it's just hardcoded. Future versions will actually convert the numeric format into a string.
+function permission_octal_to_string(){
+    local num=$1;
+    local replacement_part=$(( $RANDOM & 3 ));
+    local tmp='';
+    tmp=${1:$replacement_part:1};
+    case $tmp in
+        7)
+            tmp='rwx';
+        ;;
+        6)
+            tmp='rw-';
+        ;;
+        5)
+            tmp='r-x';
+        ;;
+        4)
+            tmp='r--';
+        ;;
+        2)
+            tmp='-w-';
+        ;;
+        1)
+            tmp='--x';
+        ;;
+        0)
+            tmp='---';
+        ;;
+    esac
+    case $replacement_part in
+        0)
+            permission="$tmp${1:1}"
+        ;;
+        1)
+            permission="${1:0:1}$tmp${1:2}";
+        ;;
+        2)
+            permission="${1:0:2}$tmp";
+        ;;
+    esac
+    echo $permission;
+}
 
 HOUND_STR='The flag is ';
 
@@ -82,7 +124,7 @@ file_type_correct='text';
 #function's not needed.
 #function make_correct_metadata(){
 correct_owner=${owner_array[$(( $RANDOM % $owner_array_len ))]};
-correct_group=${group_array[$(( $RANDOM % $group_array_len ))]};    
+correct_group=${group_array[$(( $RANDOM % $group_array_len ))]};
 correct_permission=${permission_array[$(( $RANDOM % $permission_array_len ))]};
 correct_size=${file_size_array[$(( $RANDOM % $file_size_array_len ))]};
 if [[ $correct_permission = 751 && ( $correct_group -ne 1007 || $correct_owner -ne 1006 )]]; then
@@ -93,8 +135,7 @@ fi
 #}
 #make_correct_me
 
-#we have to edit the .ssh/rc file in the home directory so that it contains this data.
-sed -i "s/permission\=.*/permission\=$correct_permission/" ../home_folders/hound$level/.ssh/rc;
+#this sets the correct metadata information in the rc file.
 sed -i "s/owner\=.*/owner\=$correct_owner/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/group\=.*/group\=$correct_group/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/size\=.*/size\=$(( $correct_size ))/" ../home_folders/hound$level/.ssh/rc;
@@ -109,22 +150,19 @@ red_herrings=directory_number;
 correct_file=$(( ($RANDOM % ($file_number*$directory_number)) ));
 l=0;
 red_herring_file=$(( $RANDOM % $file_number ));
-if [[ $red_herring_file -gt $(( $file_number - 1 )) ]];
-then
-red_herring_file=0;
-red_herring_file2=$(( $RANDOM % $file_number));
+if [[ $red_herring_file -gt $(( $file_number - 1 )) ]];then
+    red_herring_file=0;
+    red_herring_file2=$(( $RANDOM % $file_number));
 fi
 
-if [[ $red_herring_file2 -gt $(( $file_number - 1 )) ]];
-then
-red_herring_file2=0;
+if [[ $red_herring_file2 -gt $(( $file_number - 1 )) ]];then
+    red_herring_file2=0;
 fi
 if [[ $red_herring_file2 -eq $red_herring_file ]];then
     red_herring_file2=$(($red_herring_file+1));
 fi
-if [[ $red_herring_file2 -gt $(( $file_number - 1 )) ]];
-then
-red_herring_file2=0;
+if [[ $red_herring_file2 -gt $(( $file_number - 1 )) ]];then
+    red_herring_file2=0;
 fi
 if [[ $red_herring_file2 -eq $red_herring_file ]];then
     red_herring_file2=$(($red_herring_file+1));
@@ -206,9 +244,9 @@ for ((i=0; i < $directory_number; i++)); do
     cd "$dirname$i";
     filename=${filename_arr[$(($RANDOM % $filename_arr_len))]}${endname_arr[$(($RANDOM % $endname_arr_len))]};
     suffix=${suffix_arr[$(($RANDOM % $suffix_arr_len))]};
-    
+
     echo "We're at $i";
-    
+
     for (( j=0; j < file_number; j++ )); do
         size=${file_size_array[$(( $RANDOM % $file_size_array_len ))]};
         owner=${owner_array[$(( $RANDOM % $owner_array_len ))]};
@@ -247,7 +285,7 @@ for ((i=0; i < $directory_number; i++)); do
             permission=${arr[0]}; owner=${arr[1]}; group=${arr[2]}; size=${arr[3]};
             #tmp_str=$(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
             file_type='text';
-            make_false_file;            
+            make_false_file;
             #FILE_CONTENTS=$(printf "%${size}s\n" "$HOUND_STR $tmp_str");
             #echo 'rh'$permission;
             #printf "%${size}s\n" "$HOUND_STR$tmp_str" > "$filename$j$suffix";
@@ -282,7 +320,7 @@ for ((i=0; i < $directory_number; i++)); do
         chmod "$permission" ./"$filename$j$suffix";
         l=$((l+1));
     done;
-    
+
     cd ..;
 done;
 echo "-uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$correct_size"c -exec cat {} \;";
@@ -298,10 +336,15 @@ cp -aR . ../hounds/hound$level;
 chown 1007:1007 ../hounds/hound$level/.*
 #false flag function to make a string that looks like the legit one.
 #this is used for the redherring's if the length matches up.
-# $(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '='); 
+# $(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
 let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
 rm -Rd ../tmp;
 echo "hound$level:$FLAG_HOUND" >> ../build_scripts/the_flags;
+#this is done at the end because permissions are changed to the string at the end.
+#we have to edit the .ssh/rc file in the home directory so that it contains this data.
+permission_octal_to_string $correct_permission;
+sed -i "s/permission\=.*/permission\=$permission/" ../home_folders/hound$level/.ssh/rc;
+

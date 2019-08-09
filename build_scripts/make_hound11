@@ -21,7 +21,9 @@ else
 fi
 #the library of build functions.
 source build_functions;
-
+#TODO: Make sure that spaces are going to be equal based upon if extra characters are added to one string and not another for the false
+#flag line string one.
+# should be if regex code of correct one is >=3 ||
 seed_random $level;
 #the dictionary file that we're using to get our words from.
 #this will be set to a global variable DICTIONARY from the main script once the whole
@@ -35,9 +37,13 @@ password_dict_len=2007;
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
 #make the correct flag string. It's going to be b32 encoded right now. Also right now the flag is always going to be the same string.
-FLAG_HOUND=$( make_flag 1);
+
 #continue the RNG;
 continue_random;
+WORD_ARRAY=(29 30 31 32 33 34 35);
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+
 
 NUM_LINES=$(( ($RANDOM & 30) + 50 ));
 correct_line=$(( ($NUM_LINES & 30 ) + 15 ));
@@ -48,50 +54,93 @@ while [[ $correct_line -eq $false_line ]];do
 done
 #the prefix string. The false flag there'll just be one that's the correct length but also has a ':' or a ',' in it.
 #the string will be padded to a certain length and that's what they're using awk for.
-FLAG_STRING='your flag is';
-regex_str=$( select_regex );
-false_regex_str=$( select_regex );
+FLAG_STRING='your Flag is';
+regex_case=0;
+#tmp=$( select_regex );
+#tmp=("$tmp");
+read -r -a tmp <<< $( select_regex );
+regex_str=${tmp[1]};
+regex_case=${tmp[0]}
+regex_case0=$regex_case;
+read -r -a tmp <<< $( select_regex );
+false_regex_str=${tmp[1]};
+regex_case=${tmp[0]}
+i=0;
+while [[ "$regex_case0" = "$regex_case" && $i -lt 255 ]];do
+#tmp=$( select_regex );
+#tmp=("$tmp");
+read -r -a tmp <<< $( select_regex );
+    false_regex_str=${tmp[1]};
+    regex_case=${tmp[0]};
+    i=$(( $i+1 ));
+done
+echo $i;
+
+while [[ "$regex_case0" = "$regex_case" && $i -lt 255 ]];do
+#tmp=$( select_regex );
+#tmp=("$tmp");
+read -r -a tmp <<< $( select_regex );
+    false_regex_str2=${tmp[1]};
+    regex_case=${tmp[0]};
+    i=$(( $i+1 ));
+done
 #the strings will be padded with extra spaces at the end of the line.
 #The correct one will also be chosen randomly.
-max_spaces=25;
-correct_spaces=$(( ($RANDOM % $max_spaces)+1 ));
+max_spaces=30;
+correct_spaces=$(( ($RANDOM & $max_spaces) +1 ));
+echo "correct_spaces:"$correct_spaces;
 num_spaces=0;
-
+extra_space=0;
+if [[ $regex_case0 >=2 && $regex_case <=1 ]];then
+    extra_space=1;
+elif [[ $regex_case0 -le 1 && $regex_case -ge 2 ]];then
+    extra_space=-1;
+fi
 
 #the filename we're going to use. It's an empty string by default.
 filename='';
 #The prefixes for the files
-filename_arr=('.-' '-~' '-.' '.~' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET');
+filename_arr=('.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT'S A SECRET TO EVERYBODY", 'I AM ERROR' 'I AM BAGU');
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
-filename=${filename_arr[$(( $RANDOM % $filename_arr_len))]};
+filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
 extra_str=':';
 echo -n '' > tmp;
-echo 'regex_pattern:'$regex_case;
+echo 'false_regx:'"$false_regex_str";
 echo 'regex_str:'"$regex_str";
 tmp_str='';
 echo "$FLAG_HOUND";
 echo 'cl:'$correct_line;
 echo 'fl:'$false_line;
-echo 'len:'$( printf "%s%${correct_spaces}s\n" "$FLAG_STRING $FLAG_HOUND" | wc -c );
+echo 'fn:'$filename;
+mkdir -p "../hounds/hound$level";
+rm -Rv "../hounds/hound$level/*";
+file_location="../hounds/hound$level/$filename"
 for((i=0;i<NUM_LINES;++i)){
     str=$( make_false_flag $password_dict $password_dict_len );
-    num_spaces=$(( $RANDOM % $max_spaces));
-
-    while [[ $num_spaces -eq $correct_spaces ]];do
-        num_spaces=$(( $RANDOM % $max_spaces ))
-    done
-
+    num_spaces=$(( ($RANDOM & $max_spaces) +1 ));
+    if [[ $num_spaces -eq $correct_spaces ]];then
+        num_spaces=$(( $num_spaces+1 ));
+    fi
     if [[ $i = $correct_line ]];then
-        printf "%s%${correct_spaces}s\n" "$( printf "$FLAG_STRING $FLAG_HOUND" | sed -e "$regex_str" )" ''>> tmp;
+        tmp_str=$(printf "$FLAG_STRING $FLAG_HOUND %${correct_spaces}s\n" ''| sed -e "$regex_str");
+        CORRECT_LEN=$( printf "$tmp_str" | wc -c );
+        printf "$tmp_str\n" >> tmp;
+        echo "$tmp_str";
     elif [[ $i = $false_line ]];then
-        printf "%s%${num_spaces}s\n" "$( printf "$FLAG_STRING $str" | sed -e "$regex_str" )" ''>> tmp;
+        printf "$FLAG_STRING $str %${num_spaces}s\n" ''| sed -e "$regex_str" >> tmp;
+        #true;
     elif [[ $i = $false_line2 ]];then
-       printf "%s%${correct_spaces}s\n" "$( printf "$FLAG_STRING:$str" | sed -e "$false_regex_str" )" ''>> tmp;
+
+        num_spaces=$(( "$correct_spaces"+"$extra_space" ));
+        printf "$FLAG_STRING $str %${num_spaces}s\n" ''| sed -e "$false_regex_str" >> tmp;
     else
-       printf "%s%${num_spaces}s\n" "$( printf "$FLAG_STRING $str" | sed -e "$false_regex_str" )" ''>> tmp;
+        printf "$FLAG_STRING $str %${num_spaces}s\n" ''| sed -e "$false_regex_str2" >> tmp;
+        #true;
     fi
 
 }
-tmp=$( printf "%s%${correct_spaces}s " "$( printf "$FLAG_STRING $FLAG_HOUND" | sed -e "$regex_str" )"  | wc -c );
-echo 'cc:'$(( $tmp - 1 ));
+
+echo 'cc:'$CORRECT_LEN;
+echo `( select_regex_help_str $regex_case0)`;
+cp tmp "$file_location"

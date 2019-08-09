@@ -111,6 +111,30 @@ make_flag(){
 # <NAME><LEVEL>_FLAG=$( make_flag <NUMERIC_LEVEL>);
     printf '%s' $password | mk_hash;
 }
+
+make_semistatic_flag(){
+# The level will be hex-encodded to reduce character count and make easier to bruteforce the password(for now).
+    local hex_num=$( printf '%x' $level );
+# the dictionary file right now it's not checking which set of flags are being built.
+# it will have a case switch for the dictionaries later.
+    local dict_file='../dict/hound_dict';
+# we get the number of lines from the file since it can change.
+    #local max_line=$( cat $dict_file | wc -l);
+# we use random to select a random line and add one to it so that we get a valid range for sed.
+# since sed counts from 1 for whatever reason.
+    local rnd_line=$1;
+
+# then we use sed in address mode to selct the line from the file, and including levelnum encoded
+# as hex previously.
+    local password=$( sed -n "$rnd_line p" $dict_file )$hex_num;
+    #sed -n "$rnd_line p" $dict_file;
+# pass it to string to the hash function.
+# then we b64 encode it, then we use tr to delete the trailing '='s and finally replace the characters to make
+# it safe for putting into directories. How it's captured is just by doing it like any other command it'd be something like.
+# <NAME><LEVEL>_FLAG=$( make_flag <NUMERIC_LEVEL>);
+    printf  $password | mk_hash;
+}
+
 #this function will eventually actually do something.
 #it'll select a random element from an array but for now it does nothing.
 function get_random_element(){
@@ -122,8 +146,8 @@ function select_regex(){
     # 0=all lowercase characters. 1=starts with uppercase. 2=starts with number. 3=starts with special character.
     # 4=ends with a number. 5=ends with a special character. 6=ends with a capital character. 7=ends with a lowercase letter.
     regex_case=$(( $RANDOM & 7 ));
-    regex_str='';
-    tmp=0;
+    local regex_str='';
+    local tmp=0;
     case $regex_case in
         0)
             regex_str='s/\(.*\)/\L\1/';
@@ -158,7 +182,7 @@ function select_regex(){
         ;;
         4)
             tmp=$(( $RANDOM & 9 ));
-            regex_str="s/\(.*$\)/\1 $tmp/";
+            regex_str="s/\(.*$\)/\1$tmp/";
         ;;
         5)
             tmp=$(( $RANDOM & 4 ));
@@ -184,13 +208,47 @@ function select_regex(){
         6)
             tmp=$(( ($RANDOM  & 25 ) + 65 ));
             tmp=$( perl -e "printf '%c',$tmp;" );
-            regex_str="s/\(.*\)/\1 $tmp/";
+            regex_str="s/\(.*\)/\1$tmp/";
         ;;
         7)
             tmp=$(( ($RANDOM  & 25 ) + 97 ));
             tmp=$( perl -e "printf '%c',$tmp;" );
-            regex_str="s/\(.*\)/\1 $tmp/";
+            regex_str="s/\(.*\)/\1$tmp/";
         ;;
     esac
-    echo "$regex_str";
+    echo "$regex_case $regex_str";
+}
+select_regex_help_str(){
+    # the options for the regex. It sets the regex pattern for the string.
+    # 0=all lowercase characters. 1=starts with uppercase. 2=starts with number. 3=starts with special character.
+    # 4=ends with a number. 5=ends with a special character. 6=ends with a capital character. 7=ends with a lowercase letter.
+    local regex_case=$1;
+    local regex_help_str='The regex pattern must match a string:';
+    case $regex_case in
+        0)
+            regex_help_str="$regex_help_str containing only lowercase letters, numbers, and spaces."
+        ;;
+        1)
+            regex_help_str="$regex_help_str that starts with an uppercase letter."
+        ;;
+        2)
+            regex_help_str="$regex_help_str that starts with a number."
+        ;;
+        3)
+            regex_help_str="$regex_help_str that starts with a special character."
+        ;;
+        4)
+            regex_help_str="$regex_help_str that ends with a number."
+        ;;
+        5)
+            regex_help_str="$regex_help_str that ends with a special character."
+        ;;
+        6)
+            regex_help_str="$regex_help_str that ends with a capital letter."
+        ;;
+        7)
+            regex_help_str="$regex_help_str that ends with a lowercase letter."
+        ;;
+    esac
+    echo "$regex_help_str";
 }
