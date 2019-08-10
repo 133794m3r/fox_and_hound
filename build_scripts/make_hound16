@@ -11,3 +11,8 @@
 # errors will include logic error, typoed variable, using [[]] instead of (()) for a loop, same with if/else if. Writing if else if. Doing the if/else loop with C-Style syntax etc. After fixing it up
 #the program will check the argument passed to it and then process it
 # and turn it into a string(using some function that won't have issues with it) by going through the string character by character transforming it someway.
+
+
+WORD_ARRAY=(15 16 17 18 19 20 21);
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);

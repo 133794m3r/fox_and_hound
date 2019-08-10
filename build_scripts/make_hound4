@@ -20,11 +20,15 @@ source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag 1);
+#FLAG_HOUND=$( make_flag 1);
 FLAG_FALSE=$( make_false_flag);
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
+WORD_ARRAY=(15 16 46 47 48 17 18);
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+
 # the old flag.
 #FLAG_HOUND4='3h9GplLdLnj9e6uYVToiNMBLFcY';
 

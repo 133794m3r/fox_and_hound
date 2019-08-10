@@ -8,27 +8,44 @@ The rest of the flags will utilize awk to make sure that it works by getting dat
 The words from the hound dictionary that we're going to use. They were chosen semi-randomly.
 Basically each word has the level number(encoded in hex) appended to the end of the word at the line.
 
-flag_num:0 WORD_ARRAY=(33 34 35 36 37 38 49)
-flag_num:1 WORD_ARRAY=(1 2 3 4 5 6 7)
-flag_num:2 WORD_ARRAY=(8 39 40 41 42 43 44)
-flag_num:3 WORD_ARRAY=(45 9 10 11 12 13 14)
-flag_num:4 WORD_ARRAY=(15 16 46 47 48 17 18)
-flag_num:5 WORD_ARRAY=(19 20 21 22 23 24 25)
-flag_num:6 WORD_ARRAY=(26 27 28 29 30 31 32)
-flag_num:7 WORD_ARRAY=(1 2 3 4 5 6 7)
-flag_num:8 WORD_ARRAY=(8 9 10 11 12 13 14)
-flag_num:9 WORD_ARRAY=(15 16 17 18 19 20 21)
-flag_num:10 WORD_ARRAY=(22 23 24 25 26 27 28)
-flag_num:11 WORD_ARRAY=(29 30 31 32 33 34 35)
-flag_num:12 WORD_ARRAY=(36 37 1 2 3 4 38)
-flag_num:13 WORD_ARRAY=(39 40 41 5 6 7 8)
-flag_num:14 WORD_ARRAY=(42 43 44 45 9 10 11)
-flag_num:15 WORD_ARRAY=(12 46 47 48 49 13 14)
-flag_num:16 WORD_ARRAY=(15 16 17 18 19 20 21)
-flag_num:17 WORD_ARRAY=(1 2 3 4 22 23 24)
+flag_num:0
+WORD_ARRAY=(33 34 35 36 37 38 49);
+flag_num:1
+WORD_ARRAY=(1 2 3 4 5 6 7);
+flag_num:2
+WORD_ARRAY=(8 39 40 41 42 43 44);
+flag_num:3
+WORD_ARRAY=(45 9 10 11 12 13 14);
+flag_num:4
+WORD_ARRAY=(15 16 46 47 48 17 18);
+flag_num:5
+WORD_ARRAY=(19 20 21 22 23 24 25);
+flag_num:6
+WORD_ARRAY=(26 27 28 29 30 31 32);
+flag_num:7
+WORD_ARRAY=(1 2 3 4 5 6 7);
+flag_num:8
+WORD_ARRAY=(8 9 10 11 12 13 14);
+flag_num:9
+WORD_ARRAY=(15 16 17 18 19 20 21);
+flag_num:10
+WORD_ARRAY=(22 23 24 25 26 27 28);
+flag_num:11
+WORD_ARRAY=(29 30 31 32 33 34 35);
+flag_num:12
+WORD_ARRAY=(36 37 1 2 3 4 38);
+flag_num:13
+WORD_ARRAY=(39 40 41 5 6 7 8);
+flag_num:14
+WORD_ARRAY=(42 43 44 45 9 10 11);
+flag_num:15
+WORD_ARRAY=(12 46 47 48 49 13 14);
+flag_num:16
+WORD_ARRAY=(15 16 17 18 19 20 21);
+flag_num:17
+WORD_ARRAY=(1 2 3 4 22 23 24);
 #reserved for the future.
-flag_num:18 WORD_ARRAY=(25 5 6 7 8 26 27)
-flag_num:19 WORD_ARRAY=(28 29 9 10 11 12 30)
-
-
-
+flag_num:18
+WORD_ARRAY=(25 5 6 7 8 26 27);
+flag_num:19
+WORD_ARRAY=(28 29 9 10 11 12 30);

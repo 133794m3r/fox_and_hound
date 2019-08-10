@@ -12,3 +12,8 @@
 # They're going to have to either print(the correct line) or delete all lines that don't match the query.
 # They'll be given information the flag file to help them along.
 
+
+WORD_ARRAY=(36 37 1 2 3 4 38);
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+

@@ -16,10 +16,14 @@ source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag 1);
+#FLAG_HOUND=$( make_flag 1);
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
+WORD_ARRAY=(45 9 10 11 12 13 14);
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+
 # the old flag.
 #FLAG_HOUND3='jEKpny.vBXBCLg5EA.D-RKZPH8w';
 
@@ -44,7 +48,7 @@ cd ../hounds/hound3;
 #just in case there are ones in the home directory that do have spaces in their
 #names.
 #tmp=${dirname_arr[0]};
-#for (( i=1; i<$dirname_arr_len; i++ )){ 
+#for (( i=1; i<$dirname_arr_len; i++ )){
 #    tmp="$tmp|${dirname_arr[$i]}";
 #}
 #otherwise the above could would no be needed at all.

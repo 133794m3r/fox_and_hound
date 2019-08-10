@@ -19,14 +19,16 @@ seed_random $level;
 HASH_ENCODING='b32';
 
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag 1);
+#FLAG_HOUND=$( make_flag 1);
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
 # the old flag.
 #FLAG_HOUND1='k3uLis-bFoOtxl8wBllZsKapwqM';
 
-HASH_ENCODING='b32';
+WORD_ARRAY=(1 2 3 4 5 6 7)
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 #The prefixes for the files. Since they are having to deal with special characters it is stored
 #as strings to make it easier but it's no necessary for normal strings.

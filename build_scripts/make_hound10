@@ -29,9 +29,14 @@ password_dict_len=2007;
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
 #make the correct flag string. It's going to be b32 encoded right now. Also right now the flag is always going to be the same string.
-FLAG_HOUND=$( make_flag 1);
+#FLAG_HOUND=$( make_flag 1);
 #continue the RNG;
 continue_random;
+
+WORD_ARRAY=(22 23 24 25 26 27 28);
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+
 regex_str=$( select_regex );
 false_regex_str=$( select_regex );
 false_regex_str1=$( select_regex );

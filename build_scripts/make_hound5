@@ -6,6 +6,7 @@
 #This will be a nano flag. All in one. They have to find a string
 #then read into nano a file based on the string they find.
 #basic text editor stuff.
+HASH_ENCODING='b32';
 if [[ $# -lt 1 ]];then
     level=5;
 else
@@ -18,11 +19,15 @@ source build_functions;
 seed_random $level;
 
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level 1);
+#FLAG_HOUND=$( make_flag $level 1);
 
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
+
+WORD_ARRAY=(19 20 21 22 23 24 25);
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 cd ../text_shells/nano;
 #CORRECT_FLAG="$( echo "$(shuf -n 1 hound_dict)$HOUND_LEVEL" | openssl dgst -sha1 -binary | b32 )$HOUND_LEVEL";
@@ -129,14 +134,14 @@ if [[ $tmp_num -eq 0 ]]; then
 #the false flags are just the first FALSE_FLAG string(17chrs) appended with 0-999 and then expanded to 20 characters with spaces followed by b32 encoded.
 #by doing this the string is the same length as the real flag.
     FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf  "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;      
+    printf  "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;
     #set the search string to a false file.
     SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $false_file";
     #we set a new false fale and make sure $RANDOM is padded to 5 bytes.
     false_file=$(printf '%5s' $RANDOM | b32 );
     #the flag string is outputted into this incorrect file.
     FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;         
+    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;
     #we make sure to set the 3rd search string with the wrong data.
     SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
 #this time it's #1 is correct search string.
@@ -146,37 +151,37 @@ elif [[ $tmp_num -eq 1 ]];then
     second_string_line_num=$(( $instruction_line + (( $RANDOM % 50 ) + 30) ));
     INSTRUCTIONS0="$INSTRUCTIONS0 $SEARCH_STRING1";
     SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $FLAG_FILE"
-    
+
     FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf  "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;      
+    printf  "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;
     #set the search string to a false file.
     SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $false_file";
     #we set a new false fale and make sure $RANDOM is padded to 5 bytes.
     false_file=$(printf '%5s' $RANDOM | b32 );
     #the flag string is outputted into this incorrect file.
     FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;            
+    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;
     SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
-    
-#and this time it's the 3rd string aka SEARCH_STRING2 all else is the same. 
+
+#and this time it's the 3rd string aka SEARCH_STRING2 all else is the same.
 elif [[ $tmp_num -eq 2 ]];then
 
     third_string_line_num=$(( $instruction_line + (($RANDOM % 50 ) + 30) ));
     INSTRUCTIONS0="$INSTRUCTIONS0 $SEARCH_STRING2";
     SEARCH_STRING2="\n$SEARCH_STRING2   $INSTRUCTIONS1 $FLAG_FILE\n"
-    
+
     false_file=$(printf '%5s' $RANDOM | b32 );
     FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf  "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;      
+    printf  "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;
     #set the search string to a false file.
     SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $false_file";
     #we set a new false fale and make sure $RANDOM is padded to 5 bytes.
     false_file=$(printf '%5s' $RANDOM | b32 );
     #the flag string is outputted into this incorrect file.
     FALSE_FLAG=$( echo $RANDOM | mk_hash );
-    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;             
+    printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;
     SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $false_file"
-    
+
 fi
 while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
     instruction_line=$(( $RANDOM % $nano_combined_lines));
@@ -192,41 +197,41 @@ echo '' > $OUTPUT_FILE;
 while read line; do
 
     if [[ $i -eq $first_string_line_num ]]; then
-    
+
         echo -e $SEARCH_STRING0 >> $OUTPUT_FILE;
         echo 'fj:'$i;
      #   let "j++";
         let "i++";
-        
+
     elif [[ $i -eq $second_string_line_num ]]; then
-    
+
         echo -e $SEARCH_STRING1 >> $OUTPUT_FILE;
         echo 'sj:'$i;
         let "i++";
 #        let "i++";
 
     elif [[ $i -eq $third_string_line_num ]]; then
-    
+
         echo -e $SEARCH_STRING2 >> $OUTPUT_FILE;
         echo 'ti:'$i;
   #      let "j++";
         let "i++";
-        
+
     elif [[ $i -eq $instruction_line ]]; then
-    
+
         echo -e $INSTRUCTIONS0  >> $OUTPUT_FILE;
         instruction_line1=$i;
     #    echo 'ii:'$i;
         echo 'ii:'$i;
-        let "i++"; 
+        let "i++";
      #   let "i++";
-     
+
     fi
     let "i++";
-    
+
     #let "j++";
     echo -e "$line" >> $OUTPUT_FILE;
-    
+
 done < nano_combined;
 
 #this is because cat will complain if we try to redirect to the same file.

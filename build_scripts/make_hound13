@@ -16,12 +16,16 @@ source build_functions;
 seed_random $level;
 HASH_ENCODING='b32';
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag 1);
+#FLAG_HOUND=$( make_flag 1);
 #initialize this variable.
 CORRECT_WORD='';
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
+
+WORD_ARRAY=(39 40 41 5 6 7 8);
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 dictionary='../dict/names_dict';
 #I could just use the following command.

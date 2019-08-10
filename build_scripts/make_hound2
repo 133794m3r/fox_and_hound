@@ -12,12 +12,16 @@ source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag 1);
+#FLAG_HOUND=$( make_flag 1);
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
 # the old flag.
 #FLAG_HOUND='X3kIeNDOe41RPMD0H7Oxt88fmlg';
+WORD_ARRAY=(8 39 40 41 42 43 44);
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+
 #The array with the filenames in it.
 filename_arr=('this file has spaces' 'name has spaces' 'space character' 'many spaces within it' 'within filename spaces');
 #caclulate the length fo the array.
