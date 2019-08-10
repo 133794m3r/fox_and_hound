@@ -19,7 +19,7 @@ source build_functions;
 seed_random $level;
 
 #we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level 1);
+#FLAG_HOUND=$( make_flag $level 1);
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 continue_random;
@@ -27,6 +27,10 @@ continue_random;
 #FLAG_HOUND5=UGhpbmVhcyBPciBGaW5ueSBGb3gK;
 #FLAG_HOUND5=$(echo 'Phineas Or Finny Fox' | base64);
 #this is to keep them on their toes so that they _don't_ know how many levels it is everytime.
+WORD_ARRAY=(12 46 47 48 49 13 14);
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+
 compression_depth=$(( ($RANDOM % 3 ) + 5);
 i=0;
 filenames=('data' 'file' 'dump' 'binary');

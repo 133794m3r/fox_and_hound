@@ -1,11 +1,11 @@
 #!/bin/bash
-# Hound 8 aka The greatest detective in the world has arrived. Detectice Phineas is on the case!
+# Hound 8 aka The greatest detective in the world has arrived.
 # Macarthur Inbody <mdi2455@email.vccs.edu>
 # AGPLv3
 # 2019 -
 # This flag requires them to find a file with certain metadata from the list of
 #files. It has 4 attributes. Size,Owner,Group,Permissions.
-
+HASH_ENCODING='b32';
 if [[ $# -lt 1 ]];then
     level=8;
 else
@@ -25,6 +25,10 @@ FLAG_HOUND=$( make_flag $level 1);
 continue_random;
 # the old flag.
 #FLAG_HOUND=$( echo 'Phineas the Fox' | openssl dgst -sha1 -binary | base64 | tr -d '=');
+
+WORD_ARRAY=(8 9 10 11 12 13 14);
+chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 #right now it's just hardcoded. Future versions will actually convert the numeric format into a string.
 function permission_octal_to_string(){
@@ -241,6 +245,7 @@ for ((i=0; i < $directory_number; i++)); do
     dirname=${dirname_arr[$(( $RANDOM % $dirname_arr_len )) ]};
     mkdir "$dirname$i";
     chmod 777 "$dirname$i";
+    chown 1008:1008 "$dirname$i";
     cd "$dirname$i";
     filename=${filename_arr[$(($RANDOM % $filename_arr_len))]}${endname_arr[$(($RANDOM % $endname_arr_len))]};
     suffix=${suffix_arr[$(($RANDOM % $suffix_arr_len))]};
@@ -257,7 +262,7 @@ for ((i=0; i < $directory_number; i++)); do
         if [ $l -eq $correct_file ]; then
             #FILE_CONTENTS=$(printf "%${correct_size}s\n" "$HOUND_STR $FLAG_HOUND");
             size1=$(( $correct_size-1 ));
-            echo "hound6str: $FLAG_HOUND";
+            echo "hound$levelstr: $FLAG_HOUND";
             printf "%${size1}s\n" "$HOUND_STR$FLAG_HOUND" > "$filename$j$suffix";
             echo 'correct_file'"$filename$j$suffix";
             owner=$correct_owner; group=$correct_group; permission=$correct_permission;
@@ -324,7 +329,7 @@ for ((i=0; i < $directory_number; i++)); do
     cd ..;
 done;
 echo "-uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$correct_size"c -exec cat {} \;";
-cd ../hounds/hound6;
+cd ../hounds/hound$level;
 rm -R $( ls -a | grep -E '.[a-z]');
 cd ../../tmp;
 #cd ../hounds/hound6;
@@ -333,7 +338,6 @@ cd ../../tmp;
 pwd;
 cp -aR . ../hounds/hound$level;
 #chmod 755 /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
-chown 1007:1007 ../hounds/hound$level/.*
 #false flag function to make a string that looks like the legit one.
 #this is used for the redherring's if the length matches up.
 # $(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
@@ -347,4 +351,3 @@ echo "hound$level:$FLAG_HOUND" >> ../build_scripts/the_flags;
 #we have to edit the .ssh/rc file in the home directory so that it contains this data.
 permission_octal_to_string $correct_permission;
 sed -i "s/permission\=.*/permission\=$permission/" ../home_folders/hound$level/.ssh/rc;
-
