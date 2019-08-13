@@ -25,7 +25,9 @@ seed_random $level;
 continue_random;
 # the old flag.
 WORD_ARRAY=(1 2 3 4 22 23 24);
-chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
+#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
+chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 function sed_it(){

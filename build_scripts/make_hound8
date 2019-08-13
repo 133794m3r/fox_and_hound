@@ -27,13 +27,15 @@ continue_random;
 #FLAG_HOUND=$( echo 'Phineas the Fox' | openssl dgst -sha1 -binary | base64 | tr -d '=');
 
 WORD_ARRAY=(8 9 10 11 12 13 14);
-chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
+#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
+chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 #right now it's just hardcoded. Future versions will actually convert the numeric format into a string.
 function permission_octal_to_string(){
     local num=$1;
-    local replacement_part=$(( $RANDOM & 3 ));
+    local replacement_part=$(( $RANDOM % 4 ));
     local tmp='';
     tmp=${1:$replacement_part:1};
     case $tmp in

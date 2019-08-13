@@ -27,7 +27,9 @@ continue_random;
 #FLAG_HOUND1='k3uLis-bFoOtxl8wBllZsKapwqM';
 
 WORD_ARRAY=(1 2 3 4 5 6 7)
-chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
+#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
+chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 #The prefixes for the files. Since they are having to deal with special characters it is stored

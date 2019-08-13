@@ -8,7 +8,7 @@
 # of sed.
 #
 if [[ $# -lt 1 ]];then
-    level=11;
+    level=12;
 else
     level=$1;
 fi
@@ -17,7 +17,9 @@ selected_pattern='';
 function select_random_regex(){
     selected_pattern='';
     local tmp='';
-    pattern_code=$(( $RANDOM  & 8 ));
+    #local tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`
+    #pattern_code=$(( $tmp_rnd  % 8 ));
+    pattern_code=$(( $RANDOM % 9 ));
     case $pattern_code in
         0)
             selected_pattern=' ';
@@ -44,7 +46,7 @@ function select_random_regex(){
             selected_pattern='^';
         ;;
         8)
-            tmp=$(( ($RANDOM  & 25 ) + 65 ));
+            tmp=$(( ($RANDOM  % 26 ) + 65 ));
             tmp=$( perl -e "printf '%c',$tmp;" );
             selected_pattern="$tmp";
         ;;
@@ -62,7 +64,8 @@ function sed_regex_pattern(){
     echo "$str" | sed -e "s/\([a-z0-9]\)/\1$selected_pattern/g";
 }
 function sed_regex_help(){
-base_str='You need to use a regex pattern that replaces all instances of'
+#base_str='Goal:Use a regex pattern that deletes all of the'
+base_str='';
 extra_str0='';
 base_str_end='. Then you need to make sure sed only shows changed lines. And finally only print the line ';
 local code=$1;
@@ -71,11 +74,11 @@ local line=$3;
     if [[ $code = 0 ]];then
         extra_str0='spaces';
     elif [[ $code = 8 ]];then
-        extra_str0="the Uppercase letter:$pattern"
+        extra_str0="letter:'$pattern's"
     else
-        extra_str0="the special character:'$pattern'"
+        extra_str0="character:'$pattern's"
     fi
-    printf '%s\n' "$base_str $extra_str0$base_str_end$line";
+    printf '%s\n' "$base_str $extra_str0$base_str_end$line.";
 }
 
 #the library of build functions.
@@ -94,27 +97,29 @@ password_dict_len=2007;
 HASH_ENCODING='b32';
 
 WORD_ARRAY=(36 37 1 2 3 4 38);
-chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
+#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
+chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 select_random_regex;
 CORRECT_REGEX_CODE=$pattern_code;
 CORRECT_REGEX_PATTERN=$selected_pattern;
-NUM_LINES=$(( ($RANDOM & 45) + 70 ));
-correct_line=$(( ($RANDOM & 25 ) + 25 ));
+NUM_LINES=$(( ($RANDOM % 45) + 70 ));
+correct_line=$(( ($RANDOM % 25 ) + 25 ));
 tmp=$(( $RANDOM & 1 ));
 if [[ $tmp = 1 ]];then
-    false_line=$(( $correct_line + ($RANDOM  & 20 )));
+    false_line=$(( $correct_line + ($RANDOM  % 21 )));
 else
-    false_line=$(( $correct_line - ($RANDOM & 25) ));
+    false_line=$(( $correct_line - ($RANDOM % 26) ));
 fi
 i=0;
 while [[ $correct_line -eq $false_line ]];do
     case $tmp in
         1)
-            false_line=$(( $correct_line + ($RANDOM & 20 )));
+            false_line=$(( $correct_line + ($RANDOM % 21 )));
         ;;
         0)
-            false_line=$(( $correct_line - ($RANDOM & 25) ));
+            false_line=$(( $correct_line - ($RANDOM % 26) ));
         ;;
     esac
     i=$(( $i + 1 ));
@@ -122,14 +127,14 @@ done
 echo 'i:'$i;
 tmp_file=/tmpdownload/tmp_12;
 printf '' > $tmp_file;
-echo "$selected_pattern";
+echo "'$selected_pattern'";
 echo "cl:$correct_line";
 echo "fl:$false_line";
 echo "high_low:$tmp";
 echo "$FLAG_HOUND";
 capture_str='';
 tmp='';
-NUM_LINE=102;
+#NUM_LINE=102;
 for ((i=0;i<$NUM_LINES;++i)){
     str=$( make_false_flag $password_dict $password_dict_len );
     select_random_regex;
@@ -146,4 +151,31 @@ for ((i=0;i<$NUM_LINES;++i)){
 }
 echo -en "$capture_str" >> $tmp_file;
 correct_line=$(( $correct_line + 1 ));
-sed_regex_help $CORRECT_REGEX_CODE "$CORRECT_REGEX_PATTERN" "$correct_line";
+tmp=0;
+regex_help=`(sed_regex_help $CORRECT_REGEX_CODE "$CORRECT_REGEX_PATTERN" "$correct_line")`;
+echo "$regex_help";
+IFS='|' read -r -a str_array <<< `( word_wrap_string "$regex_help" 43 )`;
+tmp=$(( ${#str_array[0]} + 1 ));
+padding=$(( 43 - ${#str_array[0]} ));
+GOAL_STR0=`(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' )`;
+IFS='|' read -r -a str_array <<< `( word_wrap_string "${regex_help:$tmp}" 41 )`;
+tmp=$(( $tmp + ${#str_array[0]} + 1 ));
+padding=$(( 41 - ${#str_array[0]} ));
+GOAL_STR1=`(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' )`;
+IFS='|' read -r -a str_array <<< `( word_wrap_string "${regex_help:$tmp}" 40 )`;
+tmp=$(( $tmp + ${#str_array[0]} +1 ));
+padding=$(( 40 - ${#str_array[0]} ));
+GOAL_STR2=`(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' )`;
+IFS='|' read -r -a str_array <<< `( word_wrap_string "${regex_help:$tmp}" 40 )`;
+tmp=$(( $tmp + ${#str_array[0]} +1 ));
+padding=$(( 40 - ${#str_array[0]} ));
+GOAL_STR3=`(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' )`;
+echo -e "$GOAL_STR0";
+echo -e "$GOAL_STR1";
+echo -e "$GOAL_STR2";
+echo -e "$GOAL_STR3";
+
+sed -i 's/GOAL_STR0\=.*/GOAL_STR0\=\"'"$GOAL_STR0"'\"/' ../home_folders/hound$level/.ssh/rc;
+sed -i 's/GOAL_STR1\=.*/GOAL_STR1\=\"'"$GOAL_STR1"'\"/' ../home_folders/hound$level/.ssh/rc;
+sed -i 's/GOAL_STR2\=.*/GOAL_STR2\=\"'"$GOAL_STR2"'\"/' ../home_folders/hound$level/.ssh/rc;
+sed -i 's/GOAL_STR3\=.*/GOAL_STR3\=\"'"$GOAL_STR3"'\"/' ../home_folders/hound$level/.ssh/rc;

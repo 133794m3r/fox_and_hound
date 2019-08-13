@@ -34,7 +34,9 @@ HASH_ENCODING='b32';
 continue_random;
 FLAG_STRING='iS';
 WORD_ARRAY=(22 23 24 25 26 27 28);
-chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
+#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
+chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 FALSE_FLAG=$( make_false_flag $password_dict $password_dict_len );
 read -r -a tmp <<< $( select_regex );
@@ -72,16 +74,16 @@ filename='';
 filename_arr=('ALL YOUR BASE ARE BELONG TO.us' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT'S A SECRET TO EVERYBODY", 'I AM ERROR' 'I AM BAGU');
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
-filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
+filename=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
 
-NUM_LINES=$(( ($RANDOM & 40) + 62 ));
-correct_line=$(( ($NUM_LINES & 27 ) + 27 ));
-false_line=$(( $correct_line + ($RANDOM  & 7 )));
-false_line2=$(( $correct_line - ($RANDOM & 22) ));
+NUM_LINES=$(( ($RANDOM % 41) + 62 ));
+correct_line=$(( ($NUM_LINES % 28 ) + 27 ));
+false_line=$(( $correct_line + ($RANDOM  % 8 )));
+false_line2=$(( $correct_line - ($RANDOM % 23) ));
 while [[ $correct_line -eq $false_line ]];do
-    correct_line=$(( ($RANDOM & 27 ) + 27 ));
-    false_line=$(( $correct_line + ($RANDOM  & 7 )));
-    false_line2=$(( $correct_line - ($RANDOM & 22) ));
+    correct_line=$(( ($RANDOM % 28 ) + 27 ));
+    false_line=$(( $correct_line + ($RANDOM  % 8 )));
+    false_line2=$(( $correct_line - ($RANDOM % 23) ));
 done
 tmp_file='tmp';
 echo -n '' > $tmp_file;

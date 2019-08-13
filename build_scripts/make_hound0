@@ -31,8 +31,9 @@ continue_random;
 # the old flag.
 #FLAG_HOUND='-WeE1KX.EkmECsU-xKSki7cSQb8';
 WORD_ARRAY=(33 34 35 36 37 38 49)
-chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
-FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
+#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
+chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 # This is an array of prefixes for the file.
 file_prefix=('INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET');
 # We then get the length so that it's no hardcoded.
