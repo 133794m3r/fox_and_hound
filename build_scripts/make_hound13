@@ -103,7 +103,7 @@ for ((i=0; i<FILE_NUM_LINES;i++)); do
             false_flag_line=$(( ($RANDOM % 5) + $CORRECT_LINE_NUM ));
         else
             #else we go back to the standard modus operandi.
-            false_flag_line=$(( $false_flag_line + ($RANDOM  % ($FILE_NUM_LINE/10)) ));
+            false_flag_line=$(( $false_flag_line + ($RANDOM  % ($FILE_NUM_LINES/10)) ));
             #set j to one so that we know we've already hit here.
             j=1;
         fi
