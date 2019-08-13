@@ -19,7 +19,9 @@ continue_random;
 # the old flag.
 #FLAG_HOUND='X3kIeNDOe41RPMD0H7Oxt88fmlg';
 WORD_ARRAY=(8 39 40 41 42 43 44);
-chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
+#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
+chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 #The array with the filenames in it.

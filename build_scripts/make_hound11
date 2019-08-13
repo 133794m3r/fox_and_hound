@@ -41,18 +41,20 @@ HASH_ENCODING='b32';
 #continue the RNG;
 continue_random;
 WORD_ARRAY=(29 30 31 32 33 34 35);
-chosen_word=${WORD_ARRAY[$(( $RANDOM & 6 ))]};
+tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
+#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
+chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 
-NUM_LINES=$(( ($RANDOM & 40) + 62 ));
-correct_line=$(( ($NUM_LINES & 27 ) + 27 ));
-false_line=$(( $correct_line + ($RANDOM  & 7 )));
-false_line2=$(( $correct_line - ($RANDOM & 22) ));
+NUM_LINES=$(( ($RANDOM % 50) + 65 ));
+correct_line=$(( ($NUM_LINES % 27 ) + 27 ));
+false_line=$(( $correct_line + ($RANDOM  % 10 )));
+false_line2=$(( $correct_line - ($RANDOM % 25) ));
 while [[ $correct_line -eq $false_line ]];do
-    correct_line=$(( ($RANDOM & 27 ) + 27 ));
-    false_line=$(( $correct_line + ($RANDOM  & 7 )));
-    false_line2=$(( $correct_line - ($RANDOM & 22) ));
+    correct_line=$(( ($RANDOM % 27 ) + 27 ));
+    false_line=$(( $correct_line + ($RANDOM  % 10 )));
+    false_line2=$(( $correct_line - ($RANDOM % 25) ));
 done
 #the prefix string. The false flag there'll just be one that's the correct length but also has a ':' or a ',' in it.
 #the string will be padded to a certain length and that's what they're using awk for.
