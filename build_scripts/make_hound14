@@ -84,7 +84,6 @@ for ((i=0;i<total_lines;i++)); do
     #make_false_flag $dictionary $dictionary_len;
     #echo 'str '$str' end';
     FILE_STRING_CONTENTS="$FILE_STRING_CONTENTS$str\n";
-
 done
 echo $FLAG_HOUND;
 echo -en "$FILE_STRING_CONTENTS" > ./"$filename_1";

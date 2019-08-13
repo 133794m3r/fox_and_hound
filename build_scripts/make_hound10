@@ -128,3 +128,5 @@ GOAL_STR1=`(printf "%s%${padding}s" "${str_array[1]}" '')`;
 echo "$GOAL_STR1";
 sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR0'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/GOAL_STR1\=.*/GOAL_STR1\='$GOAL_STR1'/" ../home_folders/hound$level/.ssh/rc;
+cp $tmpfile ../hounds$level/"$filename"
+cp programs/regexer ./hounds$level/regexer;
