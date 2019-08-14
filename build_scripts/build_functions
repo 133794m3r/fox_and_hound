@@ -298,7 +298,7 @@ function encrypt_str(){
     local byte='';
     local chr='';
     local b32_dict='ybndrfg8ejkmcpqxot1uwisza345h769';
-    local b64_dict='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    local b64_dict='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+_';
     local index=0;
     #echo 'ss '$sequence_start;
     #echo 'seq'"${sequence[*]}";

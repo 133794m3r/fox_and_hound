@@ -89,18 +89,23 @@ cipher_str=$(cipher_string "code_$rot_encoding" $encrypted_flag );
 printf "fh: $FLAG_HOUND\n";
 printf "cs: $cipher_str \n";
 printf "ef: $encrypted_flag \n";
-printf 'cl: '$(( $correct_spaces + 33 ))'\n';
+printf 'cl: '$(( $correct_spaces + 64 ))'\n';
 echo "correct_line:$correct_line";
 echo "false_line:$false_line";
 echo "false_line2:$false_line2";
 #HASH_ENCODING='b64';
+rot_encoding=$(( $rot_encoding + 127 ));
 echo 'The encoding string:'`( printf '%02x%02x%02x' $sequence_start 255 $rot_encoding | base64 )`;
 echo 'Hex Version:'`(printf '%02x%02x%02x' $sequence_start 255 $rot_encoding )`;
 rnd=0;
 declare -i rnd;
-#NUM_LINES=1;
 append_str='';
-append_str_array=('*' '-' '.' '$' '#');
+append_str_array=('*' '-' '.' '$' '#' '!');
+correct_append_str=${append_str_array[$(( $RANDOM & 5 ))]};
+echo "Append str:$correct_append_str";
+echo 'awk command:';
+echo "'\$0 ~ /[\\"$correct_append_str"]/ && length(\$0) == "$(( $correct_spaces + 64 ))" {gsub(/[^A-Za-z0-9\+\_]/,\"\"); print }'"  /tmpdownload/tmp$level
+
 printf '' > /tmpdownload/tmp$level;
 
 for((i=0;i<NUM_LINES;++i)){
@@ -112,14 +117,20 @@ for((i=0;i<NUM_LINES;++i)){
     if [[ $num_spaces -eq $correct_spaces ]];then
         num_spaces=$(( $num_spaces+1 ));
     fi
+    while [[ "$append_str" == "$correct_append_str" ]]; do
+        append_str=${append_str_array[$(( $RANDOM & 4 ))]};
+    done
     if [[ $i = $correct_line ]];then
-        printf "%s%${correct_spaces}s!\n" $cipher_str '' >> "/tmpdownload/tmp$level";
-        printf "%s%${correct_spaces}s!\n" $cipher_str '';
+        printf "%s%${correct_spaces}s\n" $cipher_str '' | sed -e 's/\([A-Za-z0-9+_)]\)/\1'"$correct_append_str"'/g' >> "/tmpdownload/tmp$level";
+        printf "%s%${correct_spaces}s\n" $cipher_str '' | sed -e 's/\([A-Za-z0-9+_]\)/\1'"$correct_append_str"'/g';
     elif [[ $i = $false_line ]];then
-        printf "%s%${num_spaces}s!\n" "$str" '' >> "/tmpdownload/tmp$level";
+        printf "%s%${num_spaces}s\n" "$str" '' | sed -e 's/\([A-Za-z0-9+_]\)/\1'"$correct_append_str"'/g' >> "/tmpdownload/tmp$level";
     elif [[ $i = $false_line2 ]]; then
-        printf "%s%${correct_spaces}s$append_str\n" "$str"  '' >> "/tmpdownload/tmp$level";
+        printf "%s%${correct_spaces}s\n" "$str"  '' | sed -e 's/\([A-Za-z0-9+_]\)/\1'"$append_str"'/g' >> "/tmpdownload/tmp$level";
     else
-        printf "%s%${num_spaces}s$append_str\n" "$str" '' >> "/tmpdownload/tmp$level";
+        printf "%s%${num_spaces}s\n" "$str" '' |sed -e 's/\([A-Za-z0-9+_]\)/\1'"$append_str"'/g' >> "/tmpdownload/tmp$level";
     fi
 }
+program_name_array=('run_this_program' 'run_me' 'here_be_treasure' 'run_it');
+program_name=${program_name_array[$(($RANDOM % 4 ))]};
+
