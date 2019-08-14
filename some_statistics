@@ -1,18 +1,32 @@
 Current version.
 The biggest thing is that this _does not_ include any comments that I've included in my
 code. So this is actual code that's being written.
-Total Physical Source Lines of Code (SLOC)                = 3,299
-Development Effort Estimate, Person-Years (Person-Months) = 0.7 (8.40)
+August 12th data. sloccount is using some kinda other counting system.
+Totals grouped by language (dominant language first):
+sh:            2770 (73.28%)
+ansic:         1010 (26.72%)
+Total Physical Source Lines of Code (SLOC)                = 3,780
+Development Effort Estimate, Person-Years (Person-Months) = 0.81 (9.70)
  (Basic COCOMO model, Person-Months = 2.4 * (KSLOC**1.05))
-Schedule Estimate, Years (Months)                         = 0.47 (5.62)
+Schedule Estimate, Years (Months)                         = 0.49 (5.93)
  (Basic COCOMO model, Months = 2.5 * (person-months**0.38))
-Estimated Average Number of Developers (Effort/Schedule)  = 1.6
-Total Estimated Cost to Develop                           = $ 94,530
+Estimated Average Number of Developers (Effort/Schedule)  = 1.64
+Total Estimated Cost to Develop                           = $ 109,146
+ (average salary = $56,286/year, overhead = 2.40).
+
+1 person efffort in cocomo=152hrs/month. month 1=52hrs. Currently trending towards 20hrs
+per week. Still way below what they were expecting.
 
 
-COCOMO II
-Effort = 20.1 Person-months
-Schedule = 9.9 Months
-Cost = $116,706
+prettier chart.
+--------------------------------------------------------------------------------
+Language                      files          blank        comment           code
+--------------------------------------------------------------------------------
+Bourne Again Shell               49            309           1435           2560
+C                                14             59            320            998
+Bourne Shell                     11             61            225            269
+C/C++ Header                      1              2             31             12
+--------------------------------------------------------------------------------
+SUM:                             75            431           2011           3839
+--------------------------------------------------------------------------------
 
-Total time is ~13-20hrs per week. 1mo=52hrs. Schedule is now at 20.1mo and sitting at 1.5mo of personal-effort.

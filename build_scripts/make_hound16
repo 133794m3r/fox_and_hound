@@ -12,9 +12,114 @@
 #the program will check the argument passed to it and then process it
 # and turn it into a string(using some function that won't have issues with it) by going through the string character by character transforming it someway.
 
+#String will be of this format.
+# It will be a base64 encoded, hex-encoded version of the string.
+#start of sequence:operation         :rot-n number. N is 127-number_given.
+#4-10              :255=xor: 126+{1..25}
+#Example would be  04ff7e | base64 = MDRmZjdl
+#aka start sequence=4. Operator is |. rot-n encoding is 1.
+#then the program will utilize this information to get the data back.
+# the characters will be xored from the base32 alphabet with the alphabetical character being
+# converted to a code after xoring it. The value they are xored with will be 5 characters rotated from fibonacci
+#sequence. This data will then have to be un-rotn encoded and after this they'll have the flag. The goal is to make it
+# hard as hell to  get the flag w/o fixing the syntax errors.
+if [[ $# -lt 1 ]];then
+    level=16;
+else
+    level=$1;
+fi
+#the library of build functions.
+source build_functions;
+#the dictionary file that we're using to get our words from.
+#this will be set to a global variable DICTIONARY from the main script once the whole
+#build system is done.
+password_dict='../dict/passwords_dict';
+#get the length of the dictionary file.
+#in the future this'll be calculated once from the main build script and then the string
+#DICTIONARY_LEN will be set to this value.
+password_dict_len=2007;
+#set the encoding. In future versions this'll be hardcoded from the main script.
+#this is to make sure tha all hashes are b32 encoded.
+HASH_ENCODING='b32';
 
 WORD_ARRAY=(15 16 17 18 19 20 21);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+
+filename_arr=('SECRET' "IT'S A SECRET TO EVERYBODY", 'I AM ERROR' 'I AM BAGU' 'HERE_BE_DRAGONS');
+#we get the length of the files.
+filename_arr_len=${#filename_arr[*]};
+filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
+
+for (( i=1; i<$filename_arr_len; i++ ));do
+    tmp="$tmp|${filename_arr[$i]}";
+done
+ls ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
+
+max_spaces=10;
+correct_spaces=$(( ($RANDOM & $max_spaces) +1 ));
+echo "correct_spaces:"$correct_spaces;
+num_spaces=0;
+extra_space=0;
+NUM_LINES=$(( ($RANDOM % 25) + 40 ));
+correct_line=$(( ($RANDOM % 20) + 15  ));
+false_line=$(( $correct_line + ($RANDOM  % 5 )));
+false_line2=$(( $correct_line - ($RANDOM % 13) ));
+
+while [[ $correct_line -eq $false_line ]];do
+    false_line=$(( $correct_line + ($RANDOM  % 5 )));
+    false_line2=$(( $correct_line - ($RANDOM % 13) ));
+done
+
+file_location="../hounds/hound$level/$filename"
+
+rot_encoding=$(( ($RANDOM & 24) +1 ));
+sequence_start=$(( ($RANDOM % 6)  ));
+echo 'ss: '$sequence_start;
+echo 're: '$rot_encoding;
+#cipher_string "code_$rot_encoding" $FLAG_HOUND
+#encrypted_flag=`(encrypt_str $FLAG_HOUND $sequence_start)`;
+#cipher_str=`(cipher_string "code_$rot_encoding" $encrypted_flag )`;
+#echo $()
+encrypted_flag=$( encrypt_str $FLAG_HOUND $sequence_start );
+cipher_str=$(cipher_string "code_$rot_encoding" $encrypted_flag );
+
+printf "fh: $FLAG_HOUND\n";
+printf "cs: $cipher_str \n";
+printf "ef: $encrypted_flag \n";
+printf 'cl: '$(( $correct_spaces + 33 ))'\n';
+echo "correct_line:$correct_line";
+echo "false_line:$false_line";
+echo "false_line2:$false_line2";
+#HASH_ENCODING='b64';
+echo 'The encoding string:'`( printf '%02x%02x%02x' $sequence_start 255 $rot_encoding | base64 )`;
+echo 'Hex Version:'`(printf '%02x%02x%02x' $sequence_start 255 $rot_encoding )`;
+rnd=0;
+declare -i rnd;
+#NUM_LINES=1;
+append_str='';
+append_str_array=('*' '-' '.' '$' '#');
+printf '' > /tmpdownload/tmp$level;
+
+for((i=0;i<NUM_LINES;++i)){
+    str=$( make_false_flag $password_dict $password_dict_len | tr -d '=');
+    rnd=$(( $RANDOM % 6 ));
+    str=$( encrypt_str $str $rnd );
+    append_str=${append_str_array[$(( $RANDOM & 4 ))]};
+    num_spaces=$(( ($RANDOM & $max_spaces) +1 ));
+    if [[ $num_spaces -eq $correct_spaces ]];then
+        num_spaces=$(( $num_spaces+1 ));
+    fi
+    if [[ $i = $correct_line ]];then
+        printf "%s%${correct_spaces}s!\n" $cipher_str '' >> "/tmpdownload/tmp$level";
+        printf "%s%${correct_spaces}s!\n" $cipher_str '';
+    elif [[ $i = $false_line ]];then
+        printf "%s%${num_spaces}s!\n" "$str" '' >> "/tmpdownload/tmp$level";
+    elif [[ $i = $false_line2 ]]; then
+        printf "%s%${correct_spaces}s$append_str\n" "$str"  '' >> "/tmpdownload/tmp$level";
+    else
+        printf "%s%${num_spaces}s$append_str\n" "$str" '' >> "/tmpdownload/tmp$level";
+    fi
+}
