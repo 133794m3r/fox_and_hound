@@ -164,7 +164,7 @@ regex_help=`(sed_regex_help $CORRECT_REGEX_CODE "$CORRECT_REGEX_PATTERN" "$corre
 echo "$regex_help";
 IFS='|' read -r -a str_array <<< `( word_wrap_string "$regex_help" 43 )`;
 tmp=$(( ${#str_array[0]} + 1 ));
-padding=$(( 43 - ${#str_array[0]} ));
+padding=$(( 42 - ${#str_array[0]} ));
 GOAL_STR0=`(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' )`;
 IFS='|' read -r -a str_array <<< `( word_wrap_string "${regex_help:$tmp}" 41 )`;
 tmp=$(( $tmp + ${#str_array[0]} + 1 ));

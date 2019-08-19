@@ -123,7 +123,8 @@ done
 #The correct word that we're going to be grepping to.
 echo $CORRECT_WORD;
 cd ../../build_scripts;
-
+padding=$(( 41 - ${#CORRECT_WORD} ));
+CORRECT_WORD=$(printf "%s%${padding}s" $CORRECT_WORD ' ' );
 #we edit the file with the new and correct word. It's actually possible to do this entirely through sed, but strings is there incase they want to do it that way.
 sed -i "s/string\=.*/string\='$CORRECT_WORD'/" ../home_folders/hound$level/.ssh/rc;
 #we put it into the flags file so that we can use it to the file that we're going to use to make sure that everything works.
