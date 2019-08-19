@@ -28,14 +28,12 @@ if [[ $# -lt 1 ]];then
 else
     level=$1;
 fi
-
-function make_mistakes(){
-    mistake_str='';
-    chosen_mistake=$(( $RANDOM %  8 ));
-    chosen_mistakes=$(( $RANDOM % 3 ));
-    case $chosen_mistake in
+function choose_mistake(){
+        local mistake_str='';
+        local chosen_mistake=$1;
+        case $chosen_mistake in
         0)
-            mistake_str='if ($0 ~ /;;/ ){ gsub(/;;/,";",$0) print $0}';
+            mistake_str='if ($0 ~ /;;/ ){ gsub(/;;/,";",$0); print $0}';
         ;;
         1)
             mistake_str='if ($0 ~ /main\(\)/ ){ gsub(/\(\)/,"(void)",$0); print $0 }';
@@ -53,11 +51,36 @@ function make_mistakes(){
             mistake_str='if ($0 ~ /\(\(\ i\=0;\ i<10;\ i\+\+\ \)\)/ ){ gsub(/\(\(\ i\=0;\ i<10;\ i\+\+\ \)\)/,"( i=0; i<10; i++ )",$0); print $0 }'
         ;;
         6)
-            mistkae_str='if ($0 ~ /\$start\ \]\];then/){ gsub(/\$start\ \]\];then/,"$start ]];",$0); print $0 }';
+            mistake_str='if ($0 ~ /\$start\ \]\];then/){ gsub(/\$start\ \]\];then/,"$start ]];",$0); print $0 }';
         ;;
         7)
         ;;
     esac
+    printf "$mistake_str";
+}
+function make_mistakes(){
+    local mistake_str='';
+    local number_mistakes=$(( ( $RANDOM % 3 ) + 1 ));
+    local chosen_mistake=$(( $RANDOM %  7 ));
+    local i=0;
+    local j=0;
+    local chosen_array=();
+    chosen_array[0]=$chosen_mistake;
+    local start=$number_mistakes;
+    mistake_str=$( choose_mistake $chosen_mistake);
+    if [[ $number_mistakes -ge 2 ]];then
+        while [[ $start -ge 1 ]];do
+            chosen_mistake=$(( $RANDOM % 7 ));
+            while [[ ${chosen_array[@]} =~ $chosen_mistake ]]; do
+                chosen_mistake=$(( $RANDOM % 7 ));
+            done
+            chosen_array[$j]=$chosen_mistake;
+            mistake_str+=' else '$( choose_mistake $chosen_mistake );
+            let start--;
+        done
+    fi
+
+    printf "$mistake_str";
 }
 
 
@@ -124,13 +147,15 @@ cipher_str=$(cipher_string "code_$rot_encoding" $encrypted_flag );
 printf "fh: $FLAG_HOUND\n";
 printf "cs: $cipher_str \n";
 printf "ef: $encrypted_flag \n";
-printf 'cl: '$(( $correct_spaces + 64 ))'\n';
+correct_length=$(( $correct_spaces + 64 ));
+printf "cl: $correct_length \n";
 echo "correct_line:$correct_line";
 echo "false_line:$false_line";
 echo "false_line2:$false_line2";
 #HASH_ENCODING='b64';
 rot_encoding=$(( $rot_encoding + 127 ));
-echo 'The encoding string:'`( printf '%02x%02x%02x' $sequence_start 255 $rot_encoding | base64 )`;
+encoded_string=`( printf '%02x%02x%02x' $sequence_start 255 $rot_encoding | base64 )`;
+echo "The encoding string:$encoded_string";
 echo 'Hex Version:'`(printf '%02x%02x%02x' $sequence_start 255 $rot_encoding )`;
 rnd=0;
 declare -i rnd;
@@ -142,7 +167,8 @@ echo 'awk command:';
 echo "'\$0 ~ /[\\"$correct_append_str"]/ && length(\$0) == "$(( $correct_spaces + 64 ))" {gsub(/[^A-Za-z0-9\+\_]/,\"\"); print }'"  /tmpdownload/tmp$level
 tmp_file="tmp$level";
 printf '' > $tmp_file;
-
+GOAL_STR="$encoded_string $correct_length $correct_append_str <The_other_file_in_here>";
+echo "$GOAL_STR";
 for((i=0;i<NUM_LINES;++i)){
     str=$( make_false_flag $password_dict $password_dict_len | tr -d '=');
     rnd=$(( $RANDOM % 6 ));
@@ -171,12 +197,22 @@ for((i=0;i<NUM_LINES;++i)){
     fi
 }
 
-awk " $awk_part1
-
-
-"
-cp -v programs/default_program.sh "../hounds/hound$level/$program_name.sh";
+awk_str="$( make_mistakes )";
+tmp='';
+echo "$awk_str";
+#if [[ $number_mistakes == 2 ]];then
+#
+#elif [[ $number_mistakes == 3 ]];then
+#
+#fi
+padding=$(( 42 - ${#GOAL_STR} ));
+echo $padding;
+GOAL_STR=$( printf "%s%${padding}s" "$GOAL_STR" '');
+sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR'/" ../home_folders/hound$level/.ssh/rc;
+awk '{ '"$awk_str"' else { print $0 } }' programs/default_program.sh > programs/messed_up_program.sh;
+cp -v programs/messed_up_program.sh "../hounds/hound$level/$program_name.sh";
 cp -v $tmp_file "$file_location";
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;
 rm -v $tmp_file;
+
