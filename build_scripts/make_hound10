@@ -71,7 +71,7 @@ read -r -a tmp <<< $( select_regex );
 done
 filename='';
 #The prefixes for the files
-filename_arr=('ALL YOUR BASE ARE BELONG TO.us' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT'S A SECRET TO EVERYBODY", 'I AM ERROR' 'I AM BAGU');
+filename_arr=('ALL YOUR BASE ARE BELONG TO.us' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT IS A SECRET TO EVERYBODY" 'I AM ERROR' 'I AM BAGU');
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
 filename=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
@@ -104,21 +104,27 @@ echo 'fn:'$filename;
 
 for((i=0;i<NUM_LINES;++i)){
     str=$( make_false_flag $password_dict $password_dict_len );
-    if [[ $i = $correct_line ]];then
+    if [[ $i -eq $correct_line ]];then
         tmp_str=$(printf " $FLAG_HOUND \n" | sed -e "$regex_str");
-        printf " $tmp_str" >> tmp_file;
+        printf "$tmp_str\n" >> $tmp_file;
+        echo 'asdf';
         echo "$tmp_str";
-    elif [[ $i = $false_line ]];then
-        printf " $str \n" | sed -e "$regex_str" >> $tmp_file;
-        #true;
-    elif [[ $i = $false_line2 ]];then
+    elif [[ $i -eq $false_line2 ]];then
         printf " $str \n"| sed -e "$false_regex_str0" >> $tmp_file;
     else
-        printf " $str \n" ''| sed -e "$false_regex_str1" >> $tmp_file;
-        #true;
+        printf " $str \n"| sed -e "$false_regex_str1" >> $tmp_file;
     fi
     read -r -a tmp <<< $( select_regex );
     false_regex_str1=${tmp[1]};
+    regex_case=${tmp[0]};
+    while [[ "$regex_case0" = "$regex_case" && $i -lt 255 ]];do
+    #tmp=$( select_regex );
+    #tmp=("$tmp");
+    read -r -a tmp <<< $( select_regex );
+        false_regex_str1=${tmp[1]};
+        regex_case=${tmp[0]};
+        i=$(( $i+1 ));
+    done
 }
 regex_help=`( select_regex_help_str $regex_case0)`;
 IFS='|' read -r -a str_array <<< `( word_wrap_string "$regex_help" 41 )`;
@@ -131,4 +137,8 @@ echo "$GOAL_STR1";
 sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR0'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/GOAL_STR1\=.*/GOAL_STR1\='$GOAL_STR1'/" ../home_folders/hound$level/.ssh/rc;
 cp -v $tmp_file "$file_location";
-#cp -v programs/regexer ../hounds$level/regexer;
+cp -v programs/regexer "../hounds/hound$level/regexer";
+rm $tmp_file;
+let level++;
+pwd;
+echo "hound$level:$FLAG_HOUND" >> the_flags;

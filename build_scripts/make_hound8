@@ -352,4 +352,5 @@ echo "hound$level:$FLAG_HOUND" >> ../build_scripts/the_flags;
 #this is done at the end because permissions are changed to the string at the end.
 #we have to edit the .ssh/rc file in the home directory so that it contains this data.
 permission_octal_to_string $correct_permission;
+echo "$FLAG_HOUND";
 sed -i "s/permission\=.*/permission\=$permission/" ../home_folders/hound$level/.ssh/rc;

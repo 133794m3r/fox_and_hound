@@ -50,7 +50,7 @@ int base64_encode(unsigned char *dest, unsigned char *src, int srclen){
 * easily edited with sed in a future version. Also the correct_pin string will
 * similarly be changed too once I make sure that it works to be <correct_pin>
 * so that I can sed it away more easily.
-* 
+*
 *
 */
 int main(int argc, char **argv){
@@ -60,18 +60,18 @@ int main(int argc, char **argv){
     //char correct_pin_string[4]="MTEx";
     char *correct_pin_string=malloc(4);
     char *flag_string="The flag is ";
-    char *flag=malloc(28);
-    char *incorrect_flag1=malloc(28);
-    char *incorrect_flag2=malloc(28);
-    
-    
+    char *flag=malloc(32);
+    char *incorrect_flag1=malloc(32);
+    char *incorrect_flag2=malloc(32);
+
+
     flag="<the_flag_placeholder>";
     incorrect_flag1="<incorrect_flag_placeholder1>";
     incorrect_flag2="<incorrect_flag_placeholder2>";
     /*
     flag="-vGvr4t.3xrfx-M56kZg5f-HyUw";
     incorrect_flag1="-vGvr4t.3xrfx-M56kZg5f-HyUy";
-    incorrect_flag2="-vGvr4t.3xrfx-M56kZg5f-HyUz";        
+    incorrect_flag2="-vGvr4t.3xrfx-M56kZg5f-HyUz";
     */
     if(argc > 1){
         printf("This program doesn't take arguments.\n");
@@ -85,7 +85,7 @@ int main(int argc, char **argv){
     struct timeval time_to_wait;
     time_to_wait.tv_sec = 0;
     time_to_wait.tv_usec = 75000;
-    char flag_msg[41];
+    char flag_msg[45];
     sprintf(flag_msg,"%s%s",flag_string,flag);
     char message[8];
     FD_SET(STDIN_FILENO,&read_file_descriptors);

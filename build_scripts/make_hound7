@@ -8,6 +8,8 @@
 # via the command mode.
 #It has a debug mode included right now.
 #it'll be called like so: seed_random <SEED_VALUE> So that random is deterministic.
+HASH_ENCODING='b32';
+
 if [[ $# -lt 1 ]];then
     level=7;
 else
@@ -144,7 +146,7 @@ range=$(( $lines_max - $second_string_line_num));
 third_string_line_num=$(( ($RANDOM % $range) + $second_string_line_num));
 line='';
 #the instruction line number.
-instruction_line=$(( $RANDOM % $vim_combined_lines ));
+instruction_line=$(( ($RANDOM % ($vim_combined_lines-26)) + 26 ));
 #while loop to make sure that instruction line isn't on the same line as any of the
 #other files. If other ones are right together that's "ok" but not great.
 while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
@@ -278,7 +280,7 @@ while read line; do
         #echo this line's true number.
         echo 'fi:'$i;
         #This increments i as we just added a line.
-        let "i++";
+        let i++;
 
 #Same as before but with the SEARCH_STRING1.
     elif [[ $i -eq $second_string_line_num ]]; then
@@ -311,7 +313,7 @@ while read line; do
 
     fi
 #increments i as we added a line after a second.
-    let "i++";
+    let i++;
 
 #make sure echo the line to the file.
     echo "$line" >> $OUTPUT_FILE;
@@ -326,7 +328,7 @@ cat '../.header' $OUTPUT_FILE > "$OUTPUT_FILE-1";
 mv "$OUTPUT_FILE-1" 'vim_welcome_msg'
 #this sets the number for the flags and is easy to replace via sed later on.
 #also it pads it as per is normal.
-hound_num=$( printf '%s%4s' 9 '');
+hound_num=$( printf '%s%4s' $level '');
 
 #this makes sure that it's got the correct number of spaces to make it all
 #aligned the right way.
@@ -375,8 +377,10 @@ c_program_src_edited="givemethestring-$prog_suffix.c";
 c_program_srcdir="../c_programs"
 
 cp ../c_programs/"$c_program_src" ../c_programs/"$c_program_src_edited";
+gcc -Wall ../c_programs/"$c_program_src_edited" -o ../c_programs/givemethestring;
 #We had to sed the flags to the file itself including false flags.
 sed_it '<correct_string_placeholder>' "$CORRECT_STRING" "$c_program_src_edited";
 sed_it '<flag_placeholder_string>' "$FLAG_HOUND" "$c_program_src_edited";
 let level++;
+echo "$FLAG_HOUND";
 echo "hound$level:$FLAG_HOUND" >> the_flags;

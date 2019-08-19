@@ -145,13 +145,13 @@ function select_regex(){
     # the options for the regex. It sets the regex pattern for the string.
     # 0=all lowercase characters. 1=starts with uppercase. 2=starts with number. 3=starts with special character.
     # 4=ends with a number. 5=ends with a special character. 6=ends with a capital character. 7=ends with a lowercase letter.
-    regex_case=$(( $RANDOM % 8 ));
+    regex_case=$(( ($RANDOM % 7) + 1 ));
     local regex_str='';
     local tmp=0;
     case $regex_case in
-        0)
-            regex_str='s/\(.*\)/\L\1/';
-        ;;
+#        0)
+#           regex_str='s/\(.*\)/\L\1/';
+#        ;;
         1)
             tmp=$(( ($RANDOM  % 26 ) + 65 ));
             tmp=$( perl -e "printf '%c',$tmp;" );

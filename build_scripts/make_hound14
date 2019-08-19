@@ -73,7 +73,7 @@ tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
 #being found as rm only sees existing files because we only pass those that have been grepped.
 cd ../hounds;
 pwd;
-rm $( ls -a hound$level | egrep "($tmp)" | xargs -i{} printf "hound$level/{} " );
+rm -v $( ls -a hound$level | egrep "($tmp)" | xargs -i{} printf "hound$level/{} " );
 
 #the lines that each file's going to contain.
 total_lines=40;
@@ -96,3 +96,6 @@ line_to_delete=$(( ($RANDOM % $total_lines) + 1 ));
 sed "$line_to_delete i $FLAG_HOUND" ./"$filename_1" > ./"$filename_2";
 # "$FLAG_HOUND" >>
 diff ./"$filename_1" ./"$filename_2"
+cd ../../build_scripts;
+let level++;
+echo "hound$level:$FLAG_HOUND" >> the_flags;

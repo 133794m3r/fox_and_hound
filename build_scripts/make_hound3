@@ -10,6 +10,7 @@ if [[ $# -lt 1 ]];then
 else
     level=$1;
 fi
+HASH_ENCODING='b32';
 
 #this reads in the functions that are in the library.
 source build_functions;

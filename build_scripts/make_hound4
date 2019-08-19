@@ -138,6 +138,7 @@ rm -rv bunch_dirs;
 let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
+printf "how to find.\n file dirname/$filename\* | grep 'ASCII' | cut -f1 -d':' | xargs -i{} cat {}"
 echo "correct_filename:$correct_filename";
 echo "$FLAG_HOUND";
 echo "hound$level:$FLAG_HOUND" >> the_flags;

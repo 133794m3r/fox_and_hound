@@ -16,6 +16,7 @@ if [[ $# -lt 1 ]];then
 else
     level=$1;
 fi
+HASH_ENCODING='b32';
 
 #this reads in the functions that are in the library.
 source build_functions;
@@ -34,6 +35,8 @@ WORD_ARRAY=(33 34 35 36 37 38 49)
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+
 # This is an array of prefixes for the file.
 file_prefix=('INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET');
 # We then get the length so that it's no hardcoded.
