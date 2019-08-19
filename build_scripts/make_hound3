@@ -78,6 +78,8 @@ cd ../../../build_scripts
 #cd ../../build_scripts;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
 let level++;
+echo "$dirname/$filename";
+echo "$FLAG_HOUND";
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
 echo "hound$level:$FLAG_HOUND" >> the_flags;

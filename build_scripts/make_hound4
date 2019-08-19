@@ -95,6 +95,7 @@ for (( i=0; i<=$MAX; i++));do
     if [ $i -eq $correct_flag ]; then
         #echo $FLAG_HOUND4 > '-file'"$name";
         #the flag is outputted to the file. The name is something like '-.texts'
+        correct_filename="$filename$name";
         printf "The flag is $FLAG_HOUND\r\n" > "$filename$name"
     elif [ $i = $false_flag ]; then
         echo -e "The fl\u0430g is $FLAG_FALSE" > "$filename$name";
@@ -137,4 +138,6 @@ rm -rv bunch_dirs;
 let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
+echo "correct_filename:$correct_filename";
+echo "$FLAG_HOUND";
 echo "hound$level:$FLAG_HOUND" >> the_flags;

@@ -52,7 +52,7 @@ i=0;
 tmp=$( echo ${file_suffix[*]} | tr ' ' '|' );
 # we ls the contents of the directory, then we grep via regex the output for a list
 # of the sufffexes. Then we take that output and rm those files matching it.
-rm $( ls | egrep "($tmp)");
+rm -v $( ls | egrep "($tmp)");
 # the filename is in teh form of RANDOM_FILE_PREFIX.RANDOM_FILE_SUFFIX
 # it selects a random element from the array that is from 0-(ARRAY_LEN-1). It is inside of a subshell which is then
 # expanded into a value representing that element of the array.
@@ -68,4 +68,6 @@ cd ../../build_scripts
 let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
+echo "$file_name";
+echo "$FLAG_HOUND";
 echo "hound$level:$FLAG_HOUND" >> the_flags;

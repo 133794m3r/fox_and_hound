@@ -48,6 +48,8 @@ file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
 
 
 echo "The flag is $FLAG_HOUND" > ./$file_name;
+echo "$file_name";
+echo "$FLAG_HOUND";
 #chown 1002 ./"$file_name";
 #then we go back to the build scripts directory so that we can output to it our file that'll
 #hold the flag and the username for the next user.

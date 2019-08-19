@@ -63,4 +63,6 @@ cd ../../build_scripts
 let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
+echo "$FLAG_HOUND";
+echo "$file_name";
 echo "hound$level:$FLAG_HOUND" >> the_flags;
