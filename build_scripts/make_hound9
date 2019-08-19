@@ -149,10 +149,10 @@ tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
 #string utilizing printf to make each instance of the file as ./<filename> so that it can be rmed more easily. Finally the shell expands the value
 #converts it to a string, this string is then converted into a set of arguments to be utilized by rm. This way there are no errors about a file not
 #being found as rm only sees existing files because we only pass those that have been grepped.
-ls -a ../hounds/hound$level | egrep "($tmp)" | xargs -i{} rm -v '../hounds/hound7/'"{}";
+ls -a ../hounds/hound$level | egrep "($tmp)" | xargs -i{} rm -v "../hounds/hound$level/""{}";
 
 FLAG_CREATED=$( join -t':' <(sort -k1 -t':' $passwd_built) <(sort -k1 -t':' $shadow_built) 2>/dev/null | grep $CORRECT_USER | cut -d':' -f8 );
-FLAG_CREATED=$( printf $RANDOM | mk_hash );
+#FLAG_CREATED=$( printf $RANDOM | mk_hash );
 if [[ $FLAG_CREATED = $FLAG_HOUND ]];then
     printf 'Success, It actually worked.\n';
 else

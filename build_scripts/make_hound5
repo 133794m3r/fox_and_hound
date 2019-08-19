@@ -260,8 +260,8 @@ sed -i "s/<num>/$num_8/g" nano_welcome_msg;
 echo -e "\n$FLAG_STRING $FLAG_HOUND" > $FLAG_FILE;
 rm -v nano_combined;
 rm $OUTPUT_FILE;
-rm -v ../../../hounds/hound8/*;
-cp -v * ../../../hounds/hound8;
+rm -v ../../../hounds/hound$level/*;
+cp -v * ../../../hounds/hound$level;
 cd ../../../build_scripts;
 let level++;
 
