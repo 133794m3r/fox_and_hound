@@ -137,7 +137,8 @@ for ((i=0;i<$USERS;i++));do
     let uid++;
     let guid++;
 done
-
+echo "uid:$uid";
+echo "guid:$guid";
 #get all of the filenames converted to arguments to be sent to rm.
 #we start with sending all elements of the aray piped to tr. Then we replace the space characters with a pipe.
 #so that it can be used with egrep as an OR operator. This is then expanded out and using command substituion the final string is set to the variable
@@ -163,8 +164,8 @@ else
 fi
 cp  $passwd_built ../hounds/hound$level/"$filename_1";
 cp  $shadow_built ../hounds/hound$level/"$filename_2";
-
-sed -i "s/UID\=.*/UID\='$CORRECT_UID'/" ../home_folders/hound$level/.ssh/rc;
+CORRECT_UID=$(( $CORRECT_UID+1000 ));
+sed -i "s/word\=.*/word\='$CORRECT_UID'/" ../home_folders/hound$level/.ssh/rc;
 echo "$FLAG_HOUND";
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;
