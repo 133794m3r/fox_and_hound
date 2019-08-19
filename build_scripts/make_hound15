@@ -7,6 +7,8 @@
 # Then they have to decode the hexdumped file. Followed by decoding the base64
 # text to get the final flag string.
 
+HASH_ENCODING='b32';
+
 if [[ $# -lt 1 ]];then
     level=15;
 else
@@ -33,7 +35,7 @@ tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
-compression_depth=$(( ($RANDOM % 3 ) + 5));
+compression_depth=$(( ($RANDOM % 3 ) + 4));
 i=0;
 filenames=('data' 'file' 'dump' 'binary');
 filenames_len=${#filenames[*]};

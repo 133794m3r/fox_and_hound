@@ -165,5 +165,6 @@ cp  $passwd_built ../hounds/hound$level/"$filename_1";
 cp  $shadow_built ../hounds/hound$level/"$filename_2";
 
 sed -i "s/UID\=.*/UID\='$CORRECT_UID'/" ../home_folders/hound$level/.ssh/rc;
-
+echo "$FLAG_HOUND";
+let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;

@@ -6,6 +6,8 @@
 # It requires them to write their first bash script to bruteforce a pin
 # and then cat that data to a program which'll give them the data back.
 # But it only accepts the pin as a base64 encoded file.
+HASH_ENCODING='b32';
+
 if [[ $# -lt 1 ]];then
     level=17;
 else

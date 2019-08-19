@@ -44,7 +44,7 @@ SEARCH_STRING0='';
 SEARCH_STRING1='';
 SEARCH_STRING2='';
 FLAG_FILE='';
-FLAG_STRING='Your flag is the following base64 encoded string';
+FLAG_STRING='Your flag is the following "HASH_ENCODING" encoded string';
 tmp=0;
 #removing the build files.
 rm -v built_files/*
@@ -264,5 +264,5 @@ rm -v ../../../hounds/hound$level/*;
 cp -v * ../../../hounds/hound$level;
 cd ../../../build_scripts;
 let level++;
-
+echo "$FLAG_HOUND";
 echo "hound$level:$FLAG_HOUND" >> the_flags;

@@ -28,6 +28,39 @@ if [[ $# -lt 1 ]];then
 else
     level=$1;
 fi
+
+function make_mistakes(){
+    mistake_str='';
+    chosen_mistake=$(( $RANDOM %  8 ));
+    chosen_mistakes=$(( $RANDOM % 3 ));
+    case $chosen_mistake in
+        0)
+            mistake_str='if ($0 ~ /;;/ ){ gsub(/;;/,";",$0) print $0}';
+        ;;
+        1)
+            mistake_str='if ($0 ~ /main\(\)/ ){ gsub(/\(\)/,"(void)",$0); print $0 }';
+        ;;
+        2)
+             mistake_str='if ( $0 ~ /elif/  ){ gsub(/elif/,"else if",$0); print $0 }';
+        ;;
+        3)
+            mistake_str='if ($0 ~ /if\ \[\[\ \$\#/ ){ gsub(/if\ \[\[\ \$\#/,"if [ $#",$0); print $0}';
+        ;;
+        4)
+            mistake_str='if ($0 ~/\(\(i\=0;i<str_len;\+\+i\)\)/ ){ gsub(/\(\(i\=0;i<str_len;\+\+i\)\)/,"(i=0;i<str_len;++i))",$0); print $0 }'
+        ;;
+        5)
+            mistake_str='if ($0 ~ /\(\(\ i\=0;\ i<10;\ i\+\+\ \)\)/ ){ gsub(/\(\(\ i\=0;\ i<10;\ i\+\+\ \)\)/,"( i=0; i<10; i++ )",$0); print $0 }'
+        ;;
+        6)
+            mistkae_str='if ($0 ~ /\$start\ \]\];then/){ gsub(/\$start\ \]\];then/,"$start ]];",$0); print $0 }';
+        ;;
+        7)
+        ;;
+    esac
+}
+
+
 #the library of build functions.
 source build_functions;
 #the dictionary file that we're using to get our words from.
@@ -41,7 +74,7 @@ password_dict_len=2007;
 #set the encoding. In future versions this'll be hardcoded from the main script.
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
-
+num_mistakes=$(( $RANDOM % 3 ));
 WORD_ARRAY=(15 16 17 18 19 20 21);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
@@ -49,6 +82,8 @@ chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 filename_arr=('SECRET' "IT'S A SECRET TO EVERYBODY", 'I AM ERROR' 'I AM BAGU' 'HERE_BE_DRAGONS');
+program_name_array=('run_this_program' 'run_me' 'here_be_treasure' 'run_it');
+program_name=${program_name_array[$(($RANDOM % 4 ))]};
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
 filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
@@ -56,8 +91,8 @@ filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
 for (( i=1; i<$filename_arr_len; i++ ));do
     tmp="$tmp|${filename_arr[$i]}";
 done
-ls ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
 
+ls ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
 max_spaces=10;
 correct_spaces=$(( ($RANDOM & $max_spaces) +1 ));
 echo "correct_spaces:"$correct_spaces;
@@ -105,8 +140,8 @@ correct_append_str=${append_str_array[$(( $RANDOM & 5 ))]};
 echo "Append str:$correct_append_str";
 echo 'awk command:';
 echo "'\$0 ~ /[\\"$correct_append_str"]/ && length(\$0) == "$(( $correct_spaces + 64 ))" {gsub(/[^A-Za-z0-9\+\_]/,\"\"); print }'"  /tmpdownload/tmp$level
-
-printf '' > /tmpdownload/tmp$level;
+tmp_file="tmp$level";
+printf '' > $tmp_file;
 
 for((i=0;i<NUM_LINES;++i)){
     str=$( make_false_flag $password_dict $password_dict_len | tr -d '=');
@@ -121,16 +156,27 @@ for((i=0;i<NUM_LINES;++i)){
         append_str=${append_str_array[$(( $RANDOM & 4 ))]};
     done
     if [[ $i = $correct_line ]];then
-        printf "%s%${correct_spaces}s\n" $cipher_str '' | sed -e 's/\([A-Za-z0-9+_)]\)/\1'"$correct_append_str"'/g' >> "/tmpdownload/tmp$level";
+        printf "%s%${correct_spaces}s\n" $cipher_str '' | sed -e 's/\([A-Za-z0-9+_)]\)/\1'"$correct_append_str"'/g' >> $tmp_file;
+        #"/tmpdownload/tmp$level";
         printf "%s%${correct_spaces}s\n" $cipher_str '' | sed -e 's/\([A-Za-z0-9+_]\)/\1'"$correct_append_str"'/g';
     elif [[ $i = $false_line ]];then
-        printf "%s%${num_spaces}s\n" "$str" '' | sed -e 's/\([A-Za-z0-9+_]\)/\1'"$correct_append_str"'/g' >> "/tmpdownload/tmp$level";
+        printf "%s%${num_spaces}s\n" "$str" '' | sed -e 's/\([A-Za-z0-9+_]\)/\1'"$correct_append_str"'/g' >> $tmp_file
+        #"/tmpdownload/tmp$level";
     elif [[ $i = $false_line2 ]]; then
-        printf "%s%${correct_spaces}s\n" "$str"  '' | sed -e 's/\([A-Za-z0-9+_]\)/\1'"$append_str"'/g' >> "/tmpdownload/tmp$level";
+        printf "%s%${correct_spaces}s\n" "$str"  '' | sed -e 's/\([A-Za-z0-9+_]\)/\1'"$append_str"'/g' >> $tmp_file
+        #"/tmpdownload/tmp$level";
     else
-        printf "%s%${num_spaces}s\n" "$str" '' |sed -e 's/\([A-Za-z0-9+_]\)/\1'"$append_str"'/g' >> "/tmpdownload/tmp$level";
+        printf "%s%${num_spaces}s\n" "$str" '' |sed -e 's/\([A-Za-z0-9+_]\)/\1'"$append_str"'/g' >> $tmp_file;
+        #"/tmpdownload/tmp$level";
     fi
 }
-program_name_array=('run_this_program' 'run_me' 'here_be_treasure' 'run_it');
-program_name=${program_name_array[$(($RANDOM % 4 ))]};
 
+awk " $awk_part1
+
+
+"
+cp -v programs/default_program.sh "../hounds/hound$level/$program_name.sh";
+cp -v $tmp_file "$file_location";
+let level++;
+echo "hound$level:$FLAG_HOUND" >> the_flags;
+rm -v $tmp_file;

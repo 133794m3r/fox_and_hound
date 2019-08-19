@@ -104,7 +104,7 @@ fi
 #the filename we're going to use. It's an empty string by default.
 filename='';
 #The prefixes for the files
-filename_arr=('-.' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT'S A SECRET TO EVERYBODY", 'I AM ERROR' 'I AM BAGU');
+filename_arr=('-.' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT'S A SECRET TO EVERYBODY" 'I AM ERROR' 'I AM BAGU');
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
 filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
@@ -126,7 +126,7 @@ tmp="${filename_arr[0]}";
 for (( i=1; i<$filename_arr_len; i++ ));do
     tmp="$tmp|${filename_arr[$i]}";
 done
-ls ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
+ls -a ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
 
 file_location="../hounds/hound$level/$filename"
 for((i=0;i<NUM_LINES;++i)){
@@ -170,4 +170,7 @@ echo "$GOAL_STR1";
 sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR0'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/GOAL_STR1\=.*/GOAL_STR1\='$GOAL_STR1'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/LINE_LEN\=.*/LINE_LEN=$CORRECT_LEN/" ../home_folders/hound$level/.ssh/rc;
-cp tmp "$file_location"
+cp $tmp_file "$file_location"
+rm $tmp_file;
+let level++;
+echo "hound$level:$FLAG_HOUND" >> the_flags;
