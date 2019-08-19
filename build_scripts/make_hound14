@@ -24,7 +24,7 @@ seed_random $level;
 #the dictionary file that we're using to get our words from.
 #this will be set to a global variable DICTIONARY from the main script once the whole
 #build system is done.
-dictionary='../dict/passwords_dict';
+dictionary='../../dict/passwords_dict';
 #get the length of the dictionary file.
 #in the future this'll be calculated once from the main build script and then the string
 #DICTIONARY_LEN will be set to this value.

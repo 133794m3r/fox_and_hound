@@ -56,7 +56,7 @@ int base64_encode(unsigned char *dest, unsigned char *src, int srclen){
 int main(int argc, char **argv){
     char *correct_pin=malloc(3);
     //correct_pin="111";
-    correct_pin="265";
+    correct_pin="47";
     //char correct_pin_string[4]="MTEx";
     char *correct_pin_string=malloc(4);
     char *flag_string="The flag is ";
@@ -65,9 +65,9 @@ int main(int argc, char **argv){
     char *incorrect_flag2=malloc(28);
     
     
-    flag="2XuhQ1lkr1tx7xCDDflw59U9HcU";
-    incorrect_flag1="WJHef94paK42jEgWtDnWn1jiWY4";
-    incorrect_flag2="O4ZiNuoJ-MTbP1FjRPNLqOVcxNI";
+    flag="B105ejihOP49QV98N0S1_6NimJo=";
+    incorrect_flag1="AherCA3O5ucy-KvBFFV0Rfmy22c=";
+    incorrect_flag2="uikPUbfz0-iWtdDJP1qo-ThBA3Y=";
     /*
     flag="-vGvr4t.3xrfx-M56kZg5f-HyUw";
     incorrect_flag1="-vGvr4t.3xrfx-M56kZg5f-HyUy";

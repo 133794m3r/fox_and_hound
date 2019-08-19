@@ -87,7 +87,7 @@ echo -n '' > "$output_file";
 for ((i=0; i<FILE_NUM_LINES;i++)); do
     #we get a random word from the /usr/share/dict/american-english. We pass it the length to save time as it's precalculated.
     #this way we don't have to recalculate it each time. The value is already cached.
-    the_word=$( get_random_word $dictionary $dictionary_len );
+    the_word=$( get_random_word "../$dictionary" $dictionary_len );
     #if we've hit the correct line num we then output it.
     if [[ $i -eq $CORRECT_LINE_NUM ]]; then
         #printf the correct word and the flag on this line.
@@ -108,7 +108,7 @@ for ((i=0; i<FILE_NUM_LINES;i++)); do
             j=1;
         fi
         #we put the string into the file by appending it to the file. like before we include a new line before and after to make it easier to read.
-        printf  '\n%s %s\n' $the_word $( make_false_flag $password_dictionary $password_dictionary_len ) >> "$output_file";
+        printf  '\n%s %s\n' $the_word $( make_false_flag $passwords_dictionary $passwords_dictionary_len ) >> "$output_file";
     else
         #if we're just doing a binary line we make sure that it adds the correct line length of pure random data.
         #the options chosen are explained as follows. if=<where to read from> here it's /dev/urandom since it's a non-blocking source of randomness

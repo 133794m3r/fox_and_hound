@@ -115,6 +115,7 @@ done
 rm -v ../../hounds/hound"$level"/*
 cp -v $filename ../../hounds/hound"$level"
 cd ..;
+rm -Rv tmp;
 #rm -Rv tmp;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
 let level++;

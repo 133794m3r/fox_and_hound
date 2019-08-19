@@ -15,7 +15,7 @@
 #One note is that UPPER_CASE files are meant to be constants that aren't changed after being set.
 #lowercase can cahnge whenever.
 if [[ $# -lt 1 ]];then
-    level=12;
+    level=11;
 else
     level=$1;
 fi
@@ -109,7 +109,7 @@ filename_arr=('-.' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FIL
 filename_arr_len=${#filename_arr[*]};
 filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
 extra_str=':';
-tmp_file='tmp';
+tmp_file='tmp'$level;
 echo -n '' > $tmp_file;
 echo 'false_regx:'"$false_regex_str";
 echo 'regex_str:'"$regex_str";

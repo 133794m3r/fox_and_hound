@@ -85,9 +85,11 @@ while [[ $correct_line -eq $false_line ]];do
     false_line=$(( $correct_line + ($RANDOM  % 8 )));
     false_line2=$(( $correct_line - ($RANDOM % 23) ));
 done
-tmp_file='tmp';
+tmp_file="tmp$level";
 echo -n '' > $tmp_file;
-rm -Rv "../hounds/hound$level/";
+tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
+ls -a ../hounds/hound$level | egrep "($tmp)" | xargs -i{} rm -v "../hounds/hound$level/""{}";
+
 file_location="../hounds/hound$level/$filename"
 
 echo $regex_str;
@@ -128,5 +130,5 @@ GOAL_STR1=`(printf "%s%${padding}s" "${str_array[1]}" '')`;
 echo "$GOAL_STR1";
 sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR0'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/GOAL_STR1\=.*/GOAL_STR1\='$GOAL_STR1'/" ../home_folders/hound$level/.ssh/rc;
-cp $tmpfile ../hounds$level/"$filename"
-cp programs/regexer ./hounds$level/regexer;
+cp -v $tmp_file "$file_location";
+#cp -v programs/regexer ../hounds$level/regexer;
