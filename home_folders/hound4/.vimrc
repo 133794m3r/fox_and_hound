@@ -5,4 +5,4 @@ set nu
 set ruler
 set mouse=a
 set list
-set linewrap
+
