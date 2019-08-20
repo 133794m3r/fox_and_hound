@@ -4,21 +4,28 @@
 # Macarthur Inbody <mdi2455@email.vccs.edu>
 # AGPLv3
 # 2019 -
-function ord(){
-    printf '%x' "'$1'";
-}
 
+#recreation of the PHP function that converts a byte string to a decimal number.
+function ord(){
+    printf '%d' "'$1'";
+}
+#converts a byte to the textual character.
 function chr(){
     perl -e "printf '%c',$1;";
 }
 
+#decided against this insanity.
 function b32_encode(){
     return 0;
 }
 
 #here be black magic. It's abusing bash in ways unheard of.
+#Only Stallman fully understands this code.
 function str_index() {
+#!?!?!?!?!
+#(V) (;,,;) (V)
   local x="${1%%$2*}"
+  #WAT?!
   [[ "$x" = "$1" ]] && echo -1 || echo "${#x}"
 }
 
@@ -27,7 +34,7 @@ function generate_sequence(){
     local b=1;
     local num=0;
     local start=$1;
-    #using math requires $(( 2+2)) to get hte result.
+    #using math requires $(( 2+2)) to get the result.
     local end=$(($start + 5 ));
     # a for loop the C style.
     for (( i=0; i<10; i++ )) {
@@ -49,6 +56,8 @@ function get_specific_string(){
     local len=$2;
     local pattern=$3;
     #utilizing awk to get a certain string of a certain length.
+    #you need to escape $0 because otherwise bash will convert it to the program's name
+    #but awk uses $0 for the current line.
     awk_str="\$0 ~ /[\\$pattern]/ && length(\$0) == $len {gsub(/[^A-Za-z0-9\+\_]/,\"\"); print};"
     #piping the data from the filename to awk.
     cat "$filename" | awk "$awk_str";
@@ -80,7 +89,7 @@ function decrypt(){
     local b64_dict='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+_';
     local index=0;
 
-    #a foor loop in Shell style.
+    #a for loop in Shell style.
     for ((i=0;i<str_len;++i)); do
         #getting a substring out of a string.
         byte=${str:$i:1};
