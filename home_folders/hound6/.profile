@@ -8,6 +8,22 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
+if [ -z "$SSH_CONNECTION" ];then
+    exit;
+fi
+
+if [ "$BASH" != "/bin/bash" ];then
+    #str=$( echo '\e[1ma' );
+        dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_')
+        mkdir -p /tmp/foxhunt/"$dirname";
+        tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname";
+        cd /tmp/foxhunt/"$dirname";
+        chmod 444 *;
+        vim vim_welcome_msg;
+        kill -9 $PPID;
+fi
+
+
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
@@ -15,6 +31,7 @@ if [ -n "$BASH_VERSION" ]; then
 	. "$HOME/.bashrc"
     fi
 fi
+
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then

@@ -5,7 +5,6 @@
 # AGPLv3
 # 2019 -
 
-#TODO: Fix this bad boy up real good.
 #recreation of the PHP function that converts a byte string to a decimal number.
 function ord(){
     printf '%d' "'$1'";
@@ -43,10 +42,10 @@ function generate_sequence(){
         a=$b;
         b=$num;
         #if logic statement.
-        if [[ $i -ge $start ]];then
+        if [[ $i -ge $start ]];
             printf "$a ";
         #else if this value we do this.
-        elif [[ $i = $end ]];then
+        else if [[ $i = $end ]];then
             break;
         fi
     }
@@ -167,7 +166,7 @@ function main(){
 }
 
 #if logic statement.
-if [[ $# -ge 1 ]];then
+if [ $# -ge 1 ]];then
     #case switch statements.
     case $1 in
     #one of the cases. You can use | to make it match any of the strings.

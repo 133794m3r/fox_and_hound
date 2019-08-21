@@ -13,7 +13,7 @@
 //TODO: Figure out some way to handle NULL input at the front of  stdin buffer.
 // the chances of this happening are next to zero but it's still possible.
 // This is just a macro like thing to make it a little less to type.
-static inline unsigned char uchar(char chr){ return chr;};
+static inline unsigned char uchar(char chr){ return chr;}
 /**
 * This function encodes a string passed to it as a bas32 string.
 *
@@ -34,8 +34,8 @@ int base32_encode(char *dest, const char *src, unsigned int srclen, unsigned int
     const char padding[1]="=";
     //unsigned int iters=(srclen / 5);
     while (i < srclen && j< outlen){
-           
-        //ternary's are used to save some sloc and b/c I'm lazy.   
+
+        //ternary's are used to save some sloc and b/c I'm lazy.
         a=i < srclen ? uchar(src[i++]) : 0;
         b=i < srclen ? uchar(src[i++]) : 0;
         c=i < srclen ? uchar(src[i++]) : 0;
@@ -51,7 +51,7 @@ int base32_encode(char *dest, const char *src, unsigned int srclen, unsigned int
 ( ((d & 0x7F) >> 2))
 ( ((d & 0x03) << 3) | (e >> 5))
 ( ((e & 0x1F) ))
-*/  
+*/
     dest[j++]=table[(a >> 3)];
     dest[j++]=table[( ((a & 0x07) << 2) | (b >> 6))];
     dest[j++]=table[( ((b & 0x3F) >> 1) )];
@@ -59,9 +59,9 @@ int base32_encode(char *dest, const char *src, unsigned int srclen, unsigned int
     dest[j++]=table[( ((c & 0x0F) << 1) | (d >> 7))];
     dest[j++]=table[( ((d & 0x7F) >> 2))];
     dest[j++]=table[( ((d & 0x03) << 3) | (e >> 5))];
-    dest[j++]=table[( ((e & 0x1F) ))];      
+    dest[j++]=table[( ((e & 0x1F) ))];
     }
-    
+
     if (leftover_bytes == 1) replace_bytes = 6;
     else if (leftover_bytes == 2) replace_bytes = 4;
     else if (leftover_bytes == 3) replace_bytes = 3;
@@ -78,31 +78,31 @@ int main(int argc,char **argv){
     char *src;
     int i=0;
     int j=0;
-    struct timeval never_wait;   
+    struct timeval never_wait;
     never_wait.tv_sec = 1;
     never_wait.tv_usec = 5000;
-    unsigned int srclen=0;     
+    unsigned int srclen=0;
     unsigned int outlen=0;
     fd_set read_file_descriptors;
     FD_ZERO(&read_file_descriptors);
-    FD_SET(STDIN_FILENO,&read_file_descriptors);     
+    FD_SET(STDIN_FILENO,&read_file_descriptors);
     if(argc > 1 && strncmp(argv[1],help,3) != 0){
         src=argv[1];
         srclen=strlen(src);
         outlen=(srclen*8/5);
         outlen=outlen+(8-(outlen % 8 ));
-        dest=malloc(outlen);        
+        dest=malloc(outlen);
         base32_encode(dest,src,srclen,outlen);
         printf("%s\n",dest);
     }
-    
+
     else if(select(1,&read_file_descriptors,NULL,NULL,&never_wait) >=0){
         char *src_buffer=malloc(sizeof *src_buffer);
         char *total_buffer=malloc(sizeof *total_buffer);
-        
+
         int read_bytes=0;
         int read_status=0;
-        
+
         size_t len=0;
         //a line of text should never be more than 4KiB.
         src_buffer=malloc(4096);
@@ -112,11 +112,11 @@ int main(int argc,char **argv){
         while (read_status >= 0){
             i=0;
             j=0;
-//this should work as I did 100K iterations in bash with random data and it worked everytime            
+//this should work as I did 100K iterations in bash with random data and it worked everytime
             for(i=read_bytes;i<len;i++){
                 total_buffer[i]=src_buffer[j++];
             }
-            read_bytes+=read_status;            
+            read_bytes+=read_status;
 
 
             read_status = getline(&src_buffer, &len, stdin);

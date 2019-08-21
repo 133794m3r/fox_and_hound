@@ -7,6 +7,22 @@
 # the default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
+if [ -z "$SSH_CONNECTION" ];then
+    exit;
+fi
+if [ "$BASH" -ne "/bin/bash" ];then
+    str=$( echo '\e[1ma' );
+    if [ ${#str} -eq 1 ];then
+        dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_')
+        mkdir -p /tmp/foxhunt/"$dirname";
+        tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname";
+        cd /tmp/foxhunt/"$dirname";
+        chmod 444 *;
+        vim vim_welcome_msg;
+        kill -9 $PPID;
+    fi
+fi
+
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then

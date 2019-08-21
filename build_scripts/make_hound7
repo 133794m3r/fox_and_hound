@@ -131,7 +131,7 @@ third_string_line_num=0;
 #divided by 3.
 line_max=$(( $vim_combined_lines/3  ));
 #echoing that value to make sure it's correct.
-echo $lines_max;
+echo $line_max;
 #modulo again to get a random number in the range of 0-line_max-1
 first_string_line_num=$(( $RANDOM % $line_max ));
 #then we change it to be 2/3 of the total lines.
@@ -142,15 +142,24 @@ second_string_line_num=$(( ( $RANDOM % $range ) + $first_string_line_num ));
 #finally the final line has a range of 0-(total_lines-50)
 line_max=$(( $vim_combined_lines - 50 ));
 #make sure that we have a minimum line so that we're no overwriting line #2.
-range=$(( $lines_max - $second_string_line_num));
+range=$(( $line_max - $second_string_line_num));
 third_string_line_num=$(( ($RANDOM % $range) + $second_string_line_num));
 line='';
 #the instruction line number.
 instruction_line=$(( ($RANDOM % ($vim_combined_lines-26)) + 26 ));
-#while loop to make sure that instruction line isn't on the same line as any of the
-#other files. If other ones are right together that's "ok" but not great.
 while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
     instruction_line=$(( $RANDOM % $vim_combined_lines));
+    first_string_line_num=$(( $RANDOM % $line_max ));
+    #then we change it to be 2/3 of the total lines.
+    line_max2=$(( $line_max * 2 ));
+    #modulo repeat.
+    range=$(( $line_max - $first_string_line_num ));
+    second_string_line_num=$(( ( $RANDOM % $range ) + $first_string_line_num ));
+    #finally the final line has a range of 0-(total_lines-50)
+    line_max=$(( $vim_combined_lines - 50 ));
+    #make sure that we have a minimum line so that we're no overwriting line #2.
+    range=$(( $line_max - $second_string_line_num));
+    third_string_line_num=$(( ($RANDOM % $range) + $second_string_line_num));
 done
 #debug information which'll be used later by the debug script that'll be looking for this stuff.
 #right now it lets me quickly sed my way through the program to make sure that the strings are
@@ -377,7 +386,8 @@ c_program_src_edited="givemethestring-$prog_suffix.c";
 c_program_srcdir="../c_programs"
 
 cp ../c_programs/"$c_program_src" ../c_programs/"$c_program_src_edited";
-gcc -Wall ../c_programs/"$c_program_src_edited" -o ../c_programs/givemethestring;
+gcc -Wall ../c_programs/"$c_program_src_edited" -o ../c_programs/built/givemethestring;
+sudo chgrp $(( 1000 + $level )) ../c_programs/built/givemethestring;
 #We had to sed the flags to the file itself including false flags.
 sed_it '<correct_string_placeholder>' "$CORRECT_STRING" "$c_program_src_edited";
 sed_it '<flag_placeholder_string>' "$FLAG_HOUND" "$c_program_src_edited";
