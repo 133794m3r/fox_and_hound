@@ -63,8 +63,8 @@ int main(int argc, char **argv){
     char *flag=malloc(32);
     char *incorrect_flag1=malloc(32);
     char *incorrect_flag2=malloc(32);
-
-
+    int return_value=0;
+    int result_val=0;
     flag="<the_flag_placeholder>";
     incorrect_flag1="<incorrect_flag_placeholder1>";
     incorrect_flag2="<incorrect_flag_placeholder2>";
@@ -79,7 +79,6 @@ int main(int argc, char **argv){
     }
     base64_encode((unsigned char*)correct_pin_string,(unsigned char*)correct_pin,strlen(correct_pin));
     int str_compared=0;
-    int return_value=0;
     fd_set read_file_descriptors;
     FD_ZERO(&read_file_descriptors);
     struct timeval time_to_wait;
@@ -90,8 +89,12 @@ int main(int argc, char **argv){
     char message[8];
     FD_SET(STDIN_FILENO,&read_file_descriptors);
     if(select(1,&read_file_descriptors,NULL,NULL,&time_to_wait)){
-        scanf("%s",message);
-        str_compared=strncmp(correct_pin_string,message,4);
+        return_val=scanf("%s",message);
+        if (return_val == -1 ){
+            fprintf(stderr,"Uh oh. A major error occured.\n");
+            return -1;
+        }
+        result=str_compared=strncmp(correct_pin_string,message,4);
         if(strlen(message) >= 8){
             fprintf(stderr,"You should run it as `echo -n | base64` to make sure that newline isn't included.\n");
             fprintf(stdout,"You should run it as `echo -n | base64` to make sure that newline isn't included.\n");

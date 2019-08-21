@@ -107,7 +107,22 @@ instruction_line=$(( $RANDOM % $nano_combined_lines ));
 
 while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
     instruction_line=$(( $RANDOM % $nano_combined_lines));
+    first_string_line_num=$(( $RANDOM % $line_max ));
+    #then we change it to be 2/3 of the total lines.
+    line_max2=$(( $line_max * 2 ));
+    #modulo repeat.
+    range=$(( $line_max - $first_string_line_num ));
+    second_string_line_num=$(( ( $RANDOM % $range ) + $first_string_line_num ));
+    #finally the final line has a range of 0-(total_lines-50)
+    line_max=$(( $nano_combined_lines - 50 ));
+    #make sure that we have a minimum line so that we're no overwriting line #2.
+    range=$(( $line_max - $second_string_line_num));
+    third_string_line_num=$(( ($RANDOM % $range) + $second_string_line_num));
 done
+
+#while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
+#    instruction_line=$(( $RANDOM % $nano_combined_lines));
+#done
 
 echo "f:$first_string_line_num s:$second_string_line_num t:$third_string_line_num";
 SEARCH_STRING0=$( printf '%5s' $RANDOM | b32 );

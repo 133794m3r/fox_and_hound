@@ -1,0 +1,4 @@
+#!/bin/bash
+c_program_srcdir="../c_programs"
+gcc -march=native -Wall -Werror -Wpedantic -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/b64_encoder.c" -o "$c_program_srcdir/built/b64_encoder"
+gcc -march=native -Wall -Werror -Wpedantic -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/b32_encoder.c" -o "$c_program_srcdir/built/b32_encoder"

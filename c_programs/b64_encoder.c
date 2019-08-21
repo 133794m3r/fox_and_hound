@@ -9,7 +9,7 @@
 * 2019-
 * AGPLv3 or Later
 */
-static inline unsigned char uchar(char chr){ return chr;};
+static inline unsigned char uchar(char chr){ return chr;}
 /**
 * This function encodes a string passed to it as an argument into base64. It's
 * ~1.5x as fast as the built in base64 program from gnulib. I am not allowing for

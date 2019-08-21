@@ -1,0 +1,5 @@
+#!/bin/bash
+cd ../hounds_built;
+for ((i=0;i<=17;i++ )){
+    cp -v hound$i/challenge_file.txz ../home_folders/"hound$i/challenge_file.txz";
+}

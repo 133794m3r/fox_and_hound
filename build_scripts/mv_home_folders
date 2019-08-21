@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for (( i=0;i<=17; i++ )){
+    cp -vr ../home_folders/hound$i /home/hound$i;
+}

@@ -23,11 +23,13 @@
 # converted to a code after xoring it. The value they are xored with will be 5 characters rotated from fibonacci
 #sequence. This data will then have to be un-rotn encoded and after this they'll have the flag. The goal is to make it
 # hard as hell to  get the flag w/o fixing the syntax errors.
+HASH_ENCODING='b32';
 if [[ $# -lt 1 ]];then
     level=16;
 else
     level=$1;
 fi
+HA
 function choose_mistake(){
     local mistake_str='';
     local chosen_mistake=$1;
