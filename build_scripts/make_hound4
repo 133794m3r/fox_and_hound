@@ -39,14 +39,14 @@ FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 #upon that and the file name changes each time. So _only_ find or grep will get the right answer.
 #further I'll include some "semi" ascii files to really mess up those who use grep only in a
 #future version.
-MAX=30;
+MAX=27;
 #we select _which_ of the files will hold the flag. The rest will be binary data.
 START=$(( $MAX / 3 ));
 correct_flag=$(( ($RANDOM % ($MAX-$START)) + ($START+1)  ));
-false_flag=$(( ($RANDOM % ($MAX-$START)) + ($START+1)  ));
+false_flag=$(( ($RANDOM % $MAX ));
 
 while [ $false_flag -eq $correct_flag ];do
-    false_flag=$(( ($RANDOM % ($MAX-$START)) + ($START+1)  ));
+    false_flag=$(( ($RANDOM % $MAX ));
 done
 
 #the filename we're going to use. It's an empty string by default.
