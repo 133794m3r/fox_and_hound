@@ -1,0 +1,14 @@
+#!/bin/bash
+if [ $# -ge 1 ];then
+    case "$1" in
+        -h)
+            printf "pass the awk script you want to test as the only argument to this program.\n";
+        ;;
+        *)
+            gawk --source 'BEGIN { exit(0) } END { exit(0) }' --file "$1"; 
+        ;;
+    esac
+else
+    printf "pass the awk script you want to test as the only argument to this program.\n";
+fi
+
