@@ -18,13 +18,21 @@ fi
 #this reads in the functions that are in the library.
 source build_functions;
 #we seed $RANDOM with the current level value.
-seed_random $level;
+#seed_random $level;
+password_dict='../dict/passwords_dict';
+#get the length of the dictionary file.
+#in the future this'll be calculated once from the main build script and then the string
+#DICTIONARY_LEN will be set to this value.
+password_dict_len=2007;
 #we then make the flag by calling it.
 #FLAG_HOUND=$( make_flag 1);
-FLAG_FALSE=$( make_false_flag);
+FLAG_FALSE=$( make_false_flag $password_dict $password_dict_len);
+FLAG_FALSE2=$( make_false_flag $password_dict $password_dict_len);
+echo $FLAG_FALSE;
+echo $FLAG_FALSE2;
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
-continue_random;
+#continue_random;
 WORD_ARRAY=(15 16 46 47 48 17 18);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
@@ -39,31 +47,31 @@ FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 #upon that and the file name changes each time. So _only_ find or grep will get the right answer.
 #further I'll include some "semi" ascii files to really mess up those who use grep only in a
 #future version.
-MAX=27;
+MAX=32;
 #we select _which_ of the files will hold the flag. The rest will be binary data.
-START=$(( $MAX / 3 ));
+START=$(( $MAX / 4 ));
 correct_flag=$(( ($RANDOM % ($MAX-$START)) + ($START+1)  ));
-false_flag=$(( ($RANDOM % $MAX ));
+false_flag=$(( ($RANDOM % ($MAX+1 ))  ));
 
 while [ $false_flag -eq $correct_flag ];do
-    false_flag=$(( ($RANDOM % $MAX ));
+    false_flag=$(( ($RANDOM % $MAX) + 1 ));
 done
 
 #the filename we're going to use. It's an empty string by default.
 filename='';
 #The prefixes for the files
-filename_arr=('.-' '-~' '-.' '.~' 'this file has spaces' 'spaces in the name');
+filename_arr=('.-' '-~' '-~' '.~' 'this file has spaces' 'spaces in the it');
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
 #the suffixes for the files, I'm not doing .dat, or .hex, or .bin etc so that they don't get confused.
-endname_arr=('filename' 'files' 'texts' 'flags');
+endname_arr=('extension' 'files' 'texts' 'flags' 'data');
 #the length.
 endname_arr_len=${#endname_arr[*]};
 #we select an option from each array via subshell expansion and through direct array element access.
 #basically like other ones it's from 0-max for the array elements. Bash makes the length be one higher
 #than the max element you can get(for whatever reason). So this "hack" works as the modulu always makes it no more than
 #that number minux 1.
-filename=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]}${endname_arr[ $(( $RANDOM % $endname_arr_len ))]};
+filename=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]}'.'${endname_arr[ $(( $RANDOM % $endname_arr_len ))]};
 #the directory names. They are all hidden so that they have to use previous knowledge to see the files.
 #plus it makes it a tad bit harder to find.
 dirname_arr=('.secrets' '.filthy_lucre' '.files' '.information' '.top_secret' '.hidden' '.mystery');
@@ -90,9 +98,12 @@ for (( i=0; i<=$MAX; i++));do
     if [ $i -le 9 ];then
         name="0$i";
     fi
+
+    if [ $i -eq 0 ];then
+        printf "Th\u0435 flag is $FLAG_FALSE2" > "$filename$name";
 #if it's the correct one we then write the file out.
 #adding an extra string at the end makes sure they all are in order.
-    if [ $i -eq $correct_flag ]; then
+    elif [ $i -eq $correct_flag ]; then
         #echo $FLAG_HOUND4 > '-file'"$name";
         #the flag is outputted to the file. The name is something like '-.texts'
         correct_filename="$filename$name";
@@ -119,26 +130,33 @@ tmp=$( echo ${dirname_arr[*]} | tr ' ' '|' );
 #delete them.
 #echo $tmp;
 #echo $( ls -a | grep -E "($tmp)");
-rm -vdRf $( ls -a | grep -E "($tmp)");
+rm -dRf $( ls -a | grep -E "($tmp)");
 #otherwise the above could would not be needed at all.
 #ls -a | egrep "($tmp)"| tr '|' '\n'|xargs -d'\n' rm -vdR
-#make sure I'm where I think I am a remnance of debugging my directory traversal scripts.
-pwd;
+
 #this makes sure that it dies incase of some error.
 cd ../../build_scripts || exit;
 #we make the directory that's going to hold the files.
 mkdir ../hounds/hound4/"$dirname";
 #chown -R 1005 bunch_dirs;
 #we then copy them all over from the old one to the new area.
-cp -Rv bunch_dirs/. ../hounds/hound4/"$dirname";
+cp -R bunch_dirs/. ../hounds/hound4/"$dirname";
 #we remove the bunch_dirs directory as it's a waste of space.
-rm -rv bunch_dirs;
+rm -r bunch_dirs;
 #cd ../../build_scripts;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
 let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
-printf "how to find.\n file dirname/$filename\* | grep 'ASCII' | cut -f1 -d':' | xargs -i{} cat {}"
+printf "how to find.\nfile '$dirname/$filename'* | grep ': ASCII text' | cut -f1 -d':' | xargs -i{} cat '{}'\n"
 echo "correct_filename:$correct_filename";
 echo "$FLAG_HOUND";
 echo "hound$level:$FLAG_HOUND" >> the_flags;
+FLAG_STRING=$( printf "The flag is $FLAG_HOUND\r\n" );
+GIVEN_STRING=$( file ../hounds/hound4/"$dirname/$filename"* | grep ': ASCII text' | cut -f1 -d':' | xargs -i{} cat '{}' );
+
+if [ "$FLAG_STRING" = "$GIVEN_STRING" ];then
+    echo 'It worked... somehow.';
+else
+    echo 'Some kinda error better try it yourself to make sure.';
+fi
