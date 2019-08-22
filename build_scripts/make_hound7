@@ -386,8 +386,10 @@ c_program_src_edited="givemethestring-$prog_suffix.c";
 c_program_srcdir="../c_programs"
 
 cp ../c_programs/"$c_program_src" ../c_programs/"$c_program_src_edited";
-gcc -Wall ../c_programs/"$c_program_src_edited" -o ../c_programs/built/givemethestring;
+gcc -march=native -Wall -Werror -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/$c_program_src" -o "$c_program_srcdir/built/givemethepin";
+ ../c_programs/"$c_program_src_edited" -o ../c_programs/built/givemethestring;
 sudo chgrp $(( 1000 + $level )) ../c_programs/built/givemethestring;
+chmod 710 ../c_programs/built/givemethestring;
 #We had to sed the flags to the file itself including false flags.
 sed_it '<correct_string_placeholder>' "$CORRECT_STRING" "$c_program_src_edited";
 sed_it '<flag_placeholder_string>' "$FLAG_HOUND" "$c_program_src_edited";
