@@ -1,0 +1,4 @@
+#!/bin/bash
+#moves the c programs to the built directory along with making sure that the masks are correct.
+cd ../c_programs
+cp -aRv built /usr/local/bin;
