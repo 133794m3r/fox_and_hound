@@ -98,10 +98,10 @@ echo $lines_max;
 first_string_line_num=$(( $RANDOM % $line_max ));
 line_max=$(( $line_max * 2 ));
 range=$(( $line_max - $first_string_line_num ));
-second_string_line_num=$(( ( $RANDOM % $range ) + $first_string_line_num ));
+second_string_line_num=$(( ( $RANDOM % $range ) + 1 + $first_string_line_num ));
 line_max=$(( $nano_combined_lines - 50 ));
 range=$(( $lines_max - $second_string_line_num));
-third_string_line_num=$(( ($RANDOM % $range) + $second_string_line_num));
+third_string_line_num=$(( ($RANDOM % $range) + 10 + $second_string_line_num));
 line='';
 instruction_line=$(( $RANDOM % $nano_combined_lines ));
 
@@ -112,12 +112,12 @@ while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num
     line_max2=$(( $line_max * 2 ));
     #modulo repeat.
     range=$(( $line_max - $first_string_line_num ));
-    second_string_line_num=$(( ( $RANDOM % $range ) + $first_string_line_num ));
+    second_string_line_num=$(( ( $RANDOM % $range ) + 1+ $first_string_line_num ));
     #finally the final line has a range of 0-(total_lines-50)
     line_max=$(( $nano_combined_lines - 50 ));
     #make sure that we have a minimum line so that we're no overwriting line #2.
     range=$(( $line_max - $second_string_line_num));
-    third_string_line_num=$(( ($RANDOM % $range) + $second_string_line_num));
+    third_string_line_num=$(( ($RANDOM % $range) + 10 + $second_string_line_num));
 done
 
 #while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
@@ -162,6 +162,9 @@ if [[ $tmp_num -eq 0 ]]; then
     #we make sure to set the 3rd search string with the wrong data.
     SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
 #this time it's #1 is correct search string.
+    while [[ $second_string_line_num -eq $first_string_line_num || $third_string_line_num -eq $first_string_line_num ]];do
+        first_string_line_num=$(( $instruction_line + (($RANDOM % 60 ) + 30) ));
+    done
 
 elif [[ $tmp_num -eq 1 ]];then
 
@@ -179,6 +182,10 @@ elif [[ $tmp_num -eq 1 ]];then
     FALSE_FLAG=$( echo $RANDOM | mk_hash );
     printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;
     SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
+    while [[ $second_string_line_num -eq $first_string_line_num || $third_string_line_num -eq $second_string_line_num ]];do
+        second_string_line_num=$(( $instruction_line + (($RANDOM % 60 ) + 30) ));
+    done
+
 
 #and this time it's the 3rd string aka SEARCH_STRING2 all else is the same.
 elif [[ $tmp_num -eq 2 ]];then
@@ -199,10 +206,11 @@ elif [[ $tmp_num -eq 2 ]];then
     printf "\n$FLAG_STRING $FALSE_FLAG\n" > $false_file;
     SEARCH_STRING1="$SEARCH_STRING1   $INSTRUCTIONS1 $false_file"
 
+    while [[ $third_string_line_num -eq $first_string_line_num || $third_string_line_num -eq $second_string_line_num ]];do
+        third_string_line_num=$(( $instruction_line + (($RANDOM % 60 ) + 30) ));
+    done
 fi
-while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
-    instruction_line=$(( $RANDOM % $nano_combined_lines));
-done
+
 OUTPUT_FILE='nano_combined_built';
 #i=27;
 i=27;
