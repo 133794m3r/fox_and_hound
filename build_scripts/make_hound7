@@ -209,7 +209,11 @@ if [[ $tmp_num -eq 0 ]];then
     printf  "\n$FLAG_STRING $FALSE_STRING1\n\n" > $false_file;
     #we make sure to set the 3rd search string with the wrong data.
     SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
-#this time it's #1 is correct search string.
+#this time it's #1 is correct search string
+
+    while [[ $second_string_line_num -eq $first_string_line_num || $third_string_line_num -eq $first_string_line_num ]];do
+        first_string_line_num=$(( $instruction_line + (($RANDOM % 60 ) + 30) ));
+    done
 
 elif [[ $tmp_num -eq 1 ]];then
 
@@ -229,6 +233,10 @@ elif [[ $tmp_num -eq 1 ]];then
     printf  "\n$FLAG_STRING $FALSE_STRING1\n\n" > $false_file;
     SEARCH_STRING2="$SEARCH_STRING2   $INSTRUCTIONS1 $false_file";
 
+    while [[ $second_string_line_num -eq $first_string_line_num || $third_string_line_num -eq $second_string_line_num ]];do
+        second_string_line_num=$(( $instruction_line + (($RANDOM % 60 ) + 30) ));
+    done
+
 #and this time it's the 3rd string aka SEARCH_STRING2 all else is the same.
 elif [[ $tmp_num -eq 2 ]];then
 
@@ -247,11 +255,15 @@ elif [[ $tmp_num -eq 2 ]];then
     printf  "\n$FLAG_STRING $FALSE_STRING1\n\n" > $false_file;
     SEARCH_STRING0="$SEARCH_STRING0   $INSTRUCTIONS1 $false_file"
 
+    while [[ $third_string_line_num -eq $first_string_line_num || $third_string_line_num -eq $second_string_line_num ]];do
+        third_string_line_num=$(( $instruction_line + (($RANDOM % 60 ) + 30) ));
+    done
+
 fi
 #We make sure that nothing is the same _again_.
-while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
-    instruction_line=$(( $RANDOM % $vim_combined_lines));
-done
+#while [[ $first_string_line_num -eq $instruction_line || $second_string_line_num -eq $instruction_line || $third_string_line_num -eq $instruction_line ]]; do
+#    instruction_line=$(( $RANDOM % $vim_combined_lines));
+#done
 j=0;
 echo $FALSE_STRING0;
 echo $CORRECT_STRING;
