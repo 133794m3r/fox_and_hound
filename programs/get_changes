@@ -1,3 +1,13 @@
 #!/bin/sh
-git log --author="Macarthur Inbody" --pretty=tformat: --numstat \
-| gawk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s removed lines: %s total lines: %s\n", add, subs, loc }' -
+#get number of changes for a git repo. Optionally only those
+#done by a certain author.
+if [ $# -ge 1 ];then
+    if [ "$1" = "-h" ];then
+        printf "This script will print the added, removed, and total lines changed for a git repo. The only optional argument is to only show changes by a certain author.\nIt is called via\n get_changes <NOTHING>{or}'Author You Only Want'";
+    else
+    git log --pretty=tformat: --numstat | awk '{ added += $1; removed += $2; total_changed += $1 - $2 } END {printf "added lines:%'"'"'d removed lines:%'"'"'d \nlines changed since comitting :%'"'"'d\n",added, removed, total_changed }'
+    fi
+else 
+    git log --pretty=tformat: --numstat | awk '{ added += $1; removed += $2; total_changed += $1 - $2 } END {printf "added lines:%'"'"'d removed lines:%'"'"'d \nlines changed since comitting :%'"'"'d\n",added, removed, total_changed }'
+fi
+exit 0;
