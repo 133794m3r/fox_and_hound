@@ -56,18 +56,18 @@ int base64_encode(unsigned char *dest, unsigned char *src, int srclen){
 int main(int argc, char **argv){
     char *correct_pin=malloc(3);
     //correct_pin="111";
-    correct_pin="91";
+    correct_pin="87";
     //char correct_pin_string[4]="MTEx";
     char *correct_pin_string=malloc(4);
     char *flag_string="The flag is ";
     char *flag=malloc(32);
     char *incorrect_flag1=malloc(32);
     char *incorrect_flag2=malloc(32);
-
-
-    flag="y7qu16tawrhxhxkbm76dqtfi96tsfgr4";
-    incorrect_flag1="zbt1qehmbcu7ksmk34wf77pai4y3fux9";
-    incorrect_flag2="8e9cn1xgmr45s94it19hnpymo1fmyja6";
+    int return_value=0;
+    int return_val=0;
+    flag="913h3o17c43m343wmgcw6wz8e347jj6w";
+    incorrect_flag1="z1h5tm69fn1sr1wo4bgpb7qssae8qir5";
+    incorrect_flag2="8y8zos3zcmzjmwak8wij4411d574iusj";
     /*
     flag="-vGvr4t.3xrfx-M56kZg5f-HyUw";
     incorrect_flag1="-vGvr4t.3xrfx-M56kZg5f-HyUy";
@@ -79,7 +79,6 @@ int main(int argc, char **argv){
     }
     base64_encode((unsigned char*)correct_pin_string,(unsigned char*)correct_pin,strlen(correct_pin));
     int str_compared=0;
-    int return_value=0;
     fd_set read_file_descriptors;
     FD_ZERO(&read_file_descriptors);
     struct timeval time_to_wait;
@@ -90,7 +89,11 @@ int main(int argc, char **argv){
     char message[8];
     FD_SET(STDIN_FILENO,&read_file_descriptors);
     if(select(1,&read_file_descriptors,NULL,NULL,&time_to_wait)){
-        scanf("%s",message);
+        return_val=scanf("%s",message);
+        if (return_val == -1 ){
+            fprintf(stderr,"Uh oh. A major error occured.\n");
+            return -1;
+        }
         str_compared=strncmp(correct_pin_string,message,4);
         if(strlen(message) >= 8){
             fprintf(stderr,"You should run it as `echo -n | base64` to make sure that newline isn't included.\n");

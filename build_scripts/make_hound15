@@ -64,7 +64,7 @@ xxd  "$filename" > "$filename2";
 
 echo $filename;
 echo $filename2;
-cp $filename2 'test';
+cp "$filename2" 'test';
 mv -v $filename2 $filename;
 cat $filename;
 #rm -v $filename;
@@ -106,8 +106,8 @@ for (( i=0; i<compression_depth; i++)); do
 
     echo $i;
     echo $compression;
-    echo $filename;
-    echo $filename2;
+    echo 'filename1'$filename;
+    echo 'filename2'$filename2;
     echo '';
     compress_file $compression $filename $filename2;
     rm $filename;
@@ -115,10 +115,10 @@ for (( i=0; i<compression_depth; i++)); do
 
 done
 rm -v ../../hounds/hound"$level"/*
-cp -v $filename ../../hounds/hound"$level"
+cp -v "$filename" ../../hounds/hound"$level"
 cd ..;
-rm -Rv tmp;
 #rm -Rv tmp;
+rm -Rv tmp;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
 let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another

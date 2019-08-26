@@ -5,6 +5,7 @@
 # AGPLv3
 # 2019 -
 
+#TODO: Fix this bad boy up real good.
 #recreation of the PHP function that converts a byte string to a decimal number.
 function ord(){
     printf '%d' "'$1'";
@@ -45,7 +46,7 @@ function generate_sequence(){
         if [[ $i -ge $start ]];
             printf "$a ";
         #else if this value we do this.
-        else if [[ $i = $end ]];then
+        elif [[ $i = $end ]];then
             break;
         fi
     }
@@ -90,7 +91,7 @@ function decrypt(){
     local index=0;
 
     #a for loop in Shell style.
-    for ((i=0;i<str_len;++i)); do
+    for (i=0;i<str_len;++i)); do
         #getting a substring out of a string.
         byte=${str:$i:1};
         index=`(str_index $b64_dict $byte )`;
