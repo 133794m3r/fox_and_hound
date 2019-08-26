@@ -64,7 +64,7 @@ int main(int argc, char **argv){
     char *incorrect_flag1=malloc(32);
     char *incorrect_flag2=malloc(32);
     int return_value=0;
-    int result_val=0;
+    int return_val=0;
     flag="<the_flag_placeholder>";
     incorrect_flag1="<incorrect_flag_placeholder1>";
     incorrect_flag2="<incorrect_flag_placeholder2>";
@@ -94,7 +94,7 @@ int main(int argc, char **argv){
             fprintf(stderr,"Uh oh. A major error occured.\n");
             return -1;
         }
-        result=str_compared=strncmp(correct_pin_string,message,4);
+        str_compared=strncmp(correct_pin_string,message,4);
         if(strlen(message) >= 8){
             fprintf(stderr,"You should run it as `echo -n | base64` to make sure that newline isn't included.\n");
             fprintf(stdout,"You should run it as `echo -n | base64` to make sure that newline isn't included.\n");

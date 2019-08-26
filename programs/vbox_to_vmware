@@ -1,0 +1,16 @@
+#!/bin/bash
+vm_name="${1:0:-4}";
+mkdir -p $vm_name;
+tar -xvf "$1" -C "$vm_name";
+cd $vm_name;
+rm vmx_*;
+ovf_file="$vm_name.ovf";
+mf_file="$vm_name.mf";
+vm_disks=$(ls *.vmdk);
+sed -e 's/<OperatingSystemSection ovf:id\="80">/<OperatingSystemSection ovf:id\="101">/; s/<vssd:VirtualSystemType>virtualbox-2.2/<vssd:VirtualSystemType>vmx-7/; s/<rasd:Caption>sataController/<rasd:Caption>scsiController/; s/<rasd:Description>SATA Controller/<rasd:Description>SCSI Controller/; s/<rasd:ElementName>sataController/<rasd:ElementName>scsiController/; s/<rasd:ResourceSubType>AHCI/<rasd:ResourceSubType>lsilogic/; s/<rasd:ResourceType>20/<rasd:ResourceType>6/;' "$ovf_file" > "vmx_$ovf_file";
+sed -i 'H;1h;$!d;g;s_\(.*\)<Item>_\1<Item ovf:required="false">_' "vmx_$ovf_file";
+#mv "vmx_$ovf_file-2" "vmx_$ovf_file-1";
+ovf_hash=$( sha1sum "vmx_$ovf_file" | cut -d' ' -f1);
+sed -i -e "s/.*.foxden\.ovf.*/SHA1\ ("vmx_$ovf_file")\ \=\ $ovf_hash/" $mf_file;
+tar -cvf "$vm_name.ova" "$ovf_file" "$vm_disks" "$mf_file";
+tar -tvf "$vm_name.ova";

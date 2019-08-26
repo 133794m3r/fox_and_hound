@@ -260,7 +260,7 @@ while read line; do
 #if we hit the line number that matches the first search string we insert it to the file and appened it to the end.
     if [[ $i -eq $first_string_line_num ]]; then
     #the first string is outputted to the file.
-        echo -e $SEARCH_STRING0 >> $OUTPUT_FILE;
+        echo "$SEARCH_STRING0" >> $OUTPUT_FILE;
         #echo this line's true number.
         echo 'fi:'$i;
         #This increments i as we just added a line.
@@ -269,7 +269,7 @@ while read line; do
 #Same as before but with the SEARCH_STRING1.
     elif [[ $i -eq $second_string_line_num ]]; then
     #the 2nd search string is appeneded to the output file.
-        echo -e $SEARCH_STRING1 >> $OUTPUT_FILE;
+        echo "$SEARCH_STRING1" >> $OUTPUT_FILE;
         #second string's linenumber.
         echo 'si:'$i;
         #increment i since we added a line.
@@ -278,7 +278,7 @@ while read line; do
 #Same as before but with the SEARCH_STRING2
     elif [[ $i -eq $third_string_line_num ]]; then
     #This time we put the 3rd search string's text into the output file.
-        echo -e $SEARCH_STRING2 >> $OUTPUT_FILE;
+        echo -e "$SEARCH_STRING2" >> $OUTPUT_FILE;
         #this is debug info for me to know which lines to look at to speed up things.
         echo 'ti:'$i;
   #increment i as another line is appeneded to the file.
@@ -286,9 +286,11 @@ while read line; do
 #Same as before but with the instructions to what string to search for from the user.
     elif [[ $i -eq $instruction_line ]]; then
     #we put the instructions into the output file by appeneding it to the end of it.
-        echo -e $INSTRUCTIONS0  >> $OUTPUT_FILE;
+        echo -e "$INSTRUCTIONS0"  >> $OUTPUT_FILE;
         #we make sure that the first instruction line is set to this value.
         instruction_line1=$i;
+        echo "il1:$instruction_line1";
+        echo -e "$INSTRUCTIONS0";
 #the thing outputs the instruction line aka instruction <i> value.
         echo 'ii:'$i;
 

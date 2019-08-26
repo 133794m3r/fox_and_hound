@@ -12,14 +12,14 @@
 
 int main(int argc, char **argv){
     char *correct_string=malloc(8);
-    correct_string="gr5d1pti";
+    correct_string="ry5d1p33";
     //correct_string="12345678";
     char *flag_string="The flag is ";    
     char *flag=malloc(28);
     //char *false_flag0=malloc(28);
    // char *false_flag1=malloc(28);
     //flag="ABCDEFGHIJKLMNO";
-    flag="ac3uqsu3tfb3eqk38dpoqww5ak6p4q91";
+    flag="t4pymx6x3cyj9h9pyg8yw9y458mfx3da";
     
     /*
     * This whole if else if thing is a hacky thing to avoid declaring another variable and
