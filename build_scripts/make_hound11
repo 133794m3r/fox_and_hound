@@ -139,7 +139,7 @@ for((i=0;i<NUM_LINES;++i)){
         tmp_str=$(printf "$FLAG_STRING $FLAG_HOUND %${correct_spaces}s\n" ''| sed -e "$regex_str");
         CORRECT_LEN=$( printf "$tmp_str" | wc -c );
         printf "$tmp_str\n" >> $tmp_file;
-        echo "$tmp_str";
+        FLAG_STR="$tmp_str";
     elif [[ $i = $false_line ]];then
         printf "$FLAG_STRING $str %${num_spaces}s\n" ''| sed -e "$regex_str" >> $tmp_file;
         #true;
@@ -166,11 +166,20 @@ echo "$GOAL_STR0";
 padding=$(( 43 - ${#str_array[1]} ));
 GOAL_STR1=`(printf "%s%${padding}s" "${str_array[1]}" '')`;
 echo "$GOAL_STR1";
-
 sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR0'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/GOAL_STR1\=.*/GOAL_STR1\='$GOAL_STR1'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/LINE_LEN\=.*/LINE_LEN=$CORRECT_LEN/" ../home_folders/hound$level/.ssh/rc;
 cp $tmp_file "$file_location"
 rm $tmp_file;
+#awk "$0 ~ /PATTERN/ && length($0) == $LENGTH {print };" `<FILENAME>`;
+regex_test_pattern=`( select_regex_test_pattern $regex_case0 )`;
+regex_test_pattern=${regex_test_pattern:0:-1};
+TEST_STRING=$( awk "\$0 ~ $regex_test_pattern && length(\$0) == $CORRECT_LEN { print }" "$file_location");
+if [[ "$FLAG_STR" == "$TEST_STRING" ]];then
+    echo 'It worked. Values are the same.';
+else
+    echo 'Uh oh. Something is fubared. Verify that the values are correct. Here is what we think it should be.';
+    printf "right_value: '$FLAG_STR'\nwrong_value: '$TEST_STRING'\n The regex pattern we got was $regex_test_pattern. The help string said it should be $GOAL_STR0 $GOAL_STR1\n";
+fi
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;

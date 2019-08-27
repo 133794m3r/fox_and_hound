@@ -58,10 +58,20 @@ function sed_regex_pattern(){
     local pattern_code=$2;
     local str=$3;
     if [[ $pattern_code -le 7 ]];then
-        pattern_code='\'"$selected_pattern";
+        selected_pattern='\'"$selected_pattern";
     fi
 
     echo "$str" | sed -e "s/\([a-z0-9]\)/\1$selected_pattern/g";
+}
+function sed_regex_test(){
+    local selected_pattern="$1";
+    local pattern_code="$2";
+    local correct_line=$3;
+    local filename="$4";
+    if [[ $pattern_code -le 7 ]];then
+        selected_pattern='\'"$selected_pattern";
+    fi
+    sed -ne "s/$selected_pattern//g;$correct_line p" "$filename";
 }
 function sed_regex_help(){
 #base_str='Goal:Use a regex pattern that deletes all of the'
