@@ -72,6 +72,12 @@ cd $dirname;
 
 #we put the flagl in the file through pipes.
 echo "$FLAG_HOUND" > "$filename";
+CHECK_FILE=$( cat "$filename" );
+if [[ $FLAG_HOUND = $CHECK_FILE ]];then
+    echo "It worked. Somehow it worked. Don't question it. Doing so is a folly.";
+else
+    echo "Someone messed up. Better review it manually.";
+fi
 #chown -R 1004 "$filename";
 #then we go back to the build scripts directory so that we can output to it our file that'll
 #hold the flag and the username for the next user.

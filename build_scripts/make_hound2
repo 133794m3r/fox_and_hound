@@ -58,7 +58,12 @@ echo "$FLAG_HOUND" > "$file_name";
 
 #then we go back to the build scripts directory so that we can output to it our file that'll
 #hold the flag and the username for the next user.
-
+CHECK_FILE=$(cat "$file_name");
+if [[ "$CHECK_FILE" == "$FLAG_HOUND" ]];then
+    echo 'Both values are the same. It worked.';
+else
+    echo 'Oh no. Something broke. Verify manually.';
+fi
 cd ../../build_scripts
 #cd ../../build_scripts;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.

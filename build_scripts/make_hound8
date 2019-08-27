@@ -339,6 +339,7 @@ cd ../../tmp;
 #mkdir -p ../hounds/hound6;
 pwd;
 cp -aR . ../hounds/hound$level;
+
 #chmod 755 /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
 #false flag function to make a string that looks like the legit one.
 #this is used for the redherring's if the length matches up.
@@ -348,9 +349,19 @@ let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
 rm -Rd ../tmp;
+pwd;
 echo "hound$level:$FLAG_HOUND" >> ../build_scripts/the_flags;
 #this is done at the end because permissions are changed to the string at the end.
 #we have to edit the .ssh/rc file in the home directory so that it contains this data.
-permission_octal_to_string $correct_permission;
-echo "$FLAG_HOUND";
+permission=$( permission_octal_to_string $correct_permission );
+echo "fh: $FLAG_HOUND";
 sed -i "s/permission\=.*/permission\=$permission/" ../home_folders/hound$level/.ssh/rc;
+let level--;
+cd ../hounds/hound$level;
+CHECK_FILE=$(find -uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$correct_size"c -exec cat {} \;);
+FLAG_STRING=$(printf "%${size1}s\n" "$HOUND_STR$FLAG_HOUND");
+if [[ "$CHECK_FILE" == "$FLAG_STRING" ]];then
+    echo 'Flag was built correctly.';
+else
+    echo -e "Flag seems to not to be built correctly. Manually review it using the command.\n find -uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$correct_size"c -exec cat {} \;";
+fi

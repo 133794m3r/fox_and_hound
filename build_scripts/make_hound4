@@ -153,7 +153,7 @@ echo "correct_filename:$correct_filename";
 echo "$FLAG_HOUND";
 echo "hound$level:$FLAG_HOUND" >> the_flags;
 FLAG_STRING=$( printf "The flag is $FLAG_HOUND\r\n" );
-GIVEN_STRING=$( file ../hounds/hound4/"$dirname/$filename"* | grep ': ASCII text' | cut -f1 -d':' | xargs -i{} cat '{}' );
+GIVEN_STRING=$( file ../hounds/hound$level/"$dirname/$filename"* | grep ': ASCII text' | cut -f1 -d':' | xargs -i{} cat '{}' );
 
 if [ "$FLAG_STRING" = "$GIVEN_STRING" ];then
     echo 'It worked... somehow.';

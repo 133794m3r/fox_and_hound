@@ -107,8 +107,7 @@ for((i=0;i<NUM_LINES;++i)){
     if [[ $i -eq $correct_line ]];then
         tmp_str=$(printf " $FLAG_HOUND \n" | sed -e "$regex_str");
         printf "$tmp_str\n" >> $tmp_file;
-        echo 'asdf';
-        echo "$tmp_str";
+        FLAG_STR="$tmp_str";
     elif [[ $i -eq $false_line2 ]];then
         printf " $str \n"| sed -e "$false_regex_str0" >> $tmp_file;
     else
@@ -139,6 +138,13 @@ sed -i "s/GOAL_STR1\=.*/GOAL_STR1\='$GOAL_STR1'/" ../home_folders/hound$level/.s
 cp -v $tmp_file "$file_location";
 cp -v programs/regexer "../hounds/hound$level/regexer";
 rm $tmp_file;
+regex_test_pattern=`( select_regex_test_pattern $regex_case0 )`;
+TEST_STRING=`(sed -n "$regex_test_pattern" "$file_location")`
+if [[ $TEST_STRING == $FLAG_STR ]];then
+    echo 'It worked. Both values are the same.';
+else
+    echo "It didn't work. Try again. The shown regex pattern was $regex_test_pattern and the pattern that modified the line was $regex_str";
+fi
 let level++;
 pwd;
 echo "hound$level:$FLAG_HOUND" >> the_flags;
