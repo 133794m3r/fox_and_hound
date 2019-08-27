@@ -351,6 +351,34 @@ function cipher_string(){
     printf "$string" | tr $final_pattern;
 }
 
+function select_regex_test_pattern(){
+    local regex_code=$1;
+    local sed_str='';
+    case $regex_code in
+        1)
+            sed_str='/^[A-Z]/p';
+        ;;
+        2)
+            sed_str='/^[0-9]/p';
+        ;;
+        3)
+            sed_str='/^[^A-Za-z0-9]/p';
+        ;;
+        4)
+            sed_str='/[0-9]$/p';
+        ;;
+        5)
+            sed_str='/[^A-Za-z0-9]$/p';
+        ;;
+        6)
+            sed_str='/[A-Z]$/p';
+        ;;
+        7)
+            sed_str='/[a-z]$/p';
+        ;;
+    esac
+    echo "$sed_str";
+}
 function generate_sequence(){
     local a=0;
     local b=1;
