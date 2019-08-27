@@ -71,7 +71,7 @@ function sed_regex_test(){
     if [[ $pattern_code -le 7 ]];then
         selected_pattern='\'"$selected_pattern";
     fi
-    sed -ne "s/$selected_pattern//g;$correct_line p" "$filename";
+    sed -ne "s/$selected_pattern//g;$correct_line p" "../hounds/hound$level/$filename";
 }
 function sed_regex_help(){
 #base_str='Goal:Use a regex pattern that deletes all of the'
@@ -114,7 +114,7 @@ filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
 for (( i=1; i<$filename_arr_len; i++ ));do
     tmp="$tmp|${filename_arr[$i]}";
 done
-ls -a ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
+ls -A ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
@@ -161,7 +161,7 @@ for ((i=0;i<$NUM_LINES;++i)){
         capture_str="$capture_str"`( sed_regex_pattern "$CORRECT_REGEX_PATTERN" $CORRECT_REGEX_CODE $FLAG_HOUND )`'\n';
     elif [[ $i = $false_line ]];then
         #printf '%s\n' "`(sed_regex_pattern $CORRECT_REGEX_PATTERN $CORRECT_REGEX_CODE $str )`" >> $tmp_file;
-        capture_str="$capture_str"`( sed_regex_pattern "$CORRECT_REGEX_PATTERN" $CORRECT_REGEX_CODE $FLAG_HOUND )`'\n';
+        capture_str="$capture_str"`( sed_regex_pattern "$CORRECT_REGEX_PATTERN" $CORRECT_REGEX_CODE $str )`'\n';
     else
         #printf '%s\n' "`(sed_regex_pattern $selected_pattern $pattern_code $str )`" >> $tmp_file;
         capture_str="$capture_str"`(sed_regex_pattern "$selected_pattern" $pattern_code $str )`'\n';
@@ -192,11 +192,28 @@ echo -e "$GOAL_STR0";
 echo -e "$GOAL_STR1";
 echo -e "$GOAL_STR2";
 echo -e "$GOAL_STR3";
-
 sed -i 's/GOAL_STR0\=.*/GOAL_STR0\=\"'"$GOAL_STR0"'\"/' ../home_folders/hound$level/.ssh/rc;
 sed -i 's/GOAL_STR1\=.*/GOAL_STR1\=\"'"$GOAL_STR1"'\"/' ../home_folders/hound$level/.ssh/rc;
 sed -i 's/GOAL_STR2\=.*/GOAL_STR2\=\"'"$GOAL_STR2"'\"/' ../home_folders/hound$level/.ssh/rc;
 sed -i 's/GOAL_STR3\=.*/GOAL_STR3\=\"'"$GOAL_STR3"'\"/' ../home_folders/hound$level/.ssh/rc;
 cp $tmp_file ../hounds/hound$level/"$filename";
+#FLAG_STR=`( sed_regex_pattern "$CORRECT_REGEX_PATTERN" $CORRECT_REGEX_CODE $FLAG_HOUND )`;
+TEST_STR=$( sed_regex_test "$CORRECT_REGEX_PATTERN" $CORRECT_REGEX_CODE $correct_line "$filename" );
+if [[ "$TEST_STR" == "$FLAG_HOUND" ]];then
+    echo 'Values matched. this is a successful build.'
+else
+    echo 'No bueno. Try again.'
+    echo "right:$FLAG_STR";
+    echo "wrong:$TEST_STR";
+    echo "pattern:$CORRECT_REGEX_PATTERN";
+    echo "regex_code:$CORRECT_REGEX_CODE";
+    echo "filename:$filename";
+    echo "command to try it yourself:"
+    if [[ $CORRECT_REGEX_CODE -le 7 ]];then
+        CORRECT_REGEX_PATTERN='\'"$CORRECT_REGEX_PATTERN";
+    fi
+    echo 'sed -ne "s/'"$CORRECT_REGEX_PATTERN"'//g;'"$correct_line"' p"' "../hounds/hound$level/$filename";
+fi
+
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;
