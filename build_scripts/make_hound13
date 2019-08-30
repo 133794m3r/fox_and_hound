@@ -122,11 +122,23 @@ for ((i=0; i<FILE_NUM_LINES;i++)); do
 done
 #The correct word that we're going to be grepping to.
 echo $CORRECT_WORD;
+TEST_STR=$(strings | grep "$CORRECT_WORD" | cut -t' ' -f2);
+FLAG_STR=$(printf  '\n%s %s\n' $the_word $FLAG_HOUND);
+if [[ "$TEST_STR" == "$FLAG_STR" ]];then
+    echo 'The strings matched.';
+else
+    echo "We received the string: $TEST_STR";
+    echo "But we expected the string: $FLAG_STR";
+    echo -e 'The grep code we tried was \n $( strings | grep "'"$CORRECT_WORD"'" | cut -t'"' "' -f2)';
+    echo 'Manually review the build to verify the authenticity.';
+fi
+
 cd ../../build_scripts;
 padding=$(( 41 - ${#CORRECT_WORD} ));
 CORRECT_WORD=$(printf "%s%${padding}s" $CORRECT_WORD ' ' );
 #we edit the file with the new and correct word. It's actually possible to do this entirely through sed, but strings is there incase they want to do it that way.
 sed -i "s/string\=.*/string\='$CORRECT_WORD'/" ../home_folders/hound$level/.ssh/rc;
+
 #we put it into the flags file so that we can use it to the file that we're going to use to make sure that everything works.
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;

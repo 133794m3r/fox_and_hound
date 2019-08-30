@@ -95,7 +95,16 @@ line_to_delete=$(( ($RANDOM % $total_lines) + 1 ));
 #sed "$line_to_delete d; \$a$FLAG_HOUND" ./"$filename_1" > ./"$filename_2";
 sed "$line_to_delete i $FLAG_HOUND" ./"$filename_1" > ./"$filename_2";
 # "$FLAG_HOUND" >>
-diff ./"$filename_1" ./"$filename_2"
+TEST_STR=$( diff ./"$filename_1" ./"$filename_2" );
+if [[ "$TEST_STR" == "$FLAG_HOUND" ]];then
+    echo 'The values are the same. This flag built correctly. Do no question it!';
+else
+    echo "It didn't work. Try again.";
+    echo "String we got:$TEST_STR";
+    echo "What we wanted: $FLAG_HOUND";
+    echo -e 'The command we submitted\n $( diff ./"'"$filename_1"'" ./"'"$filename_2"'" )';
+fi
+
 cd ../../build_scripts;
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;
