@@ -104,7 +104,7 @@ fi
 #the filename we're going to use. It's an empty string by default.
 filename='';
 #The prefixes for the files
-filename_arr=('-.' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT'S A SECRET TO EVERYBODY" 'I AM ERROR' 'I AM BAGU');
+filename_arr=('-.' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT IS A SECRET TO EVERYBODY" 'I AM ERROR' 'I AM BAGU');
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
 filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
