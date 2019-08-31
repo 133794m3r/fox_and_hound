@@ -2,30 +2,36 @@
 #Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
 args=$#;
 if [[ $args -eq 1 ]]; then
-if [ $1 == '../hounds' ]; then
-cd $1;
-#TODO: Make it so that the line is passed to a function to make it to the userid/groupid
-#but that's for a future revision for now it's gotta be set manually.
-ls > /tmp/dirs;
-shopt -s dotglob
-while read line;
-do
-#    mkdir -p "$line";
-#    chmod 777 "$line";
-    
-    cd "$line";
-    pwd;
-    echo "$1:";
-    mkdir -p ../../"hounds_built/$line";
-    chmod 777 ../../"hounds_built/$line";
-    tar -cvJf ../../"hounds_built/$line/"challenge_file.txz *;
-    chmod 777 ../../"hounds_built/$line/"challenge_file.txz;
-   cd ..;
-done < /tmp/dirs
-shopt -u dotglob
-else
-    echo 'You did not include the correct directory';
-fi
+    if [ $1 == '../hounds' ]; then
+        cd $1;
+        #TODO: Make it so that the line is passed to a function to make it to the userid/groupid
+        #but that's for a future revision for now it's gotta be set manually.
+        ls > /tmp/dirs;
+        shopt -s dotglob
+        files='';
+        files_array='';
+        files_array2='';
+        while read line;
+        do
+            cd "$line";
+            pwd;
+            mapfile -t 'files_array' <<< $( ls )
+            nums_files=${#files_array[@]};
+            for((i=0;i<nums_files;i++));do
+                files_array[$i]='./'${files_array[$i]};
+            done
+
+            mkdir -p ../../"hounds_built/$line";
+            chmod 777 ../../"hounds_built/$line";
+            tar -cvJf ../../"hounds_built/$line/"challenge_file.txz "${files_array[@]}";
+            chmod 777 ../../"hounds_built/$line/"challenge_file.txz;
+           cd ..;
+
+        done < /tmp/dirs
+        shopt -u dotglob
+    else
+        echo 'You did not include the correct directory';
+    fi
 else
     echo 'you did not include a directory'
 fi
