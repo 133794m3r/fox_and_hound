@@ -7,6 +7,12 @@
 # that way they're using regex but are also only showing certain ones. Also this is showing them some non-standard views
 # of sed.
 #
+#TODO: Make this flag be more involved. So that it's a range of values.
+#this'll also require pipes to be utilized.
+#the example will be something like this.
+#sed -n -e 's/<STRING>//g;<START>,<END>p' -e '/[a-z0-9]$/p' <FILENAME> | uniq -d
+#that will require them to find the lines that are printed twice. This way they cannot simply just go to that line in a text editor and manually replace the lines. For this flag nano/vim will not have line numbers enabled to make it a big harder.
+
 if [[ $# -lt 1 ]];then
     level=12;
 else
@@ -153,7 +159,7 @@ echo "$FLAG_HOUND";
 capture_str='';
 tmp='';
 #NUM_LINE=102;
-for ((i=0;i<$NUM_LINES;++i)){
+for ((i=0;i<$NUM_LINES;++i));do
     str=$( make_false_flag $password_dict $password_dict_len );
     select_random_regex;
     if [[ $i = $correct_line ]];then
@@ -166,7 +172,7 @@ for ((i=0;i<$NUM_LINES;++i)){
         #printf '%s\n' "`(sed_regex_pattern $selected_pattern $pattern_code $str )`" >> $tmp_file;
         capture_str="$capture_str"`(sed_regex_pattern "$selected_pattern" $pattern_code $str )`'\n';
     fi
-}
+done
 echo -en "$capture_str" >> $tmp_file;
 correct_line=$(( $correct_line + 1 ));
 tmp=0;
