@@ -11,7 +11,7 @@ function select_command(){
     local str="$1";
 
     case "$str" in
-        'bzip')
+        'bzip2')
             command='bzcat'
         ;;
         'gzip')
@@ -38,15 +38,17 @@ function select_command(){
 function decompression_tester(){
     local filename="$1";
     are_we_done=0;
+    i=0;
     file_type=$( file "$filename" | cut -d' ' -f2 );
     command_base=$( select_command "$file_type" );
     return_val='';
-    echo "asdf";
-    command_base="$command_base $filename";
-    echo "$command_base";
-    while [[ $are_we_done -eq 0 ]];do
-        echo "$command";
-        file_type=$( $command | file - | cut -d' ' -f2 );
+    if [[ "$command_base" = "tar xO" ]];then
+        command_base="tar xOf";
+    fi
+    command="$command_base $filename";
+    command_base="$command";
+    while [[ $are_we_done -eq 0 && i -lt 20 ]];do
+        file_type=$( eval "$command" | file - | cut -d' ' -f2 );
         command=$( select_command "$file_type" );
         if [ "$command" == "DONE" ];then
             are_we_done=1;
@@ -58,12 +60,13 @@ function decompression_tester(){
             command="$command_base | $command"
             command_base=$command;
         fi
+        let i++;
     done
 
-    if [ "$return_vale" != 'failed!' ];then
-        return_val=$( $command_base | xxd -r | base64 -d  );
+    if [ "$return_val" != 'failed!' ];then
+        return_val=$( eval "$command_base" | xxd -r | base64 -d  );
     fi
-    echo return_val;
+    echo "$return_val";
     return 0;
 }
 
@@ -179,6 +182,7 @@ cp -v "$filename" ../../hounds/hound"$level"
 
 TEST_STR=$( decompression_tester "$filename" );
 echo "$TEST_STR";
+echo "$FLAG_STR";
 cd ..;
 #rm -Rv tmp;
 rm -Rv tmp;
