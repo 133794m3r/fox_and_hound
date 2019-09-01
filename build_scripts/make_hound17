@@ -67,5 +67,11 @@ sudo chgrp 1008 "$c_program_srcdir/built/givemethepin";
 #chmod 711  "$c_program_srcdir/built/b64";
 
 #The programs go into the /usr/local/bin
+TEST_STR=$( bash ../solutions/pin_guesser.sh | cut -d' ' -f4 );
+if [[ "$TEST_STR" == "$FLAG_HOUND" ]]; then
+    echo "The string came back fine. It worked! Just took awhile, though.";
+else
+    echo "No beuno. Better do a manual check.";
+fi
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;
