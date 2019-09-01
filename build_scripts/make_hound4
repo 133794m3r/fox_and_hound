@@ -145,18 +145,19 @@ cp -R bunch_dirs/. ../hounds/hound4/"$dirname";
 rm -r bunch_dirs;
 #cd ../../build_scripts;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
-let level++;
+
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
 printf "how to find.\nfile '$dirname/$filename'* | grep ': ASCII text' | cut -f1 -d':' | xargs -i{} cat '{}'\n"
 echo "correct_filename:$correct_filename";
 echo "$FLAG_HOUND";
-echo "hound$level:$FLAG_HOUND" >> the_flags;
+
 FLAG_STRING=$( printf "The flag is $FLAG_HOUND\r\n" );
 GIVEN_STRING=$( file ../hounds/hound$level/"$dirname/$filename"* | grep ': ASCII text' | cut -f1 -d':' | xargs -i{} cat '{}' );
-
 if [ "$FLAG_STRING" = "$GIVEN_STRING" ];then
     echo 'It worked... somehow.';
 else
     echo 'Some kinda error better try it yourself to make sure.';
 fi
+let level++;
+echo "hound$level:$FLAG_HOUND" >> the_flags;

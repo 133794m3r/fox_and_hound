@@ -122,14 +122,14 @@ for ((i=0; i<FILE_NUM_LINES;i++)); do
 done
 #The correct word that we're going to be grepping to.
 echo $CORRECT_WORD;
-TEST_STR=$(strings | grep "$CORRECT_WORD" | cut -t' ' -f2);
-FLAG_STR=$(printf  '\n%s %s\n' $the_word $FLAG_HOUND);
+TEST_STR=$(strings ./"$output_file"| grep "$CORRECT_WORD");
+FLAG_STR=$(printf  '%s %s\n' $CORRECT_WORD $FLAG_HOUND);
 if [[ "$TEST_STR" == "$FLAG_STR" ]];then
     echo 'The strings matched.';
 else
     echo "We received the string: $TEST_STR";
     echo "But we expected the string: $FLAG_STR";
-    echo -e 'The grep code we tried was \n $( strings | grep "'"$CORRECT_WORD"'" | cut -t'"' "' -f2)';
+    echo -e 'The grep code we tried was \n $( strings | grep "'"$CORRECT_WORD"'" | cut -d'"' "' -f2)';
     echo 'Manually review the build to verify the authenticity.';
 fi
 
