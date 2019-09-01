@@ -1,7 +1,10 @@
 #!/bin/bash
 #this might work, I'm probably going to have to run it from .bashrc and then have the
 #person use the vim command `let keepalive=1` and then it'll check it.
-
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
 #this comparision function is to see if the variable is set.
 if [[ -z ${keepalive+x} ]];then
     nodie=0;

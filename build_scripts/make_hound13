@@ -1,5 +1,9 @@
 #!/bin/bash
 #hound13 aka No obfusication can escape my watchful eye. I *grep* it all!
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
 # the one where they're grepping the password that appears after the certain string.
 # also combines it with strings as the file is full of binary data.
 if [[ $# -lt 1 ]];then

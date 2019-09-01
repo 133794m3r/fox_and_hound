@@ -1,4 +1,11 @@
 #!/bin/bash
+# Pipe Madness Solver.
+# This script will solve the flag and give you the final string.
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
+
 function select_command(){
     local str="$1";
 

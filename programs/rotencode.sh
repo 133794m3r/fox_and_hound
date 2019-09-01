@@ -1,5 +1,8 @@
 #!/bin/bash
-#Macarthur Inbody <mdi2455@email.vccs.edu> 2019- AGPLv3
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
 function rot_47(){
     local FILENAME=$2;
 

@@ -1,4 +1,8 @@
 #!/bin/bash
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
 cpu_temp=$(cat /sys/class/thermal/thermal_zone0/temp | awk '{printf "%.1f",$1/1000}');
 gpu_temp=$(/opt/vc/bin/vcgencmd measure_temp | tr -d 'temp=' | tr -d "'C")
 echo "CPU temp:$cpu_temp *C";
