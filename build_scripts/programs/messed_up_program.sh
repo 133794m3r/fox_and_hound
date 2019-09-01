@@ -43,7 +43,7 @@ function generate_sequence(){
         a=$b;
         b=$num;
         #if logic statement.
-        if [[ $i -ge $start ]];
+        if [[ $i -ge $start ]];then
             printf "$a ";
         #else if this value we do this.
         elif [[ $i = $end ]];then
@@ -91,7 +91,7 @@ function decrypt(){
     local index=0;
 
     #a for loop in Shell style.
-    for (i=0;i<str_len;++i)); do
+    for ((i=0;i<str_len;++i)); do
         #getting a substring out of a string.
         byte=${str:$i:1};
         index=`(str_index $b64_dict $byte )`;
