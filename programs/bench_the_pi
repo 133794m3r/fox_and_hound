@@ -1,4 +1,8 @@
 #!/bin/bash
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
 #sysbench --num-threads=1 --test=cpu --cpu-max-prime=45000 --validate run
 time sysbench --num-threads=4 --test=cpu --cpu-max-prime=45000 --validate run
 sysbench --num-threads=1 --test=memory --memory-total-size=1G

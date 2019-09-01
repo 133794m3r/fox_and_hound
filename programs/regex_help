@@ -1,4 +1,8 @@
 #!/bin/sh
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
 printf '
 Here are some basic regex help.
 If you need more help then you can type `info regex` or you can search for help online.
@@ -15,4 +19,6 @@ $ (Question)     =    match expression at the end of a line, as in A$.
 \{x,\}           =    match x or more occurrences of the preceding.
 ( )              =    a capture group.
 \\1\\2             =    References to matches of the capture group.
+
+Macarthur Inbody (C) 2019 -
 ';

@@ -1,4 +1,8 @@
 #!/bin/bash
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
 #This script will demonstrate a basic "guess the number" game.
 min=1;
 max=10;

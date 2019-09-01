@@ -1,9 +1,10 @@
 #!/bin/bash
 # Hound 16 Base Script. Goal is to make it run.
 # Then it'll give them the flag.
-# Macarthur Inbody <mdi2455@email.vccs.edu>
-# AGPLv3
-# 2019 -
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
 
 #TODO: Fix this bad boy up real good.
 #recreation of the PHP function that converts a byte string to a decimal number.

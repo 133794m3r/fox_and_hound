@@ -1,5 +1,8 @@
 #!/bin/bash
-
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
 min=1;
 max=10;
 delay=0.0625;

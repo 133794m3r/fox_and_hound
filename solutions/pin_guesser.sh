@@ -1,4 +1,9 @@
 #!/bin/dash
+# The Pin Guesser Script
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
 num_str='';
 #todo make sure that they write it so that it works with dash.
 #this results in a 50% speedup! huge as it saves a shitton of time.

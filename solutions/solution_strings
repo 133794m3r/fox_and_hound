@@ -1,6 +1,0 @@
-hound 5
-tar -xOf file.dat | tar -xO | zcat | xzcat | tar -xO | xzcat | tar -xO | xxd -r | base64 -d
-hound 6
-find . -user 1007 -group 1006 -perm 751 -size 1337c -exec cat {} \;
-hound 9
-script.
