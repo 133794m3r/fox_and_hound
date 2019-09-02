@@ -3,10 +3,7 @@
 # exists.
 # see /usr/share/doc/bash/examples/startup-files for examples.
 # the files are located in the bash-doc package.
-# Macarthur Inbody
-# mdi2455@email.vccs.edu / admin-contact@transcendental.us
-# Licenesed under AGPLv3
-# (C) 2019 -
+
 # the default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022

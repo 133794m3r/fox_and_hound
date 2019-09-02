@@ -4,5 +4,4 @@ filetype on
 set nu
 set ruler
 set mouse=a
-set list
-
+set shell=/home/hound7/vim_shell

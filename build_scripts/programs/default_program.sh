@@ -151,8 +151,8 @@ function uncipher_string(){
 function main(){
 #the arguments are from $0-$n. $0=program name. $1 is first argument and so on.
     local passed_string="$1";
-    local pattern="$2";
-    local str_len="$3";
+    local str_len="$2";
+    local pattern="$3";
     local filename="$4";
     #this utilizes command substitution to get the result back to it w/o using a subshell.
     local chosen_string=`(get_specific_string "$filename" $str_len "$pattern")`

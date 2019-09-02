@@ -1,10 +1,7 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
-# Macarthur Inbody
-# mdi2455@email.vccs.edu / admin-contact@transcendental.us
-# Licenesed under AGPLv3
-# (C) 2019 -
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -117,7 +114,7 @@ fi
 #this will set the directories and CD into it for us.
 dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_')
 mkdir /tmp/foxhunt/"$dirname";
-tar -xvJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
+#tar -xvJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
@@ -125,3 +122,4 @@ alias showbanner="sh /home/$USER/.ssh/rc";
 unset histfile
 unset HISTFILE
 alias ls="ls -N"
+echo "$dirname" > /tmp/foxhunt/hound8_users_dirs
