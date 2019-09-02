@@ -3,27 +3,24 @@
 # exists.
 # see /usr/share/doc/bash/examples/startup-files for examples.
 # the files are located in the bash-doc package.
-# Macarthur Inbody
-# mdi2455@email.vccs.edu / admin-contact@transcendental.us
-# Licenesed under AGPLv3
-# (C) 2019 -
+
 # the default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 if [ -z "$SSH_CONNECTION" ];then
     exit;
 fi
-if [ "$BASH" -ne "/bin/bash" ];then
-    str=$( echo '\e[1ma' );
-    if [ ${#str} -eq 1 ];then
+if [ "$BASH" != "/bin/bash" ];then
+#    str=$( echo '\e[1ma' );
+#    if [ ${#str} -eq 1 ];then
         dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_')
         mkdir -p /tmp/foxhunt/"$dirname";
         tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname";
         cd /tmp/foxhunt/"$dirname";
         chmod 444 *;
-        vim vim_welcome_msg;
+        vim vim_welcome_msg
         kill -9 $PPID;
-    fi
+#    fi
 fi
 
 

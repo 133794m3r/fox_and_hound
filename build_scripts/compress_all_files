@@ -18,7 +18,7 @@ if [[ $args -eq 1 ]]; then
         do
             cd "$line";
             pwd;
-            mapfile -t 'files_array' <<< $( ls )
+            mapfile -t 'files_array' <<< $( ls -A )
             nums_files=${#files_array[@]};
             for((i=0;i<nums_files;i++));do
                 files_array[$i]='./'${files_array[$i]};

@@ -39,15 +39,15 @@ function generate_sequence(){
     #using math requires $(( 2+2)) to get the result.
     local end=$(($start + 5 ));
     # a for loop the C style.
-    for (( i=0; i<10; i++ )) {
+    for ( i=0; i<10; i++ ) {
         num=$(( a + b ));
         a=$b;
         b=$num;
         #if logic statement.
-        if [[ $i -ge $start ]];then
+        if [[ $i -ge $start ]];
             printf "$a ";
         #else if this value we do this.
-        elif [[ $i = $end ]];then
+        else if [[ $i = $end ]];then
             break;
         fi
     }
@@ -168,7 +168,7 @@ function main(){
 }
 
 #if logic statement.
-if [ $# -ge 1 ]];then
+if [[ $# -ge 1 ]];then
     #case switch statements.
     case $1 in
     #one of the cases. You can use | to make it match any of the strings.
