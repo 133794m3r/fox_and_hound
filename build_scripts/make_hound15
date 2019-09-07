@@ -182,8 +182,12 @@ rm -v ../../hounds/hound"$level"/*
 cp -v "$filename" ../../hounds/hound"$level"
 
 TEST_STR=$( decompression_tester "$filename" );
-echo "$TEST_STR";
-echo "$FLAG_STR";
+if [[ "$TEST_STR" == "$FLAG_STR" ]];then
+    echo "Build hound$level succeeded.";
+else
+    echo "We were expecting. $FLAG_STR but we got,\n $TEST_STR.";
+    echo "Please manually review the file $filename, but first run the program pipemadness like so.\n bash pipe_madness.sh $filename \n to confirm that it isn't just a fluke.";
+fi
 cd ..;
 #rm -Rv tmp;
 rm -Rv tmp;
