@@ -8,6 +8,7 @@ The rest of the flags will utilize awk to make sure that it works by getting dat
 The words from the hound dictionary that we're going to use. They were chosen semi-randomly.
 Basically each word has the level number(encoded in hex) appended to the end of the word at the line.
 
+#the rest of these are already used but the numbers are out of order.
 flag_num:0
 WORD_ARRAY=(33 34 35 36 37 38 49);
 flag_num:1
@@ -44,8 +45,60 @@ flag_num:16
 WORD_ARRAY=(15 16 17 18 19 20 21);
 flag_num:17
 WORD_ARRAY=(1 2 3 4 22 23 24);
-#reserved for the future.
+
+#used for tr/unique flag number is not correct yet.
 flag_num:18
 WORD_ARRAY=(25 5 6 7 8 26 27);
+#reserved for future use.
 flag_num:19
 WORD_ARRAY=(28 29 9 10 11 12 30);
+
+THE NEW WORD_ARRAYS
+Basically the flagnum will be updated with the correct one so that I can generate the flags themselves once it's all done.
+If more flags are needed then you just give the c program the seed and change the first value which is the number of flags to generate.
+flag_num:0
+WORD_ARRAY=(24 25 26 27 28 29 30);
+flag_num:1
+WORD_ARRAY=(31 32 33 34 35 36 37);
+flag_num:2
+WORD_ARRAY=(38 39 40 41 42 43 44);
+flag_num:3
+WORD_ARRAY=(45 46 47 48 49 50 51);
+flag_num:4
+WORD_ARRAY=(52 53 54 55 56 57 58);
+flag_num:5
+WORD_ARRAY=(59 60 0 1 2 3 4);
+flag_num:6
+WORD_ARRAY=(5 6 7 8 9 10 11);
+flag_num:7
+WORD_ARRAY=(12 13 14 15 16 17 18);
+flag_num:8
+WORD_ARRAY=(19 20 21 22 23 23 22);
+flag_num:9
+WORD_ARRAY=(21 20 19 18 17 16 15);
+flag_num:10
+WORD_ARRAY=(14 13 12 11 10 9 8);
+flag_num:11
+WORD_ARRAY=(7 6 5 4 3 2 1);
+flag_num:12
+WORD_ARRAY=(0 60 59 58 57 56 55);
+flag_num:13
+WORD_ARRAY=(54 53 52 51 50 49 48);
+flag_num:14
+WORD_ARRAY=(47 46 45 44 43 42 41);
+flag_num:15
+WORD_ARRAY=(40 39 38 37 36 35 34);
+flag_num:16
+WORD_ARRAY=(33 32 31 30 29 28 27);
+flag_num:17
+WORD_ARRAY=(26 25 24 23 22 21 20);
+flag_num:18
+WORD_ARRAY=(19 18 17 16 15 14 13);
+flag_num:19
+WORD_ARRAY=(12 11 10 9 8 7 6);
+flag_num:20
+WORD_ARRAY=(6 5 4 2 1 0 60);
+
+seed: 2086713615
+
+
