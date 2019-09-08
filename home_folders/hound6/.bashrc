@@ -119,7 +119,7 @@ echo "$dirname" >> /tmp/foxhunt/hound6_users_dirs;
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-
+MEME_NAME="I'm not stuck, I'm just generating entropy for the NSA! Plz send help.";
 unset histfile
 unset HISTFILE
 alias ls="ls -N"

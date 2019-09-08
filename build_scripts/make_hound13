@@ -17,6 +17,25 @@ fi
 source build_functions;
 WORD_ARRAY=(25 24 23 22 21 20 19);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+#the dictionary file that we're using to get our words from.
+#this will be set to a global variable DICTIONARY from the main script once the whole
+#build system is done.
+dictionary='../../dict/passwords_dict';
+#get the length of the dictionary file.
+#in the future this'll be calculated once from the main build script and then the string
+#DICTIONARY_LEN will be set to this value.
+dictionary_len=2007
+
+#the filename we're going to use. It's an empty string by default.
+filename='';
+#The prefixes for the files
+filename_arr=('.-' '-~' '-.' '.~' 'this file has spaces' 'spaces in the name' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET');
+#we get the length of the files.
+filename_arr_len=${#filename_arr[*]};
+filename_ext_arr=('.txt' '.dat' '.md' '.notes' .'flag');
+filename_ext_arr_len=${#filename_ext_arr[*]};
+
+filename=${filename_arr[$(( $RANDOM % $filename_arr_len ))]}${filename_ext_arr[$(( $RANDOM % $filename_ext_arr_len))]};
+

@@ -118,4 +118,4 @@ tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-
+MEME_NAME="Why can't I hold all of these pipes?!";
