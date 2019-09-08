@@ -6,7 +6,7 @@
 DIRNAME=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_');
 case $1 in
 	'-debug')
-	echo "Person to blame: Macarthur Inbody <mdi2455@email.vccs.edu> Debug info: d|$DIRNAME f|$HOUND";;
+	echo "Person to blame: Macarthur Inbody <mdi2455@email.vccs.edu> Debug info: d|$DIRNAME f|$USER name:$MEME_NAME";;
 	'-person')
 	echo "Person to blame: Macarhtur Inbody <mdi2455@email.vccs.edu>";;
 	*)

@@ -122,7 +122,7 @@ int main(int argc, char **argv){
                 printf(" ");
             }
         }
-        printf(")\n");
+        printf(");\n");
     }
 
     for(j=0;j<=num_flags;j++){
