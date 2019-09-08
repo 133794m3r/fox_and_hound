@@ -1,0 +1,30 @@
+#!/bin/bash
+# This script will take in the word arrays for each flag and then generate the passwords
+# for them so that they can be put into CTFd.
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
+
+HASH_ENCODING='b32';
+source build_functions;
+declare -i j=0;
+declare -i i=0;
+declare -i max_words=6;
+declare -i level=0;
+declare -a word_arr=();
+while read line;do
+printf "hound$j\n";
+level=$j;
+word_arr=( $line );
+#echo ${word_arr[*]};
+for i in `( seq 0 $max_words )`;do
+    chosen_word=${word_arr[$i]};
+    if [[ $i != 0 ]];then
+        printf ',';
+    fi
+    printf "%s" $( make_semistatic_flag $chosen_word);
+done
+echo '';
+let j++;
+done < word_arrays;

@@ -1,78 +1,219 @@
 #!/bin/bash
-# Hound 17 aka `Look mah I'm a hacker now, I'm cracking someone's pin!/I've been bourne again as a programmer.`
+# Hound 16 aka `I'm a genius program, my script can't have syntax errors!`
 # Macarthur Inbody
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
 # (C) 2019 -
-# It requires them to write their first bash script to bruteforce a pin
-# and then cat that data to a program which'll give them the data back.
-# But it only accepts the pin as a base64 encoded file.
-HASH_ENCODING='b32';
+# this flag will generate a bash script that has a couple of syntax errors.
+# Basically they'll have to fix a logic error, fix a typo in a variable name.
+# then they'll also have to fix a syntax error. After doing this, they'll
+# then be able to get the program to generate a string for them after passing it an argument. Super simple thing to make sure they
+# get some basic bash scripting.
+# errors will include logic error, typoed variable, using [[]] instead of (()) for a loop, same with if/else if. Writing if else if. Doing the if/else loop with C-Style syntax etc. After fixing it up
+#the program will check the argument passed to it and then process it
+# and turn it into a string(using some function that won't have issues with it) by going through the string character by character transforming it someway.
 
+#String will be of this format.
+# It will be a base64 encoded, hex-encoded version of the string.
+#start of sequence:operation         :rot-n number. N is 127-number_given.
+#4-10              :255=xor: 126+{1..25}
+#Example would be  04ff7e | base64 = MDRmZjdl
+#aka start sequence=4. Operator is |. rot-n encoding is 1.
+#then the program will utilize this information to get the data back.
+# the characters will be xored from the base32 alphabet with the alphabetical character being
+# converted to a code after xoring it. The value they are xored with will be 5 characters rotated from fibonacci
+#sequence. This data will then have to be un-rotn encoded and after this they'll have the flag. The goal is to make it
+# hard as hell to  get the flag w/o fixing the syntax errors.
+HASH_ENCODING='b32';
 if [[ $# -lt 1 ]];then
-    level=17;
+    level=16;
 else
     level=$1;
 fi
-#this reads in the functions that are in the library.
+HA
+function choose_mistake(){
+    local mistake_str='';
+    local chosen_mistake=$1;
+    case $chosen_mistake in
+        0)
+            mistake_str='if ($0 ~ /;;/ ){ gsub(/;;/,";",$0); print $0}';
+        ;;
+        1)
+            mistake_str='if ($0 ~ /main\(\)/ ){ gsub(/\(\)/,"(void)",$0); print $0 }';
+        ;;
+        2)
+             mistake_str='if ( $0 ~ /elif/  ){ gsub(/elif/,"else if",$0); print $0 }';
+        ;;
+        3)
+            mistake_str='if ($0 ~ /if\ \[\[\ \$\#/ ){ gsub(/if\ \[\[\ \$\#/,"if [ $#",$0); print $0}';
+        ;;
+        4)
+            mistake_str='if ($0 ~/\(\(i\=0;i<str_len;\+\+i\)\)/ ){ gsub(/\(\(i\=0;i<str_len;\+\+i\)\)/,"(i=0;i<str_len;++i))",$0); print $0 }'
+        ;;
+        5)
+            mistake_str='if ($0 ~ /\(\(\ i\=0;\ i<10;\ i\+\+\ \)\)/ ){ gsub(/\(\(\ i\=0;\ i<10;\ i\+\+\ \)\)/,"( i=0; i<10; i++ )",$0); print $0 }'
+        ;;
+        6)
+            mistake_str='if ($0 ~ /\$start\ \]\];then/){ gsub(/\$start\ \]\];then/,"$start ]];",$0); print $0 }';
+        ;;
+    esac
+    printf "$mistake_str";
+}
+function make_mistakes(){
+    local mistake_str='';
+    local number_mistakes=$(( ( $RANDOM % 3 ) + 1 ));
+    local chosen_mistake=$(( $RANDOM %  7 ));
+    local i=0;
+    local j=0;
+    local chosen_array=();
+    chosen_array[0]=$chosen_mistake;
+    local start=$number_mistakes;
+    mistake_str=$( choose_mistake $chosen_mistake);
+    if [[ $number_mistakes -ge 2 ]];then
+        while [[ $start -ge 1 ]];do
+            chosen_mistake=$(( $RANDOM % 7 ));
+            while [[ ${chosen_array[@]} =~ $chosen_mistake ]]; do
+                chosen_mistake=$(( $RANDOM % 7 ));
+            done
+            chosen_array[$j]=$chosen_mistake;
+            mistake_str+=' else '$( choose_mistake $chosen_mistake );
+            let start--;
+        done
+    fi
+
+    printf "$mistake_str";
+}
+
+
+#the library of build functions.
 source build_functions;
-
-#we seed $RANDOM with the current level value.
-seed_random $level;
-
-#we then make the flag by calling it.
-#FLAG_HOUND=$( make_flag $level 1);
-
-#we continue by selecting things semi_randomly.
-#when we are in debug mode it'll be calling debug_random
-continue_random;
-# the old flag.
-WORD_ARRAY=(1 2 3 4 22 23 24);
+#the dictionary file that we're using to get our words from.
+#this will be set to a global variable DICTIONARY from the main script once the whole
+#build system is done.
+password_dict='../dict/passwords_dict';
+#get the length of the dictionary file.
+#in the future this'll be calculated once from the main build script and then the string
+#DICTIONARY_LEN will be set to this value.
+password_dict_len=2007;
+#set the encoding. In future versions this'll be hardcoded from the main script.
+#this is to make sure tha all hashes are b32 encoded.
+HASH_ENCODING='b32';
+num_mistakes=$(( $RANDOM % 3 ));
+WORD_ARRAY=(58 57 56 55 54 53 52);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
-function sed_it(){
-    sed -i "s/$1/$2/" ../c_programs/givemethepin-$pin_suffix.c;
+filename_arr=('SECRET' "IT'S A SECRET TO EVERYBODY", 'I AM ERROR' 'I AM BAGU' 'HERE_BE_DRAGONS');
+program_name_array=('run_this_program' 'run_me' 'here_be_treasure' 'run_it');
+program_name=${program_name_array[$(($RANDOM % 4 ))]};
+#we get the length of the files.
+filename_arr_len=${#filename_arr[*]};
+filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
+
+for (( i=1; i<$filename_arr_len; i++ ));do
+    tmp="$tmp|${filename_arr[$i]}";
+done
+
+ls ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
+max_spaces=10;
+correct_spaces=$(( ($RANDOM & $max_spaces) +1 ));
+echo "correct_spaces:"$correct_spaces;
+num_spaces=0;
+extra_space=0;
+NUM_LINES=$(( ($RANDOM % 25) + 40 ));
+correct_line=$(( ($RANDOM % 20) + 15  ));
+false_line=$(( $correct_line + ($RANDOM  % 5 )));
+false_line2=$(( $correct_line - ($RANDOM % 13) ));
+
+while [[ $correct_line -eq $false_line ]];do
+    false_line=$(( $correct_line + ($RANDOM  % 5 )));
+    false_line2=$(( $correct_line - ($RANDOM % 13) ));
+done
+
+file_location="../hounds/hound$level/$filename"
+
+rot_encoding=$(( ($RANDOM & 24) +1 ));
+sequence_start=$(( ($RANDOM % 6)  ));
+echo 'ss: '$sequence_start;
+echo 're: '$rot_encoding;
+#cipher_string "code_$rot_encoding" $FLAG_HOUND
+#encrypted_flag=`(encrypt_str $FLAG_HOUND $sequence_start)`;
+#cipher_str=`(cipher_string "code_$rot_encoding" $encrypted_flag )`;
+#echo $()
+encrypted_flag=$( encrypt_str $FLAG_HOUND $sequence_start );
+cipher_str=$(cipher_string "code_$rot_encoding" $encrypted_flag );
+
+printf "fh: $FLAG_HOUND\n";
+printf "cs: $cipher_str \n";
+printf "ef: $encrypted_flag \n";
+correct_length=$(( $correct_spaces + 64 ));
+printf "cl: $correct_length \n";
+echo "correct_line:$correct_line";
+echo "false_line:$false_line";
+echo "false_line2:$false_line2";
+#HASH_ENCODING='b64';
+rot_encoding=$(( $rot_encoding + 127 ));
+encoded_string=`( printf '%02x%02x%02x' $sequence_start 255 $rot_encoding | base64 )`;
+echo "The encoding string:$encoded_string";
+echo 'Hex Version:'`(printf '%02x%02x%02x' $sequence_start 255 $rot_encoding )`;
+rnd=0;
+declare -i rnd;
+append_str='';
+append_str_array=('*' '-' '.' '$' '#' '!');
+correct_append_str=${append_str_array[$(( $RANDOM & 5 ))]};
+echo "Append str:$correct_append_str";
+echo 'awk command:';
+echo "'\$0 ~ /[\\"$correct_append_str"]/ && length(\$0) == "$(( $correct_spaces + 64 ))" {gsub(/[^A-Za-z0-9\+\_]/,\"\"); print }'"
+#/tmpdownload/tmp$level
+tmp_file="tmp$level";
+printf '' > $tmp_file;
+GOAL_STR="$encoded_string $correct_length $correct_append_str <The_other_file_in_here>";
+echo "$GOAL_STR";
+for((i=0;i<NUM_LINES;++i)){
+    str=$( make_false_flag $password_dict $password_dict_len | tr -d '=');
+    rnd=$(( $RANDOM % 6 ));
+    str=$( encrypt_str $str $rnd );
+    append_str=${append_str_array[$(( $RANDOM & 4 ))]};
+    num_spaces=$(( ($RANDOM & $max_spaces) +1 ));
+    if [[ $num_spaces -eq $correct_spaces ]];then
+        num_spaces=$(( $num_spaces+1 ));
+    fi
+    while [[ "$append_str" == "$correct_append_str" ]]; do
+        append_str=${append_str_array[$(( $RANDOM & 4 ))]};
+    done
+    if [[ $i = $correct_line ]];then
+        printf "%s%${correct_spaces}s\n" $cipher_str '' | sed -e 's/\([A-Za-z0-9+_)]\)/\1'"$correct_append_str"'/g' >> $tmp_file;
+        #"/tmpdownload/tmp$level";
+        printf "%s%${correct_spaces}s\n" $cipher_str '' | sed -e 's/\([A-Za-z0-9+_]\)/\1'"$correct_append_str"'/g';
+    elif [[ $i = $false_line ]];then
+        printf "%s%${num_spaces}s\n" "$str" '' | sed -e 's/\([A-Za-z0-9+_]\)/\1'"$correct_append_str"'/g' >> $tmp_file
+        #"/tmpdownload/tmp$level";
+    elif [[ $i = $false_line2 ]]; then
+        printf "%s%${correct_spaces}s\n" "$str"  '' | sed -e 's/\([A-Za-z0-9+_]\)/\1'"$append_str"'/g' >> $tmp_file
+        #"/tmpdownload/tmp$level";
+    else
+        printf "%s%${num_spaces}s\n" "$str" '' |sed -e 's/\([A-Za-z0-9+_]\)/\1'"$append_str"'/g' >> $tmp_file;
+        #"/tmpdownload/tmp$level";
+    fi
 }
-pin_suffix='edited';
-c_program_src="givemethepin-$pin_suffix.c";
-c_program_srcdir="../c_programs"
-CORRECT_PIN=$(( $RANDOM % 300 ));
 
-#THE_FLAG=$( mk_hash $level );
-#b64
-#uOUEm1FOsgf1W0q4UcXo9OQfKoQ
-#b32
-#zd1ojg4tj43yx7k5jkhfdtxe6u1b6kwr
-INCORRECT_FLAG1=$( echo $RANDOM | mk_hash );
-INCORRECT_FLAG2=$( echo $RANDOM | mk_hash );
-cp ../c_programs/'givemethepin.c' ../c_programs/givemethepin-$pin_suffix.c;
-#We had to sed the flags to the file itself including false flags.
-sed_it '<correct_pin_placeholder>' "$CORRECT_PIN";
-sed_it '<the_flag_placeholder>' "$FLAG_HOUND"
-sed_it '<incorrect_flag_placeholder1>' "$INCORRECT_FLAG1"
-sed_it '<incorrect_flag_placeholder2>' "$INCORRECT_FLAG2"
-#cross-compile the program
-#comment out the lines that don't have armlinux and comment the arm-linux to do a native build.
-#arm-linux-gnueabihf-gcc-8 -g1 -O3 -Wall -Werror -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/$c_program_src" -o "$c_program_srcdir/built/givemethepin";
-#arm-linux-gnueabihf-gcc-8 -g1 -O3 -Wall -Werror -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/b64_encoder.c" -o "$c_program_srcdir/built/b64";
-gcc -march=native -Wall -Werror -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/$c_program_src" -o "$c_program_srcdir/built/givemethepin";
-#gcc -march=native -mtune=native -Wall -Werror -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/b64_encoder.c" -o "$c_program_srcdir/built/b64";
-#The group only has execute permissions to avoid them reading the file in and trying to debug it. Plus every other use has no permissions to avoid them from wasting cpucycles on the rpi.
-chmod 710 "$c_program_srcdir/built/givemethepin";
-#For right now group/user is numeric to keep things simpler when cross-building.
-sudo chgrp 1008 "$c_program_srcdir/built/givemethepin";
-#We don't want them accidently reading a bunch of binary data into the terminal.
-#chmod 711  "$c_program_srcdir/built/b64";
-
-#The programs go into the /usr/local/bin
-TEST_STR=$( bash ../solutions/pin_guesser.sh | cut -d' ' -f4 );
-if [[ "$TEST_STR" == "$FLAG_HOUND" ]]; then
-    echo "The string came back fine. It worked! Just took awhile, though.";
-else
-    echo "No beuno. Better do a manual check.";
-fi
+awk_str="$( make_mistakes )";
+tmp='';
+echo "$awk_str";
+#if [[ $number_mistakes == 2 ]];then
+#
+#elif [[ $number_mistakes == 3 ]];then
+#
+#fi
+padding=$(( 42 - ${#GOAL_STR} ));
+echo $padding;
+GOAL_STR=$( printf "%s%${padding}s" "$GOAL_STR" '');
+sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR'/" ../home_folders/hound$level/.ssh/rc;
+awk '{ '"$awk_str"' else { print $0 } }' programs/default_program.sh > programs/messed_up_program.sh;
+cp -v programs/messed_up_program.sh "../hounds/hound$level/$program_name.sh";
+cp -v $tmp_file "$file_location";
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;
+rm -v $tmp_file;

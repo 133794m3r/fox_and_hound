@@ -1,14 +1,20 @@
+/**
+ * A program to create the word arrays for the flag generators.
+ *
+ * This program will select items for the passwords so that they can more easily get them all the way through.
+ * These word arrays are setup so that they can be recreated if new levels are added without having to go back and then
+ * redo all of the previous passwords as the old ones won't work anymore.
+ *
+ * Macathur Inbody <mdi2455@email.vccs.edu> <admin-contact@transcendental.us>
+ * 2019-
+ * AGPLv3 or Later
+*/
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "xor_rand.c"
-/**
-* The basic C Program that they're going to be brute forcing the pin from.
-* Macathur Inbody <mdi2455@email.vccs.edu>
-* 2019-
-* AGPLv3 or Later
-*/
+
 
 unsigned int get_least_used_word(unsigned int *prev_selected_words,unsigned int *word_freq,unsigned int num_words,unsigned int seed){
     unsigned int min_index=0;
@@ -104,9 +110,9 @@ int main(int argc, char **argv){
         }
     }
 
-
     for(j=0;j<=num_flags;j++){
         printf("flag_num:%u\nWORD_ARRAY=(",j);
+        //printf("",j);
         for(i=0;i<num_words_per_flag;i++){
             //printf("\n%u\n",((j*num_flags)+i));
             //printf("%u,",word_array[(j*num_flags)+(i+4)]);
@@ -116,7 +122,22 @@ int main(int argc, char **argv){
                 printf(" ");
             }
         }
-        printf(");\n");
+        printf(")\n");
+    }
+
+    for(j=0;j<=num_flags;j++){
+        //printf("flag_num:%u\nWORD_ARRAY=(",j);
+        //printf("",j);
+        for(i=0;i<num_words_per_flag;i++){
+            //printf("\n%u\n",((j*num_flags)+i));
+            //printf("%u,",word_array[(j*num_flags)+(i+4)]);
+            the_word=(unsigned int ) word_array[j][i];
+            printf("%u",the_word+1);
+            if( i <= (num_words_per_flag - 2 )){
+                printf(" ");
+            }
+        }
+        printf("\n");
     }
     unsigned int sum=0;
     for(j=0;j<total_lines;j++){

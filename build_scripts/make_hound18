@@ -1,0 +1,78 @@
+#!/bin/bash
+# Hound 17 aka `Look mah I'm a hacker now, I'm cracking someone's pin!/I've been bourne again as a programmer.`
+# Macarthur Inbody
+# mdi2455@email.vccs.edu / admin-contact@transcendental.us
+# Licenesed under AGPLv3
+# (C) 2019 -
+# It requires them to write their first bash script to bruteforce a pin
+# and then cat that data to a program which'll give them the data back.
+# But it only accepts the pin as a base64 encoded file.
+HASH_ENCODING='b32';
+
+if [[ $# -lt 1 ]];then
+    level=17;
+else
+    level=$1;
+fi
+#this reads in the functions that are in the library.
+source build_functions;
+
+#we seed $RANDOM with the current level value.
+seed_random $level;
+
+#we then make the flag by calling it.
+#FLAG_HOUND=$( make_flag $level 1);
+
+#we continue by selecting things semi_randomly.
+#when we are in debug mode it'll be calling debug_random
+continue_random;
+# the old flag.
+WORD_ARRAY=(51 50 49 48 47 46 45);
+tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
+#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
+chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+
+function sed_it(){
+    sed -i "s/$1/$2/" ../c_programs/givemethepin-$pin_suffix.c;
+}
+pin_suffix='edited';
+c_program_src="givemethepin-$pin_suffix.c";
+c_program_srcdir="../c_programs"
+CORRECT_PIN=$(( $RANDOM % 300 ));
+
+#THE_FLAG=$( mk_hash $level );
+#b64
+#uOUEm1FOsgf1W0q4UcXo9OQfKoQ
+#b32
+#zd1ojg4tj43yx7k5jkhfdtxe6u1b6kwr
+INCORRECT_FLAG1=$( echo $RANDOM | mk_hash );
+INCORRECT_FLAG2=$( echo $RANDOM | mk_hash );
+cp ../c_programs/'givemethepin.c' ../c_programs/givemethepin-$pin_suffix.c;
+#We had to sed the flags to the file itself including false flags.
+sed_it '<correct_pin_placeholder>' "$CORRECT_PIN";
+sed_it '<the_flag_placeholder>' "$FLAG_HOUND"
+sed_it '<incorrect_flag_placeholder1>' "$INCORRECT_FLAG1"
+sed_it '<incorrect_flag_placeholder2>' "$INCORRECT_FLAG2"
+#cross-compile the program
+#comment out the lines that don't have armlinux and comment the arm-linux to do a native build.
+#arm-linux-gnueabihf-gcc-8 -g1 -O3 -Wall -Werror -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/$c_program_src" -o "$c_program_srcdir/built/givemethepin";
+#arm-linux-gnueabihf-gcc-8 -g1 -O3 -Wall -Werror -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/b64_encoder.c" -o "$c_program_srcdir/built/b64";
+gcc -march=native -Wall -Werror -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/$c_program_src" -o "$c_program_srcdir/built/givemethepin";
+#gcc -march=native -mtune=native -Wall -Werror -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/b64_encoder.c" -o "$c_program_srcdir/built/b64";
+#The group only has execute permissions to avoid them reading the file in and trying to debug it. Plus every other use has no permissions to avoid them from wasting cpucycles on the rpi.
+chmod 710 "$c_program_srcdir/built/givemethepin";
+#For right now group/user is numeric to keep things simpler when cross-building.
+sudo chgrp 1008 "$c_program_srcdir/built/givemethepin";
+#We don't want them accidently reading a bunch of binary data into the terminal.
+#chmod 711  "$c_program_srcdir/built/b64";
+
+#The programs go into the /usr/local/bin
+TEST_STR=$( bash ../solutions/pin_guesser.sh | cut -d' ' -f4 );
+if [[ "$TEST_STR" == "$FLAG_HOUND" ]]; then
+    echo "The string came back fine. It worked! Just took awhile, though.";
+else
+    echo "No beuno. Better do a manual check.";
+fi
+let level++;
+echo "hound$level:$FLAG_HOUND" >> the_flags;

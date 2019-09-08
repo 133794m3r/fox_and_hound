@@ -34,7 +34,7 @@ echo $FLAG_FALSE2;
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 #continue_random;
-WORD_ARRAY=(15 16 46 47 48 17 18);
+WORD_ARRAY=(23 24 25 26 27 28 29);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
