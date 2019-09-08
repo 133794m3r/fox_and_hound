@@ -120,4 +120,5 @@ alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
 
 unset HISTFILE
+MEME_NAME='Cat presents:Give me the flag!';
 alias ls="ls -N"

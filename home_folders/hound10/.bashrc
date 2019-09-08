@@ -122,6 +122,6 @@ cd /tmp/foxhunt/"$dirname";
 
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-
+MEME_NAME='I have a problem. I know I'll use regex. Now I have 2 problems.';
 unset HISTFILE
 alias ls="ls -N"

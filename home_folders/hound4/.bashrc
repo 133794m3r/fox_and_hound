@@ -118,7 +118,7 @@ tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-
+MEME_NAME="I don't need no UTF8, ASCII is enough for me!";
 unset histfile
 unset HISTFILE
 alias ls="ls -N"

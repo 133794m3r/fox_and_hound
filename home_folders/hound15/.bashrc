@@ -75,7 +75,7 @@ esac
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
+    alias ls="ls -N"
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
 
@@ -118,4 +118,5 @@ tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-
+MEME_NAME="I can spot the most minute differences!";
+alias ls="ls -N"
