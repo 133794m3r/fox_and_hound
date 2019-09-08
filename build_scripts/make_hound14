@@ -1,66 +1,63 @@
 #!/bin/bash
-# Hound14 AKA I can spot the most minute differences!
+#hound13 aka No obfusication can escape my watchful eye. I *grep* it all!
 # Macarthur Inbody
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
 # (C) 2019 -
-#
-# the one where they use diff to find the one line that's different
-# between two files.
-# It's a simple diff thing but since there's a ton of lines they can do this two
-# ways. The first is to just do `diff file1 file2`.
-# Other is to do `cat file1 file2 |sort |uniq -u`
-# diff is way easier and the correct way.
+# the one where they're grepping the password that appears after the certain string.
+# also combines it with strings as the file is full of binary data.
 if [[ $# -lt 1 ]];then
-#the current level we're on.
-    level=14;
+#the level we're on.
+    level=13;
 else
     level=$1;
 fi
+
 #this reads in the functions that are in the library.
 source build_functions;
 
+#we seed $RANDOM with the current level value.
 seed_random $level;
-
-#the dictionary file that we're using to get our words from.
-#this will be set to a global variable DICTIONARY from the main script once the whole
-#build system is done.
-dictionary='../../dict/passwords_dict';
-#get the length of the dictionary file.
-#in the future this'll be calculated once from the main build script and then the string
-#DICTIONARY_LEN will be set to this value.
-dictionary_len=2007
-#set the encoding. In future versions this'll be hardcoded from the main script.
-#this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
-
-
-
-#make the correct flag string. It's going to be the only file that's different between the two files.
+#we then make the flag by calling it.
 #FLAG_HOUND=$( make_flag 1);
+#initialize this variable.
+CORRECT_WORD='';
+#we continue by selecting things semi_randomly.
+#when we are in debug mode it'll be calling debug_random
 continue_random;
 
-WORD_ARRAY=(42 43 44 45 9 10 11);
+WORD_ARRAY=(18 17 16 15 14 13 12);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
-#the filename we're going to use. It's an empty string by default.
-filename='';
-#The prefixes for the files
-filename_arr=('.-' '-~' '-.' '.~' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET');
-#we get the length of the files.
-filename_arr_len=${#filename_arr[*]};
-#the first filename we're going to be sending data to.
-filename_1=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
-#the second file data is going to be sent to.
-filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
-#to make sure that they're not equal to eachother a quick while loop to pick another one randomly.
-while [ "$filename_2" = "$filename_1" ];do
-    filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
-done
+dictionary='../dict/names_dict';
+#I could just use the following command.
+# $( nl `file` | cut -f1 | tail -n1 )
+#this gives me the length fo the file. It'll be cached when the full build system actually starts.
+#dictionary_len=$( cat '/usr/share/dict/american-english' | wc -l  );
+#the word we're going to use that's correct.
+dictionary_len=29687;
 
+correct_word=$( get_random_word $dictionary $dictionary_len );
+passwords_dictionary="../../dict/passwords_dict";
+passwords_dictionary_len=2007;
+#The num of lines for the output file to contain.
+FILE_NUM_LINES=40;
+#the correct line number to put the real file in there. It'll be placed no more than 1/2 of the way through the file.
+CORRECT_LINE_NUM=$(( $RANDOM % (FILE_NUM_LINES/2) + 1 ));
+#we go to the directory that's going to contain the files.
+cd ../hounds/hound$level;
+#an array of filenames to be used.
+filename_arr=('somfile' 'something' 'thisfile' '.-' '-~' '-' '.~');
+#get the length of the array.
+filename_arr_len=${#filename_arr[*]};
+#the extensions for the chosen file.
+extension_arr=('.secrets' '.filthy_lucre' '.files' '.information' '.top_secret' '.hidden' '.mystery' '.txt' '.flag');
+#cache the length of the array.
+extension_arr_len=${#extension_arr[*]};
 #get all of the filenames converted to arguments to be sent to rm.
 #we start with sending all elements of the aray piped to tr. Then we replace the space characters with a pipe.
 #so that it can be used with egrep as an OR operator. This is then expanded out and using command substituion the final string is set to the variable
@@ -72,40 +69,81 @@ tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
 #string utilizing printf to make each instance of the file as ./<filename> so that it can be rmed more easily. Finally the shell expands the value
 #converts it to a string, this string is then converted into a set of arguments to be utilized by rm. This way there are no errors about a file not
 #being found as rm only sees existing files because we only pass those that have been grepped.
-cd ../hounds;
-pwd;
-rm -v $( ls -a hound$level | egrep "($tmp)" | xargs -i{} printf "hound$level/{} " );
-
-#the lines that each file's going to contain.
-total_lines=40;
-cd "hound$level";
-FILE_STRING_CONTENTS='';
-for ((i=0;i<total_lines;i++)); do
-    str=$( make_false_flag $dictionary $dictionary_len );
-    #make_false_flag $dictionary $dictionary_len;
-    #echo 'str '$str' end';
-    FILE_STRING_CONTENTS="$FILE_STRING_CONTENTS$str\n";
+rm -v $( ls -a | egrep "($tmp)" | xargs -i{} printf ' ./{}' );
+#the file we're going to output to.
+#first we get a random element from 0-ARRAY_MAX from filename_arr, then we do the same with extension_arr. Combine them together and through command
+#shell expasnion the variables will be replaced with the actual values. It's quoted because it's safer this way.
+output_file="${filename_arr[$(( $RANDOM % $filename_arr_len ))]}${extension_arr[$(( $RANDOM % $extension_arr_len ))]}";
+#how many false flags we're going to include.
+false_flag_num=5;
+#the first line for the false flag to start. By default it's 0-(TOTAL_LINES/10)
+false_flag_line=$(( $RANDOM % ($FILE_NUM_LINES /10 ) ));
+#this while loop is to make sure that they are never the same value ever. Since the chance of a collision is really loop. We should be able
+#to avoid collisions. Since the second value is going to be a number between 0-3 but the first one is 0-21 hopefully this won't be an infinite loop.
+while [ $false_flag_line = $CORRECT_LINE_NUM ];do
+    #keep trying for another one until the files overwith.
+    false_flag_line=$(( $RANDOM % ($FILE_NUM_LINES /10 ) ));
 done
-echo $FLAG_HOUND;
-echo -en "$FILE_STRING_CONTENTS" > ./"$filename_1";
-echo "$filename_1 $filename_2"
-#echo $( printf "$FLAG_HOUND\n$FILE_STRING_CONTENTS" | shuf ) | tr ' ' '\n' > ./"$filename_2";
 
-line_to_delete=$(( ($RANDOM % $total_lines) + 1 ));
-#echo "$line_to_delete!p; \$a$FLAG_HOUND";
-#sed "$line_to_delete d; \$a$FLAG_HOUND" ./"$filename_1" > ./"$filename_2";
-sed "$line_to_delete i $FLAG_HOUND" ./"$filename_1" > ./"$filename_2";
-# "$FLAG_HOUND" >>
-TEST_STR=$( diff ./"$filename_1" ./"$filename_2" | tr -d '\n>' | cut -d' ' -f2 );
-if [[ "$TEST_STR" == "$FLAG_HOUND" ]];then
-    echo 'The values are the same. This flag built correctly. Do no question it!';
+#we start the file off as empty.
+echo -n '' > "$output_file";
+#the loop to create the strings inside of the binary file. It runs from 0-9 right now.
+for ((i=0; i<FILE_NUM_LINES;i++)); do
+    #we get a random word from the /usr/share/dict/american-english. We pass it the length to save time as it's precalculated.
+    #this way we don't have to recalculate it each time. The value is already cached.
+    the_word=$( get_random_word "../$dictionary" $dictionary_len );
+    #if we've hit the correct line num we then output it.
+    if [[ $i -eq $CORRECT_LINE_NUM ]]; then
+        #printf the correct word and the flag on this line.
+        #we include a newline before and after the strings so that it's easier to read.
+        printf  '\n%s %s\n' $the_word $FLAG_HOUND >> "$output_file";
+        #make sure that the correct word variable is set to the word that was chosen.
+        CORRECT_WORD=$the_word;
+    #If we are at the line that's definied by false flag.
+    elif [[ $i -eq $false_flag_line ]]; then
+        #if this is the first time that we've come across the false flag, we have to do some special math for the next one.
+        if [[ $j -eq 0 ]]; then
+            #by default it's set to a line between 0-4 + the correct line number.
+            false_flag_line=$(( ($RANDOM % 5) + $CORRECT_LINE_NUM ));
+        else
+            #else we go back to the standard modus operandi.
+            false_flag_line=$(( $false_flag_line + ($RANDOM  % ($FILE_NUM_LINES/10)) ));
+            #set j to one so that we know we've already hit here.
+            j=1;
+        fi
+        #we put the string into the file by appending it to the file. like before we include a new line before and after to make it easier to read.
+        printf  '\n%s %s\n' $the_word $( make_false_flag $passwords_dictionary $passwords_dictionary_len ) >> "$output_file";
+    else
+        #if we're just doing a binary line we make sure that it adds the correct line length of pure random data.
+        #the options chosen are explained as follows. if=<where to read from> here it's /dev/urandom since it's a non-blocking source of randomness
+        #if the pool is depleted it'll just keep giving data from it. This isn't good for security contexts but we just need psuedo-random data not
+        #truly random data so this is fine. Plus it's faster as /dev/random only keeps ~4096bits of data which equates to 512bytes of data.
+        #in a future version of this script we'll complete ignore /dev/urandom and just use my xor128 PRNG to spit out data.
+        dd if=/dev/urandom status=none bs=1 count=139 >> "$output_file";
+    #close the if block.
+    fi
+#done with the loop.
+done
+#The correct word that we're going to be grepping to.
+echo $CORRECT_WORD;
+TEST_STR=$(strings ./"$output_file"| grep "$CORRECT_WORD");
+FLAG_STR=$(printf  '%s %s\n' $CORRECT_WORD $FLAG_HOUND);
+if [[ "$TEST_STR" == "$FLAG_STR" ]];then
+    echo 'The strings matched.';
 else
-    echo "It didn't work. Try again.";
-    echo "String we got:$TEST_STR";
-    echo "What we wanted:$FLAG_HOUND";
-    echo -e 'The command we submitted\n $( diff ./"'"$filename_1"'" ./"'"$filename_2"'" | tr -d "\n>" | cut -d" " -f2 )';
+    echo "We received the string: $TEST_STR";
+    echo "But we expected the string: $FLAG_STR";
+    echo -e 'The grep code we tried was \n $( strings | grep "'"$CORRECT_WORD"'" | cut -d'"' "' -f2)';
+    echo 'Manually review the build to verify the authenticity.';
 fi
 
 cd ../../build_scripts;
+padding=$(( 41 - ${#CORRECT_WORD} ));
+CORRECT_WORD=$(printf "%s%${padding}s" $CORRECT_WORD ' ' );
+#we edit the file with the new and correct word. It's actually possible to do this entirely through sed, but strings is there incase they want to do it that way.
+sed -i "s/string\=.*/string\='$CORRECT_WORD'/" ../home_folders/hound$level/.ssh/rc;
+
+#we put it into the flags file so that we can use it to the file that we're going to use to make sure that everything works.
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;
+echo "$FLAG_HOUND";

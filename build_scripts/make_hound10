@@ -34,7 +34,7 @@ HASH_ENCODING='b32';
 #continue the RNG;
 continue_random;
 FLAG_STRING='iS';
-WORD_ARRAY=(22 23 24 25 26 27 28);
+WORD_ARRAY=(46 45 44 43 42 41 40);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
