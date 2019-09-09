@@ -16,19 +16,14 @@
 #include "xor_rand.c"
 
 
-unsigned int get_least_used_word(unsigned int *prev_selected_words,unsigned int *word_freq,unsigned int num_words,unsigned int seed){
+unsigned int get_least_used_word(unsigned int *prev_selected_words,unsigned int *word_freq,unsigned int num_words){
     unsigned int min_index=0;
     unsigned int min_freq=0;
     unsigned int current_freq=0;
     unsigned int i=0;
     unsigned int start_index=0;
     unsigned int j=0;
-    if(seed!=0){
-        start_index=xor_32(0,num_words,seed);
-    }
-    else{
-        start_index=xor_32(0,num_words,0);
-    }
+        start_index=xor_32(0,num_words);
     j=start_index;
     for(i=0;i<=num_words;i++){
         current_freq=word_freq[j];
@@ -76,11 +71,11 @@ int main(int argc, char **argv){
     memset(word_freq,0,4*total_lines);
     //=calloc(4*total_lines,4);
     unsigned char num_flags=0;
-    unsigned int seed=0;
     unsigned char num_words_per_flag=7;
     unsigned int i=0;
     unsigned int j=0;
     unsigned int min_word=0;
+    unsigned int initial_seed=0;
     unsigned int prev_selected_words[4*total_lines];
     memset(prev_selected_words,0,4*total_lines);
     if(argc == 1){
@@ -91,18 +86,19 @@ int main(int argc, char **argv){
        num_flags=atoi(argv[1]);
     }
     if(argc == 3 ){
-        seed=atoi(argv[2]);
+        seed_xor32(atoi(argv[2]));
     }
     else{
-        seed=microtime();
+        seed_xor32(0);
     }
-
+    initial_seed=XOR_32_STATE;
+    //printf("%u\n",XOR_32_STATE);
     unsigned int word_array[num_flags][num_words_per_flag];
     unsigned int the_word=0;
     fprintf(stdout,"\r");
     for(j=0;j<=num_flags;j++){
         for(i=0;i<num_words_per_flag;i++){
-            min_word=get_least_used_word(prev_selected_words,word_freq,total_lines,seed);
+            min_word=get_least_used_word(prev_selected_words,word_freq,total_lines);
             word_freq[min_word]++;
             //*prev_selected_words[min_word]=*
             prev_selected_words[min_word]++;
@@ -144,7 +140,7 @@ int main(int argc, char **argv){
         ///printf("index:%u freq:%u\n",j,word_freq[j]);
         sum+=word_freq[j];
     }
-    printf("sum:%u\n",sum);
-    printf("seed: %u\n",seed);
+    printf("\nsum:%u\n",sum);
+    printf("initial seed: %u\n",initial_seed);
     return 0;
 }

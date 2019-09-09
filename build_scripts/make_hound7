@@ -401,7 +401,7 @@ c_program_srcdir="../c_programs"
 
 cp ../c_programs/"$c_program_src" ../c_programs/"$c_program_src_edited";
 #gcc -march=native -Wall -Werror -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/$c_program_src" -o "$c_program_srcdir/built/givemethepin";
-gcc ../c_programs/"$c_program_src_edited" -o ../c_programs/built/givemethestring;
+gcc -march=native -Wall -Werror -Wpedantic -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops ../c_programs/"$c_program_src_edited" -o ../c_programs/built/givemethestring;
 sudo chgrp $(( 1000 + $level )) ../c_programs/built/givemethestring;
 chmod 710 ../c_programs/built/givemethestring;
 #We had to sed the flags to the file itself including false flags.

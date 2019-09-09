@@ -3,19 +3,25 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-unsigned int xor_32(unsigned int min, unsigned int max,unsigned int seed){
+unsigned int XOR_32_STATE=0;
+
+void seed_xor32(unsigned int seed){
+    if(seed!=0){
+        XOR_32_STATE=seed;
+    }
+    else{
+        XOR_32_STATE=microtime()^clock()^getpid();
+    }
+}
+
+unsigned int xor_32(unsigned int min, unsigned int max){
     if(!min&&!max){
         min=0;
         max=4294967295;
     }
     unsigned int range=(max-min);
     unsigned int y=0;
-    if(seed==0){
-        y=microtime();
-    }
-    else{
-        y=seed;
-    }
+    y=XOR_32_STATE;
     unsigned int throw_away=3;
     if(y&1){
         throw_away=throw_away<<1;
@@ -29,6 +35,7 @@ unsigned int xor_32(unsigned int min, unsigned int max,unsigned int seed){
         y=(y>>17);
         y^=(y<<5);
     }
+    XOR_32_STATE=y;
     y=((y&range)+min);
     return y;
 }
