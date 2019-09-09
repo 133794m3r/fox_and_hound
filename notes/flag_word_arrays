@@ -1,0 +1,43 @@
+flag word_arrays.
+flag_num:0
+WORD_ARRAY=(32 56 0 8 24 4 25);
+flag_num:1
+WORD_ARRAY=(33 48 60 52 12 36 44);
+flag_num:2
+WORD_ARRAY=(20 13 26 34 37 9 49);
+flag_num:3
+WORD_ARRAY=(45 40 16 21 5 57 50);
+flag_num:4
+WORD_ARRAY=(1 10 27 41 2 35 58);
+flag_num:5
+WORD_ARRAY=(3 59 22 28 38 51 53);
+flag_num:6
+WORD_ARRAY=(6 11 54 14 7 42 39);
+flag_num:7
+WORD_ARRAY=(55 15 29 17 18 46 19);
+flag_num:8
+WORD_ARRAY=(23 47 30 31 43 59 60);
+flag_num:9
+WORD_ARRAY=(15 14 13 12 35 34 23);
+flag_num:10
+WORD_ARRAY=(33 58 31 3 39 7 47);
+flag_num:11
+WORD_ARRAY=(11 32 57 46 22 56 51);
+flag_num:12
+WORD_ARRAY=(43 42 55 38 19 45 18);
+flag_num:13
+WORD_ARRAY=(54 53 21 30 29 52 10);
+flag_num:14
+WORD_ARRAY=(9 50 20 49 17 8 16);
+flag_num:15
+WORD_ARRAY=(6 28 27 41 5 26 4);
+flag_num:16
+WORD_ARRAY=(2 25 37 1 48 40 0);
+flag_num:17
+WORD_ARRAY=(44 36 24 59 55 60 51);
+flag_num:18
+WORD_ARRAY=(58 54 27 47 57 19 39);
+flag_num:19
+WORD_ARRAY=(50 15 31 56 43 49 53);
+
+initial seed: 1910739935
