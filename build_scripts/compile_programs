@@ -6,3 +6,4 @@
 c_program_srcdir="../c_programs"
 gcc -march=native -Wall -Werror -Wpedantic -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/b64_encoder.c" -o "$c_program_srcdir/built/b64"
 gcc -march=native -Wall -Werror -Wpedantic -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/b32_encoder.c" -o "$c_program_srcdir/built/b32"
+gcc -march=native -Wall -Werror -Wpedantic -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/select_the_flag_array" -o "c_program_srcdir/built/select_flag_arrays";
