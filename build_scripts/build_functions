@@ -124,7 +124,7 @@ make_semistatic_flag(){
     #local max_line=$( cat $dict_file | wc -l);
 # we use random to select a random line and add one to it so that we get a valid range for sed.
 # since sed counts from 1 for whatever reason.
-    local rnd_line=$1;
+    local rnd_line=$(( $1 +1 ));
 
 # then we use sed in address mode to selct the line from the file, and including levelnum encoded
 # as hex previously.
@@ -364,7 +364,7 @@ function select_regex_test_pattern(){
             sed_str='/^[0-9]/p';
         ;;
         3)
-            sed_str='/^[^A-Za-z0-9]/p';
+            sed_str='/^[^A-Za-z0-9\ ]/p';
         ;;
         4)
             sed_str='/[0-9]$/p';

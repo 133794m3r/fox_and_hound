@@ -27,7 +27,7 @@ CORRECT_WORD='';
 #when we are in debug mode it'll be calling debug_random
 continue_random;
 
-WORD_ARRAY=(18 17 16 15 14 13 12);
+WORD_ARRAY=(9 50 20 49 17 8 16);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};

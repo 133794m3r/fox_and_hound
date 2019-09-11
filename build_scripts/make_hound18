@@ -27,7 +27,7 @@ seed_random $level;
 #when we are in debug mode it'll be calling debug_random
 continue_random;
 # the old flag.
-WORD_ARRAY=(51 50 49 48 47 46 45);
+WORD_ARRAY=(58 54 27 47 57 19 39);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};

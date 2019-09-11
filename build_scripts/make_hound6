@@ -31,7 +31,7 @@ seed_random $level;
 #when we are in debug mode it'll be calling debug_random
 continue_random;
 
-WORD_ARRAY=(37 38 39 40 41 42 43);
+WORD_ARRAY=(6 11 54 14 7 42 39);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
@@ -289,7 +289,7 @@ while read line; do
     #we put the instructions into the output file by appeneding it to the end of it.
         echo -e "$INSTRUCTIONS0"  >> $OUTPUT_FILE;
         #we make sure that the first instruction line is set to this value.
-        instruction_line1=$i;
+        instruction_line1="$(( $i -1 ))-$(( $i + 1))";
         echo "il1:$instruction_line1";
         echo -e "$INSTRUCTIONS0";
 #the thing outputs the instruction line aka instruction <i> value.

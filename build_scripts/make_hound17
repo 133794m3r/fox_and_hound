@@ -26,11 +26,10 @@
 # hard as hell to  get the flag w/o fixing the syntax errors.
 HASH_ENCODING='b32';
 if [[ $# -lt 1 ]];then
-    level=16;
+    level=17;
 else
     level=$1;
 fi
-HA
 function choose_mistake(){
     local mistake_str='';
     local chosen_mistake=$1;
@@ -99,7 +98,7 @@ password_dict_len=2007;
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
 num_mistakes=$(( $RANDOM % 3 ));
-WORD_ARRAY=(58 57 56 55 54 53 52);
+WORD_ARRAY=(44 36 24 59 55 60 51);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};

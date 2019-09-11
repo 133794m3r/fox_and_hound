@@ -40,14 +40,19 @@ function decompression_tester(){
     local filename="$1";
     are_we_done=0;
     i=0;
-    file_type=$( file "$filename" | cut -d' ' -f2 );
+    file_type=$( xxd -r "$filename" | file - | cut -d' ' -f2 );
     command_base=$( select_command "$file_type" );
     return_val='';
-    if [[ "$command_base" = "tar xO" ]];then
-        command_base="tar xOf";
+    #if [[ "$command_base" = "tar xO" ]];then
+    #    command_base="tar xO";
+    #fi
+    command="xxd -r $filename | $command_base";
+    command_base="xxd -r $filename | $command";
+    #echo "$command_base";
+    if [[ "$command" == 'ABSOLUTE_FAILURE' ]];then
+        echo 'Failed';
+        return -1;
     fi
-    command="$command_base $filename";
-    command_base="$command";
     while [[ $are_we_done -eq 0 && i -lt 20 ]];do
         file_type=$( eval "$command" | file - | cut -d' ' -f2 );
         command=$( select_command "$file_type" );
@@ -66,6 +71,8 @@ function decompression_tester(){
 
     if [ "$return_val" != 'failed!' ];then
         return_val=$( eval "$command_base" | xxd -r | base64 -d  );
+    else
+        return_val="$command";
     fi
     echo "$return_val";
     return 0;
@@ -74,7 +81,7 @@ function decompression_tester(){
 HASH_ENCODING='b32';
 
 if [[ $# -lt 1 ]];then
-    level=15;
+    level=16;
 else
     level=$1;
 fi
@@ -93,7 +100,7 @@ continue_random;
 #FLAG_HOUND5=UGhpbmVhcyBPciBGaW5ueSBGb3gK;
 #FLAG_HOUND5=$(echo 'Phineas Or Finny Fox' | base64);
 #this is to keep them on their toes so that they _don't_ know how many levels it is everytime.
-WORD_ARRAY=(4 3 2 1 0 60 59);
+WORD_ARRAY=(2 25 37 1 48 40 0);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
@@ -130,7 +137,7 @@ echo $filename;
 echo $filename2;
 cp "$filename2" 'test';
 mv -v $filename2 $filename;
-cat $filename;
+cat "$filename";
 #rm -v $filename;
 
 function compress_file(){
@@ -138,22 +145,22 @@ function compress_file(){
     local output_file=$3;
     case $1 in
         'bz')
-        bzip2 -c9v $input_file > $output_file;
+        bzip2 -c9v "$input_file" > "$output_file";
         ;;
         'gz')
-        gzip -c9v $input_file > $output_file;
+        gzip -c9v "$input_file" > "$output_file";
         ;;
         'tgz')
-        tar -cvzf $output_file $input_file;
+        tar -cvzf "$output_file" "$input_file";
         ;;
         'txz')
-         tar -cvJf $output_file $input_file;
+         tar -cvJf "$output_file" "$input_file";
         ;;
         'tar')
-        tar -cvf $output_file $input_file;
+        tar -cvf "$output_file" "$input_file";
         ;;
         'xz')
-        xz -e9vc $input_file > $output_file;
+        xz -e9vc "$input_file" > "$output_file";
         ;;
     esac
 #    rm -v $input_file;
@@ -178,10 +185,21 @@ for (( i=0; i<compression_depth; i++)); do
     filename="$filename2";
 
 done
+echo "$filename";
 rm -v ../../hounds/hound"$level"/*
-cp -v "$filename" ../../hounds/hound"$level"
+#tmp=$(( $RANDOM % 2 ));
+filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+    if [[ "$filename2" == "$filename" ]]; then
+        filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+    fi
+echo "$filename2";
+echo "$filename";
+xxd "$filename" > "$filename2";
+#mv "$filename2" "$filename";
 
-TEST_STR=$( decompression_tester "$filename" );
+cp -v "$filename2" ../../hounds/hound"$level"
+
+TEST_STR=$( decompression_tester "$filename2" );
 if [[ "$TEST_STR" == "$FLAG_STR" ]];then
     echo "Build hound$level succeeded.";
 else
@@ -190,7 +208,7 @@ else
 fi
 cd ..;
 #rm -Rv tmp;
-rm -Rv tmp;
+#rm -Rv tmp;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
 let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
