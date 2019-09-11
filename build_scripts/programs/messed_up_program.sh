@@ -47,7 +47,7 @@ function generate_sequence(){
         if [[ $i -ge $start ]];
             printf "$a ";
         #else if this value we do this.
-        else if [[ $i = $end ]];then
+        elif [[ $i = $end ]];then
             break;
         fi
     }
@@ -92,7 +92,7 @@ function decrypt(){
     local index=0;
 
     #a for loop in Shell style.
-    for ((i=0;i<str_len;++i)); do
+    for (i=0;i<str_len;++i)); do
         #getting a substring out of a string.
         byte=${str:$i:1};
         index=`(str_index $b64_dict $byte )`;
@@ -151,8 +151,8 @@ function uncipher_string(){
 function main(){
 #the arguments are from $0-$n. $0=program name. $1 is first argument and so on.
     local passed_string="$1";
-    local pattern="$2";
-    local str_len="$3";
+    local str_len="$2";
+    local pattern="$3";
     local filename="$4";
     #this utilizes command substitution to get the result back to it w/o using a subshell.
     local chosen_string=`(get_specific_string "$filename" $str_len "$pattern")`
@@ -168,7 +168,7 @@ function main(){
 }
 
 #if logic statement.
-if [[ $# -ge 1 ]];then
+if [ $# -ge 1 ]];then
     #case switch statements.
     case $1 in
     #one of the cases. You can use | to make it match any of the strings.

@@ -13,7 +13,7 @@
 # diff is way easier and the correct way.
 if [[ $# -lt 1 ]];then
 #the current level we're on.
-    level=14;
+    level=15;
 else
     level=$1;
 fi
@@ -40,7 +40,7 @@ HASH_ENCODING='b32';
 #FLAG_HOUND=$( make_flag 1);
 continue_random;
 
-WORD_ARRAY=(11 10 9 8 7 6 5);
+WORD_ARRAY=(6 28 27 41 5 26 4);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};

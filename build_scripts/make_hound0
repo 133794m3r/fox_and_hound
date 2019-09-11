@@ -32,7 +32,7 @@ seed_random $level;
 continue_random;
 # the old flag.
 #FLAG_HOUND='-WeE1KX.EkmECsU-xKSki7cSQb8';
-WORD_ARRAY=(56 57 58 59 60 0 1);
+WORD_ARRAY=(32 56 0 8 24 4 25);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};

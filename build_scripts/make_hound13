@@ -10,13 +10,13 @@
 
 HASH_ENCODING='b32';
 if [[ $# -lt 1 ]];then
-    level=15;
+    level=13;
 else
     level=$1;
 fi
 declare -i i=0;
 source build_functions;
-WORD_ARRAY=(25 24 23 22 21 20 19);
+WORD_ARRAY=(54 53 21 30 29 52 10);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
@@ -74,4 +74,6 @@ else
     printf "The command we tried was \n cat ./`(ls -A)` | sort | uniq -u | rev | tr '[A-Z]' '[a-z]' | cut -d' ' -f2\n";
     echo "Please try to do the command again from the target folder to verify that it wasn't just a weird typo.";
 fi
-
+cd ../../build_scripts;
+let level++;
+echo "hound$level:$FLAG_HOUND" >> the_flags;

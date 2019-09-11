@@ -27,7 +27,7 @@ continue_random;
 # the old flag.
 #FLAG_HOUND=$( echo 'Phineas the Fox' | openssl dgst -sha1 -binary | base64 | tr -d '=');
 
-WORD_ARRAY=(51 52 53 54 55 55 54);
+WORD_ARRAY=(23 47 30 31 43 59 60);
 tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
 #chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
 chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
