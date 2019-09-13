@@ -13,11 +13,13 @@ else
     level=$1;
 fi
 
+#this reads in the functions that are in the library.
+source build_functions;
+
 WORD_ARRAY=(84 85 86 87 88 89 90 91 92 93 94 95);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
-
 #right now it's just hardcoded. Future versions will actually convert the numeric format into a string.
 function permission_octal_to_string(){
     local num=$1;
@@ -342,7 +344,7 @@ echo "hound$level:$FLAG_HOUND" >> ../build_scripts/the_flags;
 permission=$( permission_octal_to_string $correct_permission );
 echo "fh: $FLAG_HOUND";
 let level--;
-sed -ie "s/permission\=.*/permission\='$permission'/" ../home_folders/hound$level/.ssh/rc;
+sed -i "s/permission\=.*/permission\='$permission'/" ../home_folders/hound$level/.ssh/rc;
 cd ../hounds/hound$level;
 CHECK_FILE=$(find -uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$correct_size"c -exec cat {} \;);
 FLAG_STRING=$(printf "%${size1}s\n" "$HOUND_STR$FLAG_HOUND");

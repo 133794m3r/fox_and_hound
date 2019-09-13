@@ -32,6 +32,7 @@ HASH_ENCODING='b32';
 continue_random;
 FLAG_STRING='iS';
 
+
 WORD_ARRAY=(76 0 105 9 14 37 72 77 42 15 65 1);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};

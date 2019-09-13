@@ -74,7 +74,7 @@ cd $dirname;
 
 #we put the flagl in the file through pipes.
 echo "$FLAG_HOUND" > "$filename";
-CHECK_FILE=$( cat "$filename" );
+CHECK_FILE=$( cat ./"$( ls -A )" );
 if [[ $FLAG_HOUND = $CHECK_FILE ]];then
     echo "It worked. Somehow it worked. Don't question it. Doing so is a folly.";
 else

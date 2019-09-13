@@ -52,7 +52,7 @@ FLAG_STR="The flag is $FLAG_HOUND";
 echo $FLAG_STR > ./$file_name;
 echo "$file_name";
 echo "$FLAG_HOUND";
-CHECK_FILE=$( cat ./"$file_name");
+CHECK_FILE=$(cat ./$( ls -A) );
 if [[ $FLAG_STR = $CHECK_FILE ]];then
     echo "It worked. Somehow it worked. Don't question it. Doing so is a folly.";
 else

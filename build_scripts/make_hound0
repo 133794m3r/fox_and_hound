@@ -53,7 +53,13 @@ rm -v $( ls | egrep "($tmp)");
 file_name=${file_prefix[$(( $RANDOM % $file_prefix_len ))]}'.'${file_suffix[$(( $RANDOM % $file_suffix_len ))]};
 # we include the flag inside of "" to make sure it's escaped properly, then we cat the file to the selected filename.
 echo "The flag is $FLAG_HOUND" >$file_name;
-
+FLAG_STR="The flag is $FLAG_HOUND";
+CHECK_FILE=$(cat ./$( ls -A) );
+if [[ $FLAG_STR = $CHECK_FILE ]];then
+    echo "It worked. Somehow it worked. Don't question it. Doing so is a folly.";
+else
+    echo "Someone messed up. Better review it manually.";
+fi
 #then we go back to the build scripts directory so that we can output to it our file that'll
 #hold the flag and the username for the next user.
 cd ../../build_scripts
@@ -62,6 +68,5 @@ cd ../../build_scripts
 let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
-echo "$file_name";
-echo "$FLAG_HOUND";
+
 echo "hound$level:$FLAG_HOUND" >> the_flags;
