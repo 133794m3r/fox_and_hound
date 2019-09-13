@@ -120,3 +120,4 @@ alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
 MEME_NAME="No obfusication can escape my watchful eye. I *grep* it all!";
 alias ls="ls -N"
+clear;

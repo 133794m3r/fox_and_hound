@@ -119,3 +119,4 @@ cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
 MEME_NAME='Spaces! Why did it have to be spaces. You darned dirty spaces!';
+clear;

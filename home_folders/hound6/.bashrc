@@ -123,3 +123,4 @@ MEME_NAME="I'm not stuck, I'm just generating entropy for the NSA! Plz send help
 unset histfile
 unset HISTFILE
 alias ls="ls -N"
+clear;

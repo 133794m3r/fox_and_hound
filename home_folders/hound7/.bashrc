@@ -119,3 +119,4 @@ fi
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
 MEME_NAME="The Unix police found out I prefer nano and locked me inside of the VIM ReEducation Program, time to breakfree and get outta here with the key! Go shell go!";
+clear;

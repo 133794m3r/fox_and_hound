@@ -122,3 +122,4 @@ MEME_NAME="I don't need no UTF8, ASCII is enough for me!";
 unset histfile
 unset HISTFILE
 alias ls="ls -N"
+clear;

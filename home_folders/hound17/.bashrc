@@ -119,3 +119,4 @@ cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
 MEME_NAME="I'm a genius program, my script can't have syntax errors!";
+clear;

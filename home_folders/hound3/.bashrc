@@ -121,3 +121,4 @@ alias showbanner="sh /home/$USER/.ssh/rc";
 MEME_NAME='You think you can hide me? I am a master of detection!';
 unset HISTFILE
 alias ls="ls -N"
+clear;
