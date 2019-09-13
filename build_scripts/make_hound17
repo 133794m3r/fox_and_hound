@@ -98,10 +98,10 @@ password_dict_len=2007;
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
 num_mistakes=$(( $RANDOM % 3 ));
-WORD_ARRAY=(44 36 24 59 55 60 51);
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+
+WORD_ARRAY=(35 52 53 54 55 56 57 58 59 60 61 62);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 filename_arr=('SECRET' "IT'S A SECRET TO EVERYBODY", 'I AM ERROR' 'I AM BAGU' 'HERE_BE_DRAGONS');

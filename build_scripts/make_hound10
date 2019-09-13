@@ -17,7 +17,6 @@ fi
 #the library of build functions.
 source build_functions;
 
-seed_random $level;
 #the dictionary file that we're using to get our words from.
 #this will be set to a global variable DICTIONARY from the main script once the whole
 #build system is done.
@@ -29,15 +28,14 @@ password_dict_len=2007;
 #set the encoding. In future versions this'll be hardcoded from the main script.
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
-#make the correct flag string. It's going to be b32 encoded right now. Also right now the flag is always going to be the same string.
-#FLAG_HOUND=$( make_flag 1);
-#continue the RNG;
+
 continue_random;
 FLAG_STRING='iS';
-WORD_ARRAY=(33 58 31 3 39 7 47);
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+
+WORD_ARRAY=(76 0 105 9 14 37 72 77 42 15 65 1);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
+
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 FALSE_FLAG=$( make_false_flag $password_dict $password_dict_len );
 read -r -a tmp <<< $( select_regex );

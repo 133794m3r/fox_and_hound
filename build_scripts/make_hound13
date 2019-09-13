@@ -15,10 +15,12 @@ else
     level=$1;
 fi
 declare -i i=0;
+
 source build_functions;
-WORD_ARRAY=(54 53 21 30 29 52 10);
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+
+WORD_ARRAY=(7 11 67 102 99 34 70 19 20 106 71 79);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 #the dictionary file that we're using to get our words from.
 #this will be set to a global variable DICTIONARY from the main script once the whole

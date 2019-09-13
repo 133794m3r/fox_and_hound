@@ -1,0 +1,3 @@
+#!/bin/bash
+read -r CURRENT_BUILD < ../notes/current_build_number;
+printf $((CURRENT_BUILD+1))'\n' > ../notes/current_build_number;

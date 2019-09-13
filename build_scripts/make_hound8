@@ -12,25 +12,10 @@ if [[ $# -lt 1 ]];then
 else
     level=$1;
 fi
-#this reads in the functions that are in the library.
-source build_functions;
 
-#we seed $RANDOM with the current level value.
-seed_random $level;
-
-#we then make the flag by calling it.
-FLAG_HOUND=$( make_flag $level 1);
-
-#we continue by selecting things semi_randomly.
-#when we are in debug mode it'll be calling debug_random
-continue_random;
-# the old flag.
-#FLAG_HOUND=$( echo 'Phineas the Fox' | openssl dgst -sha1 -binary | base64 | tr -d '=');
-
-WORD_ARRAY=(23 47 30 31 43 59 60);
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+WORD_ARRAY=(84 85 86 87 88 89 90 91 92 93 94 95);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 #right now it's just hardcoded. Future versions will actually convert the numeric format into a string.
@@ -338,7 +323,7 @@ cd ../../tmp;
 #cd ../hounds/hound6;
 #rm .*
 #mkdir -p ../hounds/hound6;
-pwd;
+
 cp -aR . ../hounds/hound$level;
 
 #chmod 755 /home/macarthur/misc_proj/fox_ctf/hounds/hound6;
@@ -350,14 +335,14 @@ let level++;
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
 rm -Rd ../tmp;
-pwd;
+
 echo "hound$level:$FLAG_HOUND" >> ../build_scripts/the_flags;
 #this is done at the end because permissions are changed to the string at the end.
 #we have to edit the .ssh/rc file in the home directory so that it contains this data.
 permission=$( permission_octal_to_string $correct_permission );
 echo "fh: $FLAG_HOUND";
-sed -i "s/permission\=.*/permission\=$permission/" ../home_folders/hound$level/.ssh/rc;
 let level--;
+sed -ie "s/permission\=.*/permission\='$permission'/" ../home_folders/hound$level/.ssh/rc;
 cd ../hounds/hound$level;
 CHECK_FILE=$(find -uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$correct_size"c -exec cat {} \;);
 FLAG_STRING=$(printf "%${size1}s\n" "$HOUND_STR$FLAG_HOUND");

@@ -34,20 +34,11 @@ if [[ $# -lt 1 ]];then
 else
     level=$1;
 fi
-#this reads in the functions that are in the library.
-source build_functions;
 
-#we seed $RANDOM with the current level value.
-seed_random $level;
 
-#FLAG_HOUND=$( make_flag 1);
-
-continue_random
-
-WORD_ARRAY=(15 14 13 12 35 34 23);
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+WORD_ARRAY=(64 12 13 8 4 104 32 44 40 36 108 41);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 #the filename we're going to use. It's an empty string by default.

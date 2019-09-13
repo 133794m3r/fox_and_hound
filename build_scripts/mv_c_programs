@@ -4,5 +4,9 @@
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
 # (C) 2019 -
-cd ../c_programs
-cp -aRv built /usr/local/bin;
+cd ../c_programs/built
+files=$( ls -A );
+cd /usr/local/bin;
+rm -v $files;
+cd /home/tophound/fox_ctf_c_programs/built;
+cp -aRv * /usr/local/bin;
