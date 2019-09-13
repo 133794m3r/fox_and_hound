@@ -35,6 +35,8 @@ else
     level=$1;
 fi
 
+#this reads in the functions that are in the library.
+source build_functions;
 
 WORD_ARRAY=(64 12 13 8 4 104 32 44 40 36 108 41);
 read -r CURRENT_BUILD < ../notes/current_build_number;

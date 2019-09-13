@@ -181,7 +181,7 @@ if [[ $# -ge 1 ]];then
         #we are passing the arguments given to the script to the program.
         #the string variables are enclosed in "" as this'll replace their value with the
         #string value and won't mess up the argument number if there are special characters.
-            main "$1" "$2" $3 "$4";
+            main "$1" "$2" "$3" "$4";
         ;;
     esac
     #else statement.

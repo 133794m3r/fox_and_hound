@@ -165,11 +165,10 @@ correct_append_str=${append_str_array[$(( $RANDOM & 5 ))]};
 echo "Append str:$correct_append_str";
 echo 'awk command:';
 echo "'\$0 ~ /[\\"$correct_append_str"]/ && length(\$0) == "$(( $correct_spaces + 64 ))" {gsub(/[^A-Za-z0-9\+\_]/,\"\"); print }'"
-#/tmpdownload/tmp$level
 tmp_file="tmp$level";
 printf '' > $tmp_file;
 GOAL_STR="$encoded_string $correct_length $correct_append_str <The_other_file_in_here>";
-echo "$GOAL_STR";
+echo "$GOAL_STR"
 for((i=0;i<NUM_LINES;++i)){
     str=$( make_false_flag $password_dict $password_dict_len | tr -d '=');
     rnd=$(( $RANDOM % 6 ));
@@ -211,8 +210,18 @@ echo $padding;
 GOAL_STR=$( printf "%s%${padding}s" "$GOAL_STR" '');
 sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR'/" ../home_folders/hound$level/.ssh/rc;
 awk '{ '"$awk_str"' else { print $0 } }' programs/default_program.sh > programs/messed_up_program.sh;
+
 cp -v programs/messed_up_program.sh "../hounds/hound$level/$program_name.sh";
 cp -v $tmp_file "$file_location";
+TEST_STR=$( bash programs/default_program.sh $encoded_string $correct_length "$correct_append_str" "$file_location" );
+echo $TEST_STR;
+if [[ $TEST_STR == $FLAG_HOUND ]];then
+    echo "The program worked correctly.";
+else
+    echo "Received:$TEST_STR";
+    echo "Expected:$FLAG_HOUND";
+    echo 'Tried to run: bash programs/default_program.sh '"$encoded_string $correct_length "'"'"$correct_append_str"'"''"'"$file_location"'"';
+fi
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;
 rm -v $tmp_file;

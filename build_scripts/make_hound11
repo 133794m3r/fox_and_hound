@@ -21,10 +21,14 @@ else
 fi
 pattern_code='';
 selected_pattern='';
+HASH_ENCODING='b32';
+#this reads in the functions that are in the library.
+source build_functions;
 
 WORD_ARRAY=(16 73 5 38 74 100 39 96 43 75 45 101);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
+FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 function select_random_regex(){
     selected_pattern='';
     local tmp='';
@@ -221,6 +225,6 @@ else
     fi
     echo 'sed -ne "s/'"$CORRECT_REGEX_PATTERN"'//g;'"$correct_line"' p"' "../hounds/hound$level/$filename";
 fi
-
+pwd;
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;
