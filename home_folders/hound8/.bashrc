@@ -124,3 +124,4 @@ unset HISTFILE
 alias ls="ls -N"
 MEME_NAME="I can _find_ anything. The greatest detective in the world has arrived.";
 echo "$dirname" > /tmp/foxhunt/hound8_users_dirs
+clear;

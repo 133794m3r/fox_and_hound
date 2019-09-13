@@ -123,3 +123,4 @@ unset histfile
 unset HISTFILE
 alias ls="ls -N"
 MEME_NAME=" I am the master of joining. All connection are known instantly.";
+clear;
