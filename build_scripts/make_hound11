@@ -21,6 +21,10 @@ else
 fi
 pattern_code='';
 selected_pattern='';
+
+WORD_ARRAY=(16 73 5 38 74 100 39 96 43 75 45 101);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 function select_random_regex(){
     selected_pattern='';
     local tmp='';
@@ -113,7 +117,7 @@ password_dict_len=2007;
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
 
-WORD_ARRAY=(11 32 57 46 22 56 51);
+
 filename_arr=('-.' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT'S A SECRET TO EVERYBODY" 'I AM ERROR' 'I AM BAGU' 'not in here(am i lying?)');
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
@@ -122,10 +126,6 @@ for (( i=1; i<$filename_arr_len; i++ ));do
     tmp="$tmp|${filename_arr[$i]}";
 done
 ls -A ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
-FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 select_random_regex;
 CORRECT_REGEX_CODE=$pattern_code;
 CORRECT_REGEX_PATTERN=$selected_pattern;

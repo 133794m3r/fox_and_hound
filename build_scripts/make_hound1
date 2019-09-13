@@ -29,10 +29,9 @@ continue_random;
 # the old flag.
 #FLAG_HOUND1='k3uLis-bFoOtxl8wBllZsKapwqM';
 
-WORD_ARRAY=(33 48 60 52 12 36 44);
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+WORD_ARRAY=(34 12 97 13 40 100 14 10 73 35 74 68);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 #The prefixes for the files. Since they are having to deal with special characters it is stored

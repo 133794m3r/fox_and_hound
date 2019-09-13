@@ -22,10 +22,7 @@ else
 fi
 #the library of build functions.
 source build_functions;
-#TODO: Make sure that spaces are going to be equal based upon if extra characters are added to one string and not another for the false
-#flag line string one.
-# should be if regex code of correct one is >=3 ||
-seed_random $level;
+
 #the dictionary file that we're using to get our words from.
 #this will be set to a global variable DICTIONARY from the main script once the whole
 #build system is done.
@@ -39,12 +36,10 @@ password_dict_len=2007;
 HASH_ENCODING='b32';
 #make the correct flag string. It's going to be b32 encoded right now. Also right now the flag is always going to be the same string.
 
-#continue the RNG;
-continue_random;
-WORD_ARRAY=(43 42 55 38 19 45 18);
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+
+WORD_ARRAY=(78 66 2 6 10 97 68 33 17 98 18 69);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 

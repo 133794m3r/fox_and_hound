@@ -31,10 +31,9 @@ seed_random $level;
 #when we are in debug mode it'll be calling debug_random
 continue_random;
 
-WORD_ARRAY=(6 11 54 14 7 42 39);
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+WORD_ARRAY=(29 65 30 31 50 51 52 53 54 81 55 56);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 cd ../text_shells/vim;
@@ -43,7 +42,7 @@ cd ../text_shells/vim;
 #CORRECT_FLAG='NxfXihbMovnLArUD2xrZXAC4ANs=';
 #the false flag is there to make it harder for them to bruteforce the answer.
 FALSE_FLAG='';
-FLAG_STRING='Your flag is the following "$HASH_ENCODING" encoded string ';
+FLAG_STRING='Your flag is the following $HASH_ENCODING encoded string ';
 #these are the 3 strings that are going to be inserted that they're going to be searching for but only
 #one of them is the correct one.
 SEARCH_STRING0='';

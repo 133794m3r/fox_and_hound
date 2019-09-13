@@ -11,6 +11,7 @@
 # to utilize basic linux commands to read the file. To make sure that they have to
 # utilize ls to see the list of files the filename is randomized.
 
+
 if [[ $# -lt 1 ]];then
     #this is the level that this flag is going to be identified as.
     level=0;
@@ -21,21 +22,10 @@ HASH_ENCODING='b32';
 
 #this reads in the functions that are in the library.
 source build_functions;
-#we seed $RANDOM with the current level value.
-#next version during testing will use this information.
-seed_random $level;
-#uncomment for debug puproses.
-#FLAG_HOUND=$( make_flag 1);
-#echo $( make_flag $level 1 );
-#we continue by selecting things semi_randomly.
-#when we are in debug mode it'll be calling debug_random
-continue_random;
-# the old flag.
-#FLAG_HOUND='-WeE1KX.EkmECsU-xKSki7cSQb8';
-WORD_ARRAY=(32 56 0 8 24 4 25);
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+
+WORD_ARRAY=(32 8 96 72 0 104 105 4 5 33 36 9);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 # This is an array of prefixes for the file.

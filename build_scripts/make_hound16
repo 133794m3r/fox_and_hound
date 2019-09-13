@@ -100,10 +100,9 @@ continue_random;
 #FLAG_HOUND5=UGhpbmVhcyBPciBGaW5ueSBGb3gK;
 #FLAG_HOUND5=$(echo 'Phineas Or Finny Fox' | base64);
 #this is to keep them on their toes so that they _don't_ know how many levels it is everytime.
-WORD_ARRAY=(2 25 37 1 48 40 0);
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+WORD_ARRAY=(26 90 27 28 91 29 30 92 31 93 94 95);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 compression_depth=$(( ($RANDOM % 3 ) + 4));

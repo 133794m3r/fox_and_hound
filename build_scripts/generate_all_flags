@@ -10,21 +10,21 @@ HASH_ENCODING='b32';
 source build_functions;
 declare -i j=0;
 declare -i i=0;
-declare -i max_words=6;
+declare -i max_words=11;
 declare -i level=0;
 declare -a word_arr=();
 while read line;do
-printf "hound$j\n";
-level=$j;
-word_arr=( $line );
-#echo ${word_arr[*]};
-for i in `( seq 0 $max_words )`;do
-    chosen_word=${word_arr[$i]};
-    if [[ $i != 0 ]];then
-        printf ',';
-    fi
-    printf "%s" $( make_semistatic_flag $chosen_word);
-done
-echo '';
-let j++;
+    printf "var hound$j=new Array(";
+    level=$j;
+    word_arr=( $line );
+    #echo ${word_arr[*]};
+    for i in `( seq 0 $max_words )`;do
+        chosen_word=${word_arr[$i]};
+        if [[ $i != 0 ]];then
+            printf ',';
+        fi
+        printf "'%s'" $( make_semistatic_flag $chosen_word);
+    done
+    echo ');';
+    let j++;
 done < word_arrays;

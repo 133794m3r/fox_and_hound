@@ -25,21 +25,9 @@ function sed_it(){
     sed -i "s/$1/$2/" ../c_programs/$3;
 }
 
-#we seed $RANDOM with the current level value. So that we can get determinstic
-# values for your flag string.
-seed_random $level;
-
-#we then make the flag by calling it.
-#FLAG_HOUND=$( make_flag $level 1);
-
-#we continue by selecting things semi_randomly.
-#when we are in debug mode it'll be calling debug_random
-continue_random;
-
-WORD_ARRAY=(55 15 29 17 18 46 19);
-tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`;
-#chosen_word=${WORD_ARRAY[$(( $RANDOM % 7 ))]};
-chosen_word=${WORD_ARRAY[$(( $tmp_rnd % 7 ))]};
+WORD_ARRAY=(57 58 82 83 59 60 61 62 63 66 67 71);
+read -r CURRENT_BUILD < ../notes/current_build_number;
+chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 CORRECT_STRING=$( mk_b32_string $(( $RANDOM+$level )) );
