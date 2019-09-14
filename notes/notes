@@ -7,3 +7,9 @@ The rest of the flags will utilize awk to make sure that it works by getting dat
 
 The words from the hound dictionary that we're going to use. They were chosen semi-randomly.
 Basically each word has the level number(encoded in hex) appended to the end of the word at the line.
+
+A setuid flag that involves them trying to get a file that is written to the /tmp/foxhunt directory, but the file cannot be read by them so they have to use a program that has the setuid flag set and is owned
+by the next level's user. The program is in their personal directory. 
+It'll involve them reading a bash script(from the crontab entries). They'll be told it's in the crontab directory. The name will be houndXX_cron.sh.
+
+It'll look for a file in their directory and then they'll have to run a setuid program that'll allow them to then read the file.
