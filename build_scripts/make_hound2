@@ -15,7 +15,7 @@ fi
 #this reads in the functions that are in the library.
 source build_functions;
 
-WORD_ARRAY=(1 75 69 98 76 77 41 42 2 78 37 38);
+WORD_ARRAY=(4 72 65 99 76 77 43 40 5 78 38 39);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);

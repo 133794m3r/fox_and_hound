@@ -38,7 +38,7 @@ HASH_ENCODING='b32';
 #make the correct flag string. It's going to be b32 encoded right now. Also right now the flag is always going to be the same string.
 
 
-WORD_ARRAY=(78 66 2 6 10 97 68 33 17 98 18 69);
+WORD_ARRAY=(78 67 4 5 16 99 68 39 17 100 8 69);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);

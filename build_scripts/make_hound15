@@ -40,7 +40,7 @@ HASH_ENCODING='b32';
 #FLAG_HOUND=$( make_flag 1);
 continue_random;
 
-WORD_ARRAY=(86 22 49 50 107 23 24 87 88 51 89 25);
+WORD_ARRAY=(86 23 49 50 104 24 25 87 88 51 89 26);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);

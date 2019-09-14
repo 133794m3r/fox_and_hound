@@ -34,7 +34,7 @@ echo $FLAG_FALSE2;
 #we continue by selecting things semi_randomly.
 #when we are in debug mode it'll be calling debug_random
 #continue_random;
-WORD_ARRAY=(45 17 18 46 79 19 47 20 102 21 22 48);
+WORD_ARRAY=(46 18 19 47 79 20 48 21 101 22 23 49);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);

@@ -23,7 +23,7 @@ HASH_ENCODING='b32';
 #this reads in the functions that are in the library.
 source build_functions;
 
-WORD_ARRAY=(32 8 96 72 0 104 105 4 5 33 36 9);
+WORD_ARRAY=(33 8 96 75 2 104 0 1 3 34 35 9);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);

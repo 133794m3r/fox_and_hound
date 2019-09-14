@@ -44,10 +44,10 @@ function generate_sequence(){
         a=$b;
         b=$num;
         #if logic statement.
-        if [[ $i -ge $start ]];then
+        if [[ $i -ge $start ]];
             printf "$a ";
         #else if this value we do this.
-        else if [[ $i = $end ]];then
+        elif [[ $i = $end ]];then
             break;
         fi
     }
@@ -92,7 +92,7 @@ function decrypt(){
     local index=0;
 
     #a for loop in Shell style.
-    for ((i=0;i<str_len;++i)); do
+    for (i=0;i<str_len;++i)); do
         #getting a substring out of a string.
         byte=${str:$i:1};
         index=`(str_index $b64_dict $byte )`;
@@ -148,7 +148,7 @@ function uncipher_string(){
 }
 
 #the main function.
-function main(){
+function main(void){
 #the arguments are from $0-$n. $0=program name. $1 is first argument and so on.
     local passed_string="$1";
     local str_len="$2";
@@ -168,21 +168,21 @@ function main(){
 }
 
 #if logic statement.
-if [ $# -ge 1 ]];then
+if [[ $# -ge 1 ]];then
     #case switch statements.
     case $1 in
     #one of the cases. You can use | to make it match any of the strings.
         '-h'|'help')
             #this prints how to use the program. This is always a good idea.
             printf "Help: -h to print this message. Pass the string you were given to this program. Once it runs it'll give you the flag. Also include the file you were told to give it.\nUsage: ./<PROGAM_FILENAME_PLACEHOLDER> <STRING> <PATTERN> <LINE_LENGTH> <FILENAME_TO_BE_READ>\n";
-        ;
+        ;;
         #the default case.
         *)
         #we are passing the arguments given to the script to the program.
         #the string variables are enclosed in "" as this'll replace their value with the
         #string value and won't mess up the argument number if there are special characters.
             main "$1" "$2" "$3" "$4";
-        ;
+        ;;
     esac
     #else statement.
 else

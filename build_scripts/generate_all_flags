@@ -13,18 +13,37 @@ declare -i i=0;
 declare -i max_words=11;
 declare -i level=0;
 declare -a word_arr=();
+hash_string='';
+word_string='';
+hashes='';
+tmp='';
 while read line;do
-    printf "var hound$j=new Array(";
+    hash_string+="this.hound$j""_hash=new Array(";
     level=$j;
     word_arr=( $line );
-    #echo ${word_arr[*]};
+
+    for i in `( seq 0 $max_words )`;do
+        chosen_word=${word_arr[$i]};
+        chosen_word=$(( $chosen_word - 1 ));    
+        if [[ $i != 0 ]];then
+           hash_string+=', ';
+        fi
+        hash_string+=$(printf "'%s'" $( make_semistatic_flag $chosen_word));
+        hashes+=$(printf "'%s'" $( make_semistatic_flag $chosen_word))'\n';
+    done
+    hash_string+=');\n';
+    word_string+="this.hound$j""_word=new Array(";
     for i in `( seq 0 $max_words )`;do
         chosen_word=${word_arr[$i]};
         if [[ $i != 0 ]];then
-            printf ',';
+           word_string+=', ';
         fi
-        printf "'%s'" $( make_semistatic_flag $chosen_word);
+        tmp=$( sed -n "$chosen_word p" '../dict/hound_dict');
+        word_string+=$(printf "'%s'" "$tmp$level");
     done
-    echo ');';
+    word_string+=');\n';
     let j++;
 done < word_arrays;
+printf "$hash_string\n";
+printf "$word_string\n";
+printf "$hashes" |  uniq -d | sort -u ;

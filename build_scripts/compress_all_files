@@ -17,7 +17,7 @@ if [[ $args -eq 1 ]]; then
         while read line;
         do
             cd "$line";
-            pwd;
+            echo "$line";
             mapfile -t 'files_array' <<< $( ls -A )
             nums_files=${#files_array[@]};
             for((i=0;i<nums_files;i++));do
@@ -26,7 +26,7 @@ if [[ $args -eq 1 ]]; then
 
             mkdir -p ../../"hounds_built/$line";
             chmod 777 ../../"hounds_built/$line";
-            tar -cvJf ../../"hounds_built/$line/"challenge_file.txz "${files_array[@]}";
+            tar -cJf ../../"hounds_built/$line/"challenge_file.txz "${files_array[@]}";
             chmod 777 ../../"hounds_built/$line/"challenge_file.txz;
            cd ..;
 

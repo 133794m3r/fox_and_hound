@@ -116,7 +116,7 @@ make_flag(){
 
 make_semistatic_flag(){
 # The level will be hex-encodded to reduce character count and make easier to bruteforce the password(for now).
-    local hex_num=$( printf '%x' $level );
+    local hex_num=$( printf '%02x' $level );
 # the dictionary file right now it's not checking which set of flags are being built.
 # it will have a case switch for the dictionaries later.
     local dict_file='../dict/hound_dict';
@@ -128,7 +128,10 @@ make_semistatic_flag(){
 
 # then we use sed in address mode to selct the line from the file, and including levelnum encoded
 # as hex previously.
-    local password=$( sed -n "$rnd_line p" $dict_file )$hex_num;
+#    local sed_str="$rnd_line p";
+IFS='|';
+    local password=$( sed -n "$rnd_line p" $dict_file );
+    password="$password$hex_num";
     #sed -n "$rnd_line p" $dict_file;
 # pass it to string to the hash function.
 # then we b64 encode it, then we use tr to delete the trailing '='s and finally replace the characters to make

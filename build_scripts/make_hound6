@@ -31,7 +31,7 @@ seed_random $level;
 #when we are in debug mode it'll be calling debug_random
 continue_random;
 
-WORD_ARRAY=(29 65 30 31 50 51 52 53 54 81 55 56);
+WORD_ARRAY=(30 69 31 32 51 52 53 54 55 81 56 57);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
