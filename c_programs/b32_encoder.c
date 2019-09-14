@@ -4,7 +4,9 @@
 #include <unistd.h>
 #include <stdint.h>
 /**
-* The basic C Program that they're going to be brute forcing the pin from.
+* The basic base32 encoder.
+* This program encodes either an argument or a file passed to it through a pipe into a
+* base32 encoded string.
 * Macathur Inbody <mdi2455@email.vccs.edu>
 * 2019-
 * AGPLv3 or Later
