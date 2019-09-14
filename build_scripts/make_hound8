@@ -16,7 +16,7 @@ fi
 #this reads in the functions that are in the library.
 source build_functions;
 
-WORD_ARRAY=(84 85 86 87 88 89 90 91 92 93 94 95);
+WORD_ARRAY=(85 86 87 88 89 90 91 92 93 94 95 32);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
@@ -128,11 +128,21 @@ fi
 #    return 0;
 #}
 #make_correct_me
-
+tmp=$(( $RANDOM % 2 ));
+correct_owner_string="'$correct_owner';";
+correct_group_string="'$correct_group';";
+case $tmp in
+    0)
+        correct_owner_string="'hound$(( $correct_owner - 1001 ))';";
+    ;;
+    1)
+        correct_group_string="'hound$(( $correct_group - 1001 ))';";
+    ;;
+esac
 #this sets the correct metadata information in the rc file.
-sed -i "s/owner\=.*/owner\=$correct_owner/" ../home_folders/hound$level/.ssh/rc;
-sed -i "s/group\=.*/group\=$correct_group/" ../home_folders/hound$level/.ssh/rc;
-sed -i "s/size\=.*/size\=$(( $correct_size ))/" ../home_folders/hound$level/.ssh/rc;
+sed -i "s/owner\=.*/owner\=$correct_owner_string/" ../home_folders/hound$level/.ssh/rc;
+sed -i "s/group\=.*/group\=$correct_group_string/" ../home_folders/hound$level/.ssh/rc;
+sed -i "s/size\=.*/size\=$correct_size;/" ../home_folders/hound$level/.ssh/rc;
 
 #the amount of partial matches to include by default it's 1 per directory.
 #with the remaining files have random bits of the pattern correct.
@@ -161,6 +171,7 @@ fi
 if [[ $red_herring_file2 -eq $red_herring_file ]];then
     red_herring_file2=$(($red_herring_file+1));
 fi
+
 function red_herring_options(){
 	incorrect_file_metadata=$(( $RANDOM % 4));
 	local permission=$correct_permission;
@@ -343,6 +354,7 @@ echo "hound$level:$FLAG_HOUND" >> ../build_scripts/the_flags;
 #we have to edit the .ssh/rc file in the home directory so that it contains this data.
 permission=$( permission_octal_to_string $correct_permission );
 echo "fh: $FLAG_HOUND";
+permission="$permission;";
 let level--;
 sed -i "s/permission\=.*/permission\='$permission'/" ../home_folders/hound$level/.ssh/rc;
 cd ../hounds/hound$level;

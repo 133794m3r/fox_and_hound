@@ -27,7 +27,7 @@ CORRECT_WORD='';
 #when we are in debug mode it'll be calling debug_random
 continue_random;
 
-WORD_ARRAY=(46 3 47 80 81 82 83 21 84 85 48 103);
+WORD_ARRAY=(46 21 47 80 81 82 83 22 84 85 48 103);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);

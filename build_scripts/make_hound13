@@ -18,7 +18,7 @@ declare -i i=0;
 
 source build_functions;
 
-WORD_ARRAY=(7 11 67 102 99 34 70 19 20 106 71 79);
+WORD_ARRAY=(6 7 70 101 102 45 71 18 19 20 65 79);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);

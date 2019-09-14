@@ -29,7 +29,7 @@ continue_random;
 # the old flag.
 #FLAG_HOUND1='k3uLis-bFoOtxl8wBllZsKapwqM';
 
-WORD_ARRAY=(34 12 97 13 40 100 14 10 73 35 74 68);
+WORD_ARRAY=(36 10 98 11 41 97 12 13 73 37 74 66);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
