@@ -54,7 +54,7 @@ echo "$file_name";
 echo "$FLAG_HOUND";
 CHECK_FILE=$(cat ./$( ls -A) );
 if [[ $FLAG_STR = $CHECK_FILE ]];then
-    echo "It worked. Somehow it worked. Don't question it. Doing so is a folly.";
+    echo "It worked. By Stallman's beard it worked!";
 else
     echo "Someone messed up. Better review it manually.";
 fi
