@@ -39,15 +39,15 @@ function generate_sequence(){
     #using math requires $(( 2+2)) to get the result.
     local end=$(($start + 5 ));
     # a for loop the C style.
-    for (( i=0; i<10; i++ )) {
+    for ( i=0; i<10; i++ ) {
         num=$(( a + b ));
         a=$b;
         b=$num;
         #if logic statement.
-        if [[ $i -ge $start ]];
+        if [[ $i -ge $start ]];then
             printf "$a ";
         #else if this value we do this.
-        elif [[ $i = $end ]];then
+        else if [[ $i = $end ]];then
             break;
         fi
     }
@@ -92,7 +92,7 @@ function decrypt(){
     local index=0;
 
     #a for loop in Shell style.
-    for (i=0;i<str_len;++i)); do
+    for ((i=0;i<str_len;++i)); do
         #getting a substring out of a string.
         byte=${str:$i:1};
         index=`(str_index $b64_dict $byte )`;
@@ -148,7 +148,7 @@ function uncipher_string(){
 }
 
 #the main function.
-function main(void){
+function main(){
 #the arguments are from $0-$n. $0=program name. $1 is first argument and so on.
     local passed_string="$1";
     local str_len="$2";

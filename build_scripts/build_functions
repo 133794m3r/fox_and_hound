@@ -248,7 +248,7 @@ select_regex_help_str(){
             regex_help_str="$regex_help_str that ends with a number."
         ;;
         5)
-            regex_help_str="$regex_help_str that ends with a special character."
+            regex_help_str="$regex_help_str that ends with a special character(excluding space)"
         ;;
         6)
             regex_help_str="$regex_help_str that ends with a capital letter."
@@ -307,7 +307,7 @@ function encrypt_str(){
     local index=0;
     #echo 'ss '$sequence_start;
     #echo 'seq'"${sequence[*]}";
-    for ((i=0;i<str_len;++i)){
+    for ((i=0;i<str_len;++i));do
         byte=${str:$i:1};
         index=`(str_index $b32_dict $byte )`;
         index=$(( $index ^ ${sequence[$j]} ));
@@ -318,7 +318,7 @@ function encrypt_str(){
             j=0;
         fi
 
-    }
+    done
 
     printf "$ouput_str\n";
 }
@@ -373,7 +373,7 @@ function select_regex_test_pattern(){
             sed_str='/[0-9]$/p';
         ;;
         5)
-            sed_str='/[^A-Za-z0-9]$/p';
+            sed_str='/[^A-Za-z0-9\ ]$/p';
         ;;
         6)
             sed_str='/[A-Z]$/p';

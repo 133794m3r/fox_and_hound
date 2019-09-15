@@ -56,7 +56,7 @@ echo "The flag is $FLAG_HOUND" >$file_name;
 FLAG_STR="The flag is $FLAG_HOUND";
 CHECK_FILE=$(cat ./$( ls -A) );
 if [[ $FLAG_STR = $CHECK_FILE ]];then
-    echo "It worked. Somehow it worked. Don't question it. Doing so is a folly.";
+    echo "It's alive. It's alive. Another thing is made.";
 else
     echo "Someone messed up. Better review it manually.";
 fi
