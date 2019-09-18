@@ -39,7 +39,8 @@ while read line;do
            word_string+=', ';
         fi
         tmp=$( sed -n "$chosen_word p" '../dict/hound_dict');
-        word_string+=$(printf "'%s'" "$tmp$level");
+        tmp="$tmp"$( printf '%02x' $level);
+        word_string+=$(printf "'%s'" "$tmp");
     done
     word_string+=');\n';
     let j++;

@@ -1,48 +1,37 @@
 Current version.
-The biggest thing is that this _does not_ include any comments that I've included in my
-code. So this is actual code that's being written.
-August 31st data. sloccount is using some kinda other counting system.
-Totals grouped by language (dominant language first):
-sh:            3701 (81.74%)
-ansic:          826 (18.24%)
-awk:              1 (0.02%)
-
-
-
-1 person efffort in cocomo=152hrs/month. month 1=52hrs. Currently trending towards 20hrs
-per week. Still way below what they were expecting.
-
-prettier chart.
 --------------------------------------------------------------------------------
 Language                      files          blank        comment           code
 --------------------------------------------------------------------------------
-Bourne Again Shell               57            361           1560           3218
-C                                12             46            235            814
-Bourne Shell                     15             85            327            554
+Bourne Again Shell               61            386           1720           3413
+C                                12             53            240            819
+Bourne Shell                     26             94            439            651
+HTML                              1             10              0            113
 C/C++ Header                      1              2             31             12
-awk                               1              0              0              1
+awk                               1              0              4              1
 --------------------------------------------------------------------------------
-SUM:                             86            494           2153           4599
+SUM:                            102            545           2434           5009
 --------------------------------------------------------------------------------
 
+
 COCOMO I (A Basic estimation based solely on code-base size)
-1Total Physical Source Lines of Code (SLOC)                = 4,528
-Development Effort Estimate, Person-Years (Person-Months) = 0.98 (11.72)
+Total Physical Source Lines of Code (SLOC)                = 5,099
+Development Effort Estimate, Person-Years (Person-Months) = 1.11 (13.27)
  (Basic COCOMO model, Person-Months = 2.4 * (KSLOC**1.05))
-Schedule Estimate, Years (Months)                         = 0.53 (6.37)
+Schedule Estimate, Years (Months)                         = 0.56 (6.67)
  (Basic COCOMO model, Months = 2.5 * (person-months**0.38))
-Estimated Average Number of Developers (Effort/Schedule)  = 1.84
-Total Estimated Cost to Develop                           = $ 131,930
- (average salary = $56,286/year, overhead = 2.40).
+Estimated Average Number of Developers (Effort/Schedule)  = 1.98
+Total Estimated Cost to Develop                           = $ 149,383
+
  
 COCOMO II (Taking into account the complexity of the project, and how reliable the code had to be, how many software tools were available for debugging, testing etc. There were none.)
 
 Software Development (Elaboration and Construction)
-Effort =        45.1 Person-months
-Schedule =      12.9 Months
-Cost =          $211,610
 
-Total Equivalent Size = 4,599 SLOC
+Effort = 59.5 Person-months
+Schedule = 14.1 Months
+Cost = $278,893
+
+Total Equivalent Size = 5,099 SLOC 
 
 ==============================================================================================
 Acquisition Phase Distribution

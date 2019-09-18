@@ -1,5 +1,5 @@
 #!/bin/bash
-# Hound ??: Work it, let me work it. Flip it and reverse it. ti tuc ,ti rt ,ti ver ,ti qinu ,ti troS
+# Hound 13: Work it, let me work it. Flip it and reverse it. ti tuc ,ti rt ,ti ver ,ti qinu ,ti troS
 # This hound flag will combine the following commands into one. They'll sort a file, then get the only uniq
 # line. After that, reverse the string, tr it from mixed-case to lowercase. Then the flag is the second field.
 # so if they use cut they can instantly get it.

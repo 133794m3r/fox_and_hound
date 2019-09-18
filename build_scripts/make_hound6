@@ -42,7 +42,7 @@ cd ../text_shells/vim;
 #CORRECT_FLAG='NxfXihbMovnLArUD2xrZXAC4ANs=';
 #the false flag is there to make it harder for them to bruteforce the answer.
 FALSE_FLAG='';
-FLAG_STRING='Your flag is the following $HASH_ENCODING encoded string ';
+FLAG_STRING="Your flag is the following $HASH_ENCODING encoded string ";
 #these are the 3 strings that are going to be inserted that they're going to be searching for but only
 #one of them is the correct one.
 SEARCH_STRING0='';
