@@ -23,7 +23,7 @@ FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 #right now it's just hardcoded. Future versions will actually convert the numeric format into a string.
 function permission_octal_to_string(){
     local num=$1;
-    local replacement_part=$(( $RANDOM % 4 ));
+    local replacement_part=$(( $RANDOM % 3 ));
     local tmp='';
     tmp=${1:$replacement_part:1};
     case $tmp in
@@ -354,7 +354,7 @@ echo "hound$level:$FLAG_HOUND" >> ../build_scripts/the_flags;
 #we have to edit the .ssh/rc file in the home directory so that it contains this data.
 permission=$( permission_octal_to_string $correct_permission );
 echo "fh: $FLAG_HOUND";
-permission="$permission;";
+echo "$permission";
 let level--;
 sed -i "s/permission\=.*/permission\='$permission'/" ../home_folders/hound$level/.ssh/rc;
 cd ../hounds/hound$level;

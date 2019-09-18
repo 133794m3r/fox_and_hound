@@ -49,7 +49,7 @@ file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
 
 
 FLAG_STR="The flag is $FLAG_HOUND";
-echo $FLAG_STR > ./$file_name;
+echo $FLAG_STR > ./"$file_name";
 echo "$file_name";
 echo "$FLAG_HOUND";
 CHECK_FILE=$(cat ./$( ls -A) );
