@@ -118,5 +118,6 @@ tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-MEME_NAME="Look mah I'm a hacker now, I'm cracking someone's pin!I've been bourne again as a programmer.";
+export LOGGED_IN=1;
+export MEME_NAME="Look mah I'm a hacker now, I'm cracking someone's pin!I've been bourne again as a programmer.";
 clear;

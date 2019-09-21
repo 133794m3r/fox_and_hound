@@ -118,5 +118,6 @@ tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-MEME_NAME="Saint IGNUcius send help I'm trapped in Nano and cannot use lisp!";
+export LOGGED_IN=1;
+export MEME_NAME="Saint IGNUcius send help I'm trapped in Nano and cannot use lisp!";
 clear;

@@ -9,3 +9,22 @@ password:MECCFox
 MAC:005056133702
 IP:10.0.0.2
 
+Hound 2 add alias ls="ls -N"
+
+Hound 5 cannot be completed in netlab at all.
+hound8 change the line with the cd to be the correct directory as no file is 
+being copied.
+Also exportexport is at the end of the .bahsrc file.
+Hound9 needs the .ssh/rc file to be redone as 1017.
+hound10 .bashrc error on line 127, likely the export line.
+hound10 needs rebuilt as it's fucked also the word end isn't showing up for 
+ends with a letter.
+hound11 has hound 12's .ssh/rc file. have to reverse them.
+Hound 11 is fucked has to be rebuilt.
+hound 12 is fucked.
+hound 13 needs rc file rewrote.
+hound 14 needs to say seasonally. And the rc file moved from 13.
+13,14,15 need rc files moved up by one.
+hound 16,17,18 all need their rc files updated approtiately.
+17 needs rebuilt.
+hound18 b64 command not found.

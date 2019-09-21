@@ -118,5 +118,6 @@ tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-MEME_NAME="I write scripts _in_ my scripts! *INCEPTION SOUND*";
+export LOGGED_IN=1;
+export MEME_NAME="I write scripts _in_ my scripts! *INCEPTION SOUND*";
 alias ls="ls -N"

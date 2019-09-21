@@ -156,14 +156,16 @@ if [[ $CORRECT_LEN -lt 10 ]];then
 fi
 echo 'cc:'$CORRECT_LEN;
 regex_help=`( select_regex_help_str $regex_case0)`;
-regex_help_combined="$regex_help And it has a length of $CORRECT_LEN.";
+echo $regex_case0;
+echo "$regex_help";
+regex_help_combined="$regex_help";
 IFS='|' read -r -a str_array <<< `( word_wrap_string "$regex_help_combined" 42 )`;
 padding=$(( 43 - ${#str_array[0]} ));
 GOAL_STR0=`(printf "%s%${padding}s" "${str_array[0]}" '')`;
 echo "$GOAL_STR0";
-padding=$(( 42 - ${#str_array[1]} ));
+padding=$(( 43 - ${#str_array[1]} ));
 GOAL_STR1=`(printf "%s%${padding}s" "${str_array[1]}" '')`;
-padding=$(( 41 - ${#str_array[2]} ));
+padding=$(( 42 - ${#str_array[2]} ));
 GOAL_STR2=`(printf "%s%${padding}s" "${str_array[2]}" '')`;
 sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR0'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/GOAL_STR1\=.*/GOAL_STR1\='$GOAL_STR1'/" ../home_folders/hound$level/.ssh/rc;

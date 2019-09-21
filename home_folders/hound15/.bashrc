@@ -118,6 +118,7 @@ tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-MEME_NAME="I can spot the most minute differences!";
+export LOGGED_IN=1;
+export MEME_NAME="I can spot the most minute differences!";
 alias ls="ls -N"
 clear;
