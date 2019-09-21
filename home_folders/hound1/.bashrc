@@ -118,7 +118,8 @@ tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-MEME_NAME='Special characters never stopped me before! Go cat go!';
+export LOGGED_IN=1;
+export MEME_NAME='Special characters never stopped me before! Go cat go!';
 unset HISTFILE
 alias ls="ls -N"
 clear;

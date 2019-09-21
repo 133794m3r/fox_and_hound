@@ -142,7 +142,6 @@ esac
 #this sets the correct metadata information in the rc file.
 sed -i "s/owner\=.*/owner\=$correct_owner_string/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/group\=.*/group\=$correct_group_string/" ../home_folders/hound$level/.ssh/rc;
-sed -i "s/size\=.*/size\=$correct_size;/" ../home_folders/hound$level/.ssh/rc;
 
 #the amount of partial matches to include by default it's 1 per directory.
 #with the remaining files have random bits of the pattern correct.
@@ -266,6 +265,8 @@ for ((i=0; i < $directory_number; i++)); do
             echo "hound$levelstr: $FLAG_HOUND";
             printf "%${size1}s\n" "$HOUND_STR$FLAG_HOUND" > "$filename$j$suffix";
             echo 'correct_file'"$filename$j$suffix";
+            echo "correct_size:"$( printf "%${size1}s\n" "$HOUND_STR$FLAG_HOUND" | wc -c );
+            CORRECT_SIZE=$( printf "%${size1}s\n" "$HOUND_STR$FLAG_HOUND" | wc -c );
             owner=$correct_owner; group=$correct_group; permission=$correct_permission;
             tmp_herring=$red_herring_file; tmp_herring2=$red_herring_file2;
             if [[ $j -eq $red_herring_file ]]; then
@@ -329,7 +330,7 @@ for ((i=0; i < $directory_number; i++)); do
 
     cd ..;
 done;
-echo "-uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$correct_size"c -exec cat {} \;";
+echo "-uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$CORRECT_SIZE"c -exec cat {} \;";
 cd ../hounds/hound$level;
 rm -R $( ls -a | grep -E '.[a-z]');
 cd ../../tmp;
@@ -357,11 +358,13 @@ echo "fh: $FLAG_HOUND";
 echo "$permission";
 let level--;
 sed -i "s/permission\=.*/permission\='$permission'/" ../home_folders/hound$level/.ssh/rc;
+sed -i "s/size\=.*/size\=$CORRECT_SIZE;/" ../home_folders/hound$level/.ssh/rc;
+
 cd ../hounds/hound$level;
-CHECK_FILE=$(find -uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$correct_size"c -exec cat {} \;);
+CHECK_FILE=$(find -uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$CORRECT_SIZE"c -exec cat {} \;);
 FLAG_STRING=$(printf "%${size1}s\n" "$HOUND_STR$FLAG_HOUND");
 if [[ "$CHECK_FILE" == "$FLAG_STRING" ]];then
     echo 'Flag was built correctly.';
 else
-    echo -e "Flag seems to not to be built correctly. Manually review it using the command.\n find -uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$correct_size"c -exec cat {} \;";
+    echo -e "Flag seems to not to be built correctly. Manually review it using the command.\n find -uid $correct_owner -gid $correct_group -perm $correct_permission  -size "$CORRECT_SIZE"c -exec cat {} \;";
 fi

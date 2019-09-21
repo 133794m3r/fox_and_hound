@@ -118,6 +118,7 @@ tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-MEME_NAME="Work it, let me work it. Flip it and reverse it. ti tuc ,ti rt ,ti ver ,ti qinu ,ti troS";
+export LOGGED_IN=1;
+export MEME_NAME="Work it, let me work it. Flip it and reverse it. ti tuc ,ti rt ,ti ver ,ti qinu ,ti troS";
 alias ls="ls -N"
 clear;
