@@ -122,4 +122,4 @@ export LOGGED_IN=1;
 export MEME_NAME='Special characters never stopped me before! Go cat go!';
 unset HISTFILE
 alias ls="ls -N"
-clear;
+

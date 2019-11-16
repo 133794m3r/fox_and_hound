@@ -121,4 +121,4 @@ alias showbanner="sh /home/$USER/.ssh/rc";
 export LOGGED_IN=1;
 export MEME_NAME="Work it, let me work it. Flip it and reverse it. ti tuc ,ti rt ,ti ver ,ti qinu ,ti troS";
 alias ls="ls -N"
-clear;
+

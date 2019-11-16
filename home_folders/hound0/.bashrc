@@ -118,7 +118,7 @@ tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
 cd /tmp/foxhunt/"$dirname";
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
-clear;
+
 unset HISTFILE
 export LOGGED_IN=1;
 export MEME_NAME='Cat presents:Give me the flag!';

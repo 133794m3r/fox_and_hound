@@ -122,4 +122,4 @@ export LOGGED_IN=1;
 export MEME_NAME='You think you can hide me? I am a master of detection!';
 unset HISTFILE
 alias ls="ls -N"
-clear;
+

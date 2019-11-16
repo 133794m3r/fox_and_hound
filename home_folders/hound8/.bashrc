@@ -125,4 +125,4 @@ alias ls="ls -N"
 export LOGGED_IN=1;
 export MEME_NAME="I can _find_ anything. The greatest detective in the world has arrived.";
 echo "$dirname" > /tmp/foxhunt/hound8_users_dirs
-clear;
+

@@ -121,4 +121,4 @@ alias showbanner="sh /home/$USER/.ssh/rc";
 export LOGGED_IN=1;
 export MEME_NAME="I can spot the most minute differences!";
 alias ls="ls -N"
-clear;
+

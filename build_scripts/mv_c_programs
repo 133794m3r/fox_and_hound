@@ -8,5 +8,5 @@ cd ../c_programs/built
 files=$( ls -A );
 cd /usr/local/bin;
 rm -v $files;
-cd /home/tophound/fox_ctf_c_programs/built;
+cd /home/tophound/fox_ctf/c_programs/built;
 cp -aRv * /usr/local/bin;

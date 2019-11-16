@@ -120,4 +120,4 @@ alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
 export LOGGED_IN=1;
 export MEME_NAME='Spaces! Why did it have to be spaces. You darned dirty spaces!';
-clear;
+

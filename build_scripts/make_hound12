@@ -170,6 +170,7 @@ GOAL_STR2=`(printf "%s%${padding}s" "${str_array[2]}" '')`;
 sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR0'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/GOAL_STR1\=.*/GOAL_STR1\='$GOAL_STR1'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/GOAL_STR2\=.*/GOAL_STR2\='$GOAL_STR2'/" ../home_folders/hound$level/.ssh/rc;
+sed -i "s/LINE_LEN\=.*/LINE_LEN\='$CORRECT_LEN';/" ../home_folders/hound$level/.ssh/rc;
 cp $tmp_file "$file_location"
 rm $tmp_file;
 pwd;

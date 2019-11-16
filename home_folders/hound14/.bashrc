@@ -121,4 +121,4 @@ alias showbanner="sh /home/$USER/.ssh/rc";
 export LOGGED_IN=1;
 export MEME_NAME="No obfusication can escape my watchful eye. I *grep* it all!";
 alias ls="ls -N"
-clear;
+
