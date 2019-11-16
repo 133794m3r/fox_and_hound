@@ -9,6 +9,10 @@ password:MECCFox
 MAC:005056133702
 IP:10.0.0.2
 
+rpi
+username phineas
+password securep455w0rd$
+
 Hound 2 add alias ls="ls -N"
 
 Hound 5 cannot be completed in netlab at all.

@@ -54,10 +54,13 @@ file_name=${file_prefix[$(( $RANDOM % $file_prefix_len ))]}'.'${file_suffix[$(( 
 echo "The flag is $FLAG_HOUND" >$file_name;
 FLAG_STR="The flag is $FLAG_HOUND";
 CHECK_FILE=$(cat ./$( ls -A) );
+CHECK_FILE='false'
 if [[ $FLAG_STR = $CHECK_FILE ]];then
     echo "It's alive. It's alive. Another thing is made.";
 else
+    echo "$FLAG_STR and got $CHECK_FILE";
     echo "Someone messed up. Better review it manually.";
+
 fi
 #then we go back to the build scripts directory so that we can output to it our file that'll
 #hold the flag and the username for the next user.
