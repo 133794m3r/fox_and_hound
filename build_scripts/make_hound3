@@ -6,8 +6,8 @@
 # (C) 2019 -
 # working with hidden files.
 # This flag requires the user to find a hidden file
-#then read the contents of the file. As they previously
-#had to read a file with spaces this is a hearken back to that moment.
+# then read the contents of the file. As they previously
+# had to read a file with spaces this is a hearken back to that moment.
 if [[ $# -lt 1 ]];then
     level=3;
 else

@@ -1,12 +1,12 @@
 #!/bin/bash
-#Hound 1 aka `Special characters never stopped me before! Go cat go!`
+# Hound 1 aka `Special characters never stopped me before! Go cat go!`
 # Macarthur Inbody
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
 # (C) 2019 -
 # Hound 1 aka Special characters never stopped me before! Go cat go!
 # Working with special characters in the filename.
-#This flag requires them to read the file either via cat ./<FILENAME> or cat '<FILENAME>'
+# This flag requires them to read the file either via cat ./<FILENAME> or cat '<FILENAME>'
 
 if [[ $# -lt 1 ]];then
     #this is the level that this flag is going to be identified as.

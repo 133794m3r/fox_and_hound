@@ -5,7 +5,7 @@
 # Licenesed under AGPLv3
 # (C) 2019 -
 # This flag requires them to find a file with certain metadata from the list of
-#files. It has 4 attributes. Size,Owner,Group,Permissions.
+# files. It has 4 attributes. Size,Owner,Group,Permissions.
 HASH_ENCODING='b32';
 if [[ $# -lt 1 ]];then
     level=8;

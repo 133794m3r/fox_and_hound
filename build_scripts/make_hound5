@@ -4,9 +4,9 @@
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
 # (C) 2019 -
-#This will be a nano flag. All in one. They have to find a string
-#then read into nano a file based on the string they find.
-#basic text editor stuff.
+# This will be a nano flag. All in one. They have to find a string
+# then read into nano a file based on the string they find.
+# basic text editor stuff.
 HASH_ENCODING='b32';
 if [[ $# -lt 1 ]];then
     level=5;
