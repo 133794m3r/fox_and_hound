@@ -11,10 +11,10 @@
 # This one will require them to run some regex on the file and the regex strings will of course
 # be changing so one time it'll be field that ends in a '.' or some other character. or starts with it
 # along with the standard regex things to make this a lot more random in the future.
-#awk "$0 ~ /^[a-zA-Z]*$/ && length($0) == $LENGTH {print };" `<FILENAME>`;
-#sed -n "/.\{$LENGTH,$LENGTH\}/p" `<FILENAME>` | grep -v "[^a-zA-Z]"
-#One note is that UPPER_CASE files are meant to be constants that aren't changed after being set.
-#lowercase can cahnge whenever.
+# awk "$0 ~ /^[a-zA-Z]*$/ && length($0) == $LENGTH {print };" `<FILENAME>`;
+# sed -n "/.\{$LENGTH,$LENGTH\}/p" `<FILENAME>` | grep -v "[^a-zA-Z]"
+# One note is that UPPER_CASE files are meant to be constants that aren't changed after being set.
+# lowercase can cahnge whenever.
 if [[ $# -lt 1 ]];then
     level=12;
 else

@@ -10,7 +10,7 @@
 # then be able to get the program to generate a string for them after passing it an argument. Super simple thing to make sure they
 # get some basic bash scripting.
 # errors will include logic error, typoed variable, using [[]] instead of (()) for a loop, same with if/else if. Writing if else if. Doing the if/else loop with C-Style syntax etc. After fixing it up
-#the program will check the argument passed to it and then process it
+# the program will check the argument passed to it and then process it
 # and turn it into a string(using some function that won't have issues with it) by going through the string character by character transforming it someway.
 
 #String will be of this format.

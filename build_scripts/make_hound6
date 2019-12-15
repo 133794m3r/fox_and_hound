@@ -4,11 +4,11 @@
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
 # (C) 2019 -
-#This will be the vim version the nano flag.
-#it's basicaly just the vim flag but modified for vim purposes.
-#insert into their text file to then find the flag.
-#this function will be called if a debug flag is passed to the program in the future.
-#it'll be called like so: seed_random <SEED_VALUE> So that random is deterministic.
+# This will be the vim version the nano flag.
+# it's basicaly just the vim flag but modified for vim purposes.
+# insert into their text file to then find the flag.
+# this function will be called if a debug flag is passed to the program in the future.
+# it'll be called like so: seed_random <SEED_VALUE> So that random is deterministic.
 
 HASH_ENCODING='b32';
 
