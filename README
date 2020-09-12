@@ -13,6 +13,7 @@ Some of the C Programs are ones I've wrote that I may need in a future version I
 The scripts are licensed under AGPLv3 and the data contained herein is licensed
 under CC-BY.
 
+The images are all (C) Mountain Empire Community College. The "M" logo that shows up during the signin is (C) MECC with all rights reserved to them. For the public version of this repo a new custom logo will be created so that licensing will not be an issue.
 
 Tools utilized when building the project.
 BASH, GNU Utils, OpenSSL, openSSH, shelldb, shellcheck, VirtualBox, VMWare, VSphere, Perl, C, GCC, REGEX, sed, awk, linux server administration, git.
