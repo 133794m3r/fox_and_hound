@@ -74,6 +74,9 @@ int base32_encode(char *dest, const char *src, unsigned int srclen, unsigned int
     }
     return 0;
 }
+
+
+
 int main(int argc,char **argv){
     char *dest=malloc(sizeof *dest);
     char *help="-h";
@@ -98,7 +101,7 @@ int main(int argc,char **argv){
         printf("%s\n",dest);
     }
 
-    else if(select(1,&read_file_descriptors,NULL,NULL,&never_wait) >=0){
+    else if(select(1,&read_file_descriptors,NULL,NULL,&never_wait) > 0){
         char *src_buffer=malloc(sizeof *src_buffer);
         char *total_buffer=malloc(sizeof *total_buffer);
 
@@ -114,7 +117,7 @@ int main(int argc,char **argv){
         while (read_status >= 0){
             i=0;
             j=0;
-//this should work as I did 100K iterations in bash with random data and it worked everytime
+		//this should work as I did 100K iterations in bash with random data and it worked everytime
             for(i=read_bytes;i<len;i++){
                 total_buffer[i]=src_buffer[j++];
             }
@@ -135,3 +138,4 @@ int main(int argc,char **argv){
     }
     return 0;
 }
+

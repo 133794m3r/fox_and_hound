@@ -6,11 +6,18 @@
 # (C) 2019 -
 # This flag requires them to find a file with certain metadata from the list of
 # files. It has 4 attributes. Size,Owner,Group,Permissions.
+
 HASH_ENCODING='b32';
 if [[ $# -lt 1 ]];then
     level=8;
 else
     level=$1;
+fi
+
+# User must be root or else it won't work.
+if [[ $(whoami) != "root" ]];then
+	echo "Must be run as root.";
+	exit 1;
 fi
 
 #this reads in the functions that are in the library.
@@ -70,6 +77,7 @@ j=0;
 #FLAG_HOUND l0pMty8KC2HxqKBni+XzWWm7jfk
 #Number of directories.
 directory_number=20;
+
 #number of files per directory
 file_number=10;
 filename_arr=('.-' '-~' '-.' '.~');
@@ -317,9 +325,7 @@ for ((i=0; i < $directory_number; i++)); do
             #FILE_CONTENTS=$(make_false_file $file_size $file_type);
             make_false_file;
         fi
-        #if [[ $owner -eq $correct_owner && $group -eq $correct_group && $permission -eq $correct_permission  ]];then
-        #    permission=755;
-        #fi
+
         #echo "$filename$j$suffix";
         #echo "$owner:$group";
         chown "$owner:$group" ./"$filename$j$suffix";
