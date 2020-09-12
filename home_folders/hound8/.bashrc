@@ -114,8 +114,7 @@ fi
 #this will set the directories and CD into it for us.
 dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_')
 mkdir /tmp/foxhunt/"$dirname";
-#tar -xvJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname"
-cd /tmp/foxhunt/"$dirname";
+#cd /foxhunt
 alias takemeback="cd /tmp/foxhunt/$dirname";
 alias showbanner="sh /home/$USER/.ssh/rc";
 
@@ -125,4 +124,4 @@ alias ls="ls -N"
 export LOGGED_IN=1;
 export MEME_NAME="I can _find_ anything. The greatest detective in the world has arrived.";
 echo "$dirname" > /tmp/foxhunt/hound8_users_dirs
-
+sleep 30;
