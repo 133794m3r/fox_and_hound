@@ -47,6 +47,7 @@ function mk_hash(){
         openssl dgst -sha1 -binary | base64;
     fi
 }
+
 #this function gets words of a certain length that are valid ASCII I include control characters in the grepping for simplicity's sake.
 function get_certain_words(){
 #the ake command makes sure that the length of the file it's reading line by line column $0=first columnt is equal to the
@@ -54,6 +55,7 @@ function get_certain_words(){
 # \x00-\x7f=0-127 aka valid ASCII characters.
     awk 'length($0) == '"$2"'' "$1" | grep  -P -v '[^\x00-\x7f]'
 }
+
 #this selects a random word from the dictionary that's passed to it as argument 1, argument 2 is that dictionaries length.
 #argument 3 is whether it's going to chose the same for testing purposes.
 function get_random_word(){
@@ -77,6 +79,7 @@ function get_random_word(){
     #use sed in address mode.
     sed -n "$rnd_line p" $dict;
 }
+
 function make_false_flag(){
     if [ $# -ge 3 ]; then
         seed_random $level;
@@ -88,6 +91,7 @@ function make_false_flag(){
     local password=$( sed -n "$rnd_line p" $dict );
     printf $password | mk_hash;
 }
+
 make_flag(){
     if [ $# -ge 1 ];then
         seed_random $level;
@@ -225,6 +229,7 @@ function select_regex(){
     esac
     echo "$regex_case $regex_str";
 }
+
 select_regex_help_str(){
     # the options for the regex. It sets the regex pattern for the string.
     # 0=all lowercase characters. 1=starts with uppercase. 2=starts with number. 3=starts with special character.
@@ -259,6 +264,7 @@ select_regex_help_str(){
     esac
     echo "$regex_help_str";
 }
+
 word_wrap_string(){
     local str="$1";
     local columns="$2";
@@ -318,6 +324,39 @@ function encrypt_str(){
             j=0;
         fi
 
+    done
+
+    printf "$ouput_str\n";
+}
+
+function decrypt(){
+    local str="$1";
+    local sequence;
+    local str_len=${#str};
+    local sequence_start=$2;
+    read -r -a sequence <<< $(generate_sequence $sequence_start );
+    local output_str='';
+    local i=0;
+    local j=0;
+    local byte='';
+    local chr='';
+    local b32_dict='ybndrfg8ejkmcpqxot1uwisza345h769';
+    local b64_dict='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+_';
+    local index=0;
+
+    #a for loop in Shell style.
+    for ((i=0;i<str_len;++i)); do
+        #getting a substring out of a string.
+        byte=${str:$i:1};
+        index=`(str_index $b64_dict $byte )`;
+        index=$(( $index ^ ${sequence[$j]} ));
+        ouput_str+="${b32_dict:$index:1}";
+        #printf ${b64_dict:$index:1};
+        let j++;
+        #if logic statement.
+        if [[ $j -ge 5 ]];then
+            j=0;
+        fi
     done
 
     printf "$ouput_str\n";
@@ -384,6 +423,7 @@ function select_regex_test_pattern(){
     esac
     echo "$sed_str";
 }
+
 function generate_sequence(){
     local a=0;
     local b=1;
@@ -391,7 +431,8 @@ function generate_sequence(){
     local start=$1;
     local end=$(( $start + 5 ));
     sequence_str='';
-    for (( i=0; i<10; i++ )) {
+    
+    for (( i=0; i<10; i++ )); do
         num=$(( a + b ));
         a=$b;
         b=$num;
@@ -401,6 +442,7 @@ function generate_sequence(){
         if [[ $i = $end ]];then
             break;
         fi
-    }
+    done
+    
     printf "$sequence_str";
 }

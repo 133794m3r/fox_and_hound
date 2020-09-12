@@ -21,6 +21,7 @@ source build_functions;
 function mk_b32_string(){
     printf '%5s' $1 | b32;
 }
+
 function sed_it(){
     sed -i "s/$1/$2/" ../c_programs/$3;
 }

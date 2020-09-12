@@ -29,9 +29,9 @@ echo -e '\e[0m \e[31m                       /#\
 \e[31m                      /#####\
 \e[31m                     /#######\
 \e[31m                    /#########\
-\e[31m                   /##########/              *****A textbox with some Info****
+\e[31m                   /##########/           
 \e[31m                  /##########/  /\         \e[33m[+==================================+ 
-\e[31m                 /##########/  /##\        \e[33m| \e[97m{ PLACEHOLDER TEXT IS HERE     }  \e[33m| 
+\e[31m                 /##########/  /##\        \e[33m| \e[97m The Transcendentlists \e[33m| 
 \e[31m                /##########/  /###/  _     \e[33m| \e[97m { PLACEHOLDER TEXT IS HERE    }  \e[33m| 
 \e[31m               /##########/__/###/  /#\    \e[33m| \e[97m  { PLACEHOLDER TEXT IS HERE   }  \e[33m|  
 \e[31m              /#################/  /###\   \e[33m\ \e[97m { PLACEHOLDER TEXT IS HERE   }   \e[33m|

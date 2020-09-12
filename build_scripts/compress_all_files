@@ -3,6 +3,16 @@
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
 # (C) 2019 -
+
+# The hound8 flag has permissions that are not normal thus it must be done as root
+# So that we can retain the correct ownership/group ownership permissions 
+# that we have.
+
+if [[ $(whoami) != "root" ]];then
+	echo "Must be run as root.";
+	exit 1;
+fi
+
 args=$#;
 if [[ $args -eq 1 ]]; then
     if [ $1 == '../hounds' ]; then
