@@ -4,7 +4,7 @@
 # Macarthur Inbody
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
-# (C) 2019 -
+# (C) 2019 - 2020
 
 HASH_ENCODING='b32';
 source build_functions;
