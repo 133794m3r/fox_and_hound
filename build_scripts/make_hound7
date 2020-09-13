@@ -390,8 +390,13 @@ c_program_srcdir="../c_programs"
 
 cp ../c_programs/"$c_program_src" ../c_programs/"$c_program_src_edited";
 #gcc -march=native -Wall -Werror -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops "$c_program_srcdir/$c_program_src" -o "$c_program_srcdir/built/givemethepin";
+#Have to make sure that _no_ errors or anyting end up screwing with me.
 gcc -march=native -Wall -Werror -Wpedantic -O3 -fweb -fgcse-las -fgcse-sm -fgcse-after-reload -fpeel-loops ../c_programs/"$c_program_src_edited" -o ../c_programs/built/givemethestring;
-sudo chgrp $(( 1001 + $level )) ../c_programs/built/givemethestring;
+if [[ `(whoami)` == "root" ]];then
+	chgrp $(( 1001 + $level) ../c_programs/built/givemethestring;
+else
+	sudo chgrp $(( 1001 + $level )) ../c_programs/built/givemethestring;
+fi
 chmod 710 ../c_programs/built/givemethestring;
 #We had to sed the flags to the file itself including false flags.
 sed_it '<correct_string_placeholder>' "$CORRECT_STRING" "$c_program_src_edited";

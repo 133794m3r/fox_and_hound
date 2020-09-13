@@ -12,7 +12,7 @@
 
 int main(int argc, char **argv){
     char *correct_string=malloc(8);
-    correct_string="ge4uocti";
+    correct_string="ry3uncta";
     //correct_string="12345678";
     char *flag_string="The flag is ";    
     char *flag=malloc(28);

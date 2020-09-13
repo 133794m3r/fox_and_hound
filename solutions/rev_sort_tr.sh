@@ -8,4 +8,11 @@
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
 # (C) 2019 -
-cat ./`(ls -A)` | sort | uniq -u | rev | tr '[A-Z]' '[a-z]' | cut -d' ' -f2 
+# below is the "normal" way using tr. 
+# cat ./`(ls -A)` | sort | uniq -u | rev | tr '[A-Z]' '[a-z]' | cut -d' ' -f2
+ 
+# I prefer abusing sed though.
+# This script does _exactly_ the same thing as the line above just using sed scripting instead of
+# utilizing standard unix scripts.
+cat ./`(ls -A)` | sort | uniq -u | rev | sed -n -e 's/\(.*\)/\L\1/g;s/\ \(.*\)/\1/p'
+
