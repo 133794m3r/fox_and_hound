@@ -2,16 +2,16 @@
 # Macarthur Inbody
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
-# (C) 2019 -
+# (C) 2019 - 2020
 printf '
-Here are some basic regex help.
+Here are some basic regex hints/help when working with the flags.\nIt should get you most of the way to the flag\n
 If you need more help then you can type `info regex` or you can search for help online.
 ^ (Caret)        =    match expression at the start of a line, as in ^A.
 $ (Question)     =    match expression at the end of a line, as in A$.
 \ (Back Slash)   =    turn off the special meaning of the next character, as in \^.
 [ ] (Brackets)   =    match any one of the enclosed characters, as in [aeiou].
-                      Use Hyphen "-" for a range, as in [0-9].
-[^ ]             =    match any one character except those enclosed in [ ], as in [^0-9].
+                      Use Hyphen "-" for a range, as in [0-9] which will match all numbers between 0 and 9.
+[^ ]             =    match any one character except those enclosed in [ ], as in [^0-9]. It will match anything but 0-9. 
 . (Period)       =    match a single character of any value, except end of line.
 * (Asterisk)     =    match zero or more of the preceding character or expression.
 \{x,y\}          =    match x to y occurrences of the preceding.
@@ -19,6 +19,11 @@ $ (Question)     =    match expression at the end of a line, as in A$.
 \{x,\}           =    match x or more occurrences of the preceding.
 ( )              =    a capture group.
 \\1\\2             =    References to matches of the capture group.
+g                =    When appended to a regex expression makes it match all occurences.
+SED SPECIFIC INFO
+p                =    Specific to sed. It will print whatever was matched.\nCan be utilized to get a certain line out of a file and print it.\nTo just print the 31st line in a file the command would be. `sed -n -e '31p' SOME_FILE`
+When using Sed the following characters have be escaped to be utilized. To create a capture group that matches the letter A from 1 to 3 times.\nThen adding a single "B" at the end of it, and make it global match.
 
-Macarthur Inbody (C) 2019 -
+sed "s/\\([A]\\{1,3\\}\\)/\\1B/g" SOME_FILE
+Macarthur Inbody 2019 - 2020
 ';
