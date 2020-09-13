@@ -2,6 +2,6 @@
 # Macarthur Inbody
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
-# (C) 2019 -
+# (C) 2019 - 2020
 dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_');
 echo -e 'To get back to your directory go to\n /tmp/foxhunt/'"$dirname\n by typing\n cd /tmp/foxhunt/$dirname";
