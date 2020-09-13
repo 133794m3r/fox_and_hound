@@ -2,14 +2,16 @@
 # Macarthur Inbody
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
-# (C) 2019 -
+# (C) 2019 - 2020
+
+CONTACT_NAME = "Macarthur David Inbody";
+EMAIL_ADDR = "admin-contact@transcendental.us";
 DIRNAME=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_');
 case $1 in
 	'-debug')
-	echo "Person to blame: Macarthur Inbody <admin_contact@transcendental.us> Debug info: d|$DIRNAME f|$USER name:$MEME_NAME";;
+	echo "Person to blame: $CONTACT_NAME email: $EMAIL_ADDR Include in email Body: d|$DIRNAME f|$USER name:$MEME_NAME\nPlus anything else that you think might be relevant.";;
 	'-person')
-	echo "Person to blame: Macarthur Inbody <admin_contact@transcendental.us>";;
+	echo "Person to blame: $CONTACT_NAME  email: $EMAIL_ADDR";;
 	*)
-	echo -e 'usage: blame -person|-debug\n -person will say who to blame -debug will also help them figure out what went wrong.'
-	;;
+	echo -e 'usage: blame -person|-debug\n -person will say who to blame -debug will also help them figure out what went wrong.\nWhen contacting them make sure to include a relevant screenshot showing the exercise being broke. Any and all information will help.';;
 esac
