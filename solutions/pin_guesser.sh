@@ -7,6 +7,8 @@
 num_str='';
 #todo make sure that they write it so that it works with dash.
 #this results in a 50% speedup! huge as it saves a shitton of time.
+#TODO: Add a check condition to see if the result actually has some output.
+# if it does I should really break out of the loop.
 cd ../c_programs/built;
 i=0;
 max=300;
