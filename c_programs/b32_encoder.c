@@ -15,6 +15,7 @@
 //TODO: Figure out some way to handle NULL input at the front of  stdin buffer.
 // the chances of this happening are next to zero but it's still possible.
 // This is just a macro like thing to make it a little less to type.
+
 static inline unsigned char uchar(char chr){ return chr;}
 /**
 * This function encodes a string passed to it as a bas32 string.
