@@ -6,7 +6,7 @@
 
 /**
  * The flag exchanger program.
- * Macathur Inbody <mdi2455@email.vccs.edu> <admin-contact@transcendental.us>
+ * Macarthur Inbody <mdi2455@email.vccs.edu> <admin-contact@transcendental.us>
  * 2020 -
  * AGPLv3 or Later
  *
@@ -18,14 +18,17 @@
  * terminal so that they can more easily see the text.
  *
 */
+
 static inline unsigned char uchar(char chr){ return chr;}
+
 void print_help(char *fname){
 	fprintf(stdout,"Usage: %s -h| -u <LEVEL> -s <SECRET_STRING>\n-h=show this help string. -u <LEVEL> The level that the secret string was generated for. So for hound0 it'd be '0'.\n-s <SECRET_STRING> This is first 5-6 characters of the flag string.\n After giving both parameters to this program it will return back to you the password to the username that you've specified if your token matches the stored one.",fname);
 }
 
 int main(int argc, char **argv){
 	char secret[6] = {0,0,0,0,0,0};
-	int level = 0;
+	int level = -1;
+
 	if(argc == 1){
 		print_help(argv[0]);
 		return 0;
@@ -87,30 +90,52 @@ int main(int argc, char **argv){
 		}
 	}
 
+	// our file we'll be using later.
 	FILE *fp;
+
+	//if secret was never set time to just exit.
 	if(secret[0] == '\0'){
-		fprintf(stderr,"Program requires the secret string.");
+		fprintf(stderr,"Program requires the secret string.\n");
 		return 2;
 	}
+	else if(level == -1){
+		fprintf(stderr,"You must supply a level to this program via -u <LEVEL>\n");
+		return 2;
+	}
+
 	//this directory will actually
 	fp = fopen("/tmpdownload/the_flags.txt","r");
 
+	//how far to seek into the file.
 	unsigned int  seek_pad = 0;
+	//for levels 0-9 it's always 40 characters of padding to the first character of the line.
 	if(level <= 9){
+		//if we're on level 9 then we have to move 1 more character as username has 2 digits after it.
 		seek_pad += (level <= 8)?7:8;
 		seek_pad += (level*40);
 	}
 	else{
+		//otherwise we have to move it by all of the previous ones, plus the current level minus 9
+		// times 41, plus 8 characters.
 		seek_pad = (9*40)+((level-9)*41) + 8;
 	}
+
+	//move the fp to the correct place.
 	fseek(fp,seek_pad,SEEK_SET);
+	//allocate our static buffer to hold 32 characters of text and null terminator.
 	char flag[33];
+	//get the string from the file and make it read 33 bytes(includes terminator)
 	fgets(flag,33,fp);
 
+	//make sure that the strings match as strncmp returns the number of characters that were different.
 	if(strncmp(flag,secret,5) == 0){
 		fprintf(stdout,"%s\n",flag);
 	}
 	else{
+		//tell them as much.
 		fprintf(stderr,"The secret string you entered was incorrect. The string '%s' is not a valid secret string.",secret);
 	}
+
+	//always return 0.
+	return 0;
 }
