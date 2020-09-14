@@ -71,13 +71,13 @@ tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
 #string utilizing printf to make each instance of the file as ./<filename> so that it can be rmed more easily. Finally the shell expands the value
 #converts it to a string, this string is then converted into a set of arguments to be utilized by rm. This way there are no errors about a file not
 #being found as rm only sees existing files because we only pass those that have been grepped.
-cd ../hounds;
+cd ../hounds || exit;
 pwd;
 rm -v $( ls -a hound$level | egrep "($tmp)" | xargs -i{} printf "hound$level/{} " );
 
 #the lines that each file's going to contain.
 total_lines=40;
-cd "hound$level";
+cd "hound$level" || exit;
 FILE_STRING_CONTENTS='';
 for ((i=0;i<total_lines;i++)); do
     str=$( make_false_flag $dictionary $dictionary_len );
@@ -105,6 +105,6 @@ else
     echo -e 'The command we submitted\n $( diff ./"'"$filename_1"'" ./"'"$filename_2"'" | tr -d "\n>" | cut -d" " -f2 )';
 fi
 
-cd ../../build_scripts;
+cd ../../build_scripts || exit;
 let level++;
 echo "hound$level:$FLAG_HOUND" >> the_flags;
