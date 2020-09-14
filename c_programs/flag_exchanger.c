@@ -5,12 +5,24 @@
 #include <ctype.h>
 
 /**
+ * The flag exchanger program.
+ * Macathur Inbody <mdi2455@email.vccs.edu> <admin-contact@transcendental.us>
+ * 2020 -
+ * AGPLv3 or Later
  *
- */
+ * The users will login to hound0 and then it'll let them exchange the first 5
+ * characters of the full flag for a string they can copy and then paste
+ * into the terminal so that they have to type a lot less. I feel like 5 characters
+ * is a nice balance between being enough possible values whilst also not being too
+ * much for an end-user to have to type. To help I'll also up the font-size of the
+ * terminal so that they can more easily see the text.
+ *
+*/
 static inline unsigned char uchar(char chr){ return chr;}
 void print_help(char *fname){
 	fprintf(stdout,"Usage: %s -h| -u <LEVEL> -s <SECRET_STRING>\n-h=show this help string. -u <LEVEL> The level that the secret string was generated for. So for hound0 it'd be '0'.\n-s <SECRET_STRING> This is first 5-6 characters of the flag string.\n After giving both parameters to this program it will return back to you the password to the username that you've specified if your token matches the stored one.",fname);
 }
+
 int main(int argc, char **argv){
 	char secret[6] = {0,0,0,0,0,0};
 	int level = 0;
