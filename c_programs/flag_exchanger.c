@@ -9,7 +9,7 @@
  */
 static inline unsigned char uchar(char chr){ return chr;}
 void print_help(char *fname){
-	fprintf(stdout,"Usage: %s -h| -u <LEVEL> -s <SECRET_STRING>\n-h=show this help string. -u <LEVEL> The level that the secret string was generated for. So for hound0 it'd be '0'.\n-s <SECRET_STRING> This is the 5-6 character string you were given upon getting the flag.\n After giving both parameters to this program it will return back to you the password to the username that you've specified if your token matches the stored one.",fname);
+	fprintf(stdout,"Usage: %s -h| -u <LEVEL> -s <SECRET_STRING>\n-h=show this help string. -u <LEVEL> The level that the secret string was generated for. So for hound0 it'd be '0'.\n-s <SECRET_STRING> This is first 5-6 characters of the flag string.\n After giving both parameters to this program it will return back to you the password to the username that you've specified if your token matches the stored one.",fname);
 }
 int main(int argc, char **argv){
 	char secret[6] = {0,0,0,0,0,0};
