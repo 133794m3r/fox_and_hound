@@ -13,17 +13,18 @@
 * 2019-
 * AGPLv3 or Later
 */
-int main(int *argc,char **argv){
+int main(int argc,char **argv){
     char command[80];
     int realid=getuid();
     setuid(geteuid());
-    if (argc >= 2) &&  (argv[1] == "rm" | argv[1] == "rmdir" ){
+    if ((argc >= 2) && (argv[1] == "rm" | argv[1] == "rmdir" )){
         printf("We're not going to let you delete files!\n");
         return -1;
     }
+
     switch(argc){
         case 2:
-            snprintf(command,"%s %s",argv[1],argv[2]);
+            snprintf(command,6,"%s %s",argv[1],argv[2]);
             system(command);
         break;
         case 3     
