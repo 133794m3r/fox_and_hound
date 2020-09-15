@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <ctype.h>
+#include <unistd.h>
 
 /**
  * The flag exchanger program.
@@ -103,9 +104,13 @@ int main(int argc, char **argv){
 		return 2;
 	}
 
-	//this directory will actually
+	//since this is super dangerous it's only set here.
+	setuid(geteuid());
+	//this will be the actual directory where the files contained eventually.
 	fp = fopen("/tmpdownload/the_flags.txt","r");
-
+	//followed by being returned to a much lower priv user.
+	//on the VMs this'll be the UID of hound0(but for dev purposes it's 1000. VMs it'll be 1001.
+	setuid(1000);
 	//how far to seek into the file.
 	unsigned int  seek_pad = 0;
 	//for levels 0-9 it's always 40 characters of padding to the first character of the line.
@@ -133,7 +138,8 @@ int main(int argc, char **argv){
 	}
 	else{
 		//tell them as much.
-		fprintf(stderr,"The secret string you entered was incorrect. The string '%s' is not a valid secret string.",secret);
+		fprintf(stderr,"The secret string you entered was incorrect. The string '%s' is not a valid secret string.\n",secret);
+		return 1
 	}
 
 	//always return 0.
