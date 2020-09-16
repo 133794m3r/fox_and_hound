@@ -5,5 +5,5 @@
 # Licenesed under AGPLv3
 # (C) 2019 -
 
-cd $1;
+cd "$1" || echo "Directory doesn't exist.";
 file .* | grep ': ASCII text' | cut -f1 -d':' | xargs -i{} cat '{}' 

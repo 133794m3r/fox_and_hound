@@ -6,4 +6,4 @@
 # Licenesed under AGPLv3
 # (C) 2019 -
 
-cat $( ls -A);
+cat "$( ls -A)";

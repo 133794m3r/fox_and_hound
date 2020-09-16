@@ -54,7 +54,7 @@ file_name=${file_prefix[$(( $RANDOM % $file_prefix_len ))]}'.'${file_suffix[$(( 
 echo "The flag is $FLAG_HOUND" >$file_name;
 FLAG_STR="The flag is $FLAG_HOUND";
 CHECK_FILE=$(cat ./$( ls -A) );
-if [[ $FLAG_STR = $CHECK_FILE ]];then
+if [[ $FLAG_STR = "$CHECK_FILE" ]];then
     echo "It's alive. It's alive. Another thing is made.";
 else
     echo "$FLAG_STR and got $CHECK_FILE";

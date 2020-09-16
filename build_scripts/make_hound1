@@ -19,6 +19,7 @@ source build_functions;
 #we seed $RANDOM with the current level value.
 seed_random $level;
 
+# shellcheck disable=SC2034
 HASH_ENCODING='b32';
 
 #we then make the flag by calling it.
