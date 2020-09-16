@@ -51,7 +51,7 @@ function decompression_tester(){
     #echo "$command_base";
     if [[ "$command" == 'ABSOLUTE_FAILURE' ]];then
         echo 'Failed';
-        return -1;
+        return 255;
     fi
     while [[ $are_we_done -eq 0 && i -lt 20 ]];do
         file_type=$( eval "$command" | file - | cut -d' ' -f2 );
@@ -202,8 +202,8 @@ TEST_STR=$( decompression_tester "$filename2" );
 if [[ "$TEST_STR" == "$FLAG_STR" ]];then
     echo "Build hound$level succeeded.";
 else
-    echo "We were expecting. $FLAG_STR but we got,\n $TEST_STR.";
-    echo "Please manually review the file $filename, but first run the program pipemadness like so.\n bash pipe_madness.sh $filename \n to confirm that it isn't just a fluke.";
+    echo -e "We were expecting. $FLAG_STR but we got,\n $TEST_STR.";
+    echo -e "Please manually review the file $filename, but first run the program pipemadness like so.\n bash pipe_madness.sh $filename \n to confirm that it isn't just a fluke.";
 fi
 cd ..;
 #rm -Rv tmp;

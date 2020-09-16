@@ -71,7 +71,7 @@ function decompression_tester(){
     fi
     #iterate over it until we're done or if we're 20 layers deep because that's the maximum
     # if we go higher than that then something's fucked up.
-    while [[ !$are_we_done && i -lt 20 ]];do
+    while [[ ! $are_we_done && i -lt 20 ]];do
     	#make sure we get the file's type.
     	#I have to use eval because tar doesn't like being run as a string but it works.
     	
