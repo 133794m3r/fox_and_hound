@@ -92,7 +92,7 @@ correct_spaces=$(( ($RANDOM & $max_spaces) +1 ));
 echo "correct_spaces:"$correct_spaces;
 num_spaces=0;
 extra_space=0;
-if [[ $regex_case0 >=2 && $regex_case <=1 ]];then
+if [[ $regex_case0 -ge 2 && $regex_case -le 1 ]];then
     extra_space=1;
 elif [[ $regex_case0 -le 1 && $regex_case -ge 2 ]];then
     extra_space=-1;

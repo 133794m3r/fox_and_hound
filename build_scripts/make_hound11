@@ -129,7 +129,7 @@ filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
 for (( i=1; i<$filename_arr_len; i++ ));do
     tmp="$tmp|${filename_arr[$i]}";
 done
-ls -A ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
+ls -A "../hounds/hound$level" | grep -E "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
 select_random_regex;
 CORRECT_REGEX_CODE=$pattern_code;
 CORRECT_REGEX_PATTERN=$selected_pattern;

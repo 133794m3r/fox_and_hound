@@ -37,17 +37,17 @@ function generate_sequence(){
     local num=0;
     local start=$1;
     #using math requires $(( 2+2)) to get the result.
-    local end=$(($start + 5 ));
+    local end=$((start + 5 ));
     # a for loop the C style.
-    for ( i=0; i<10; i++ ) {
+    for (( i=0; i<10; i++ )) {
         num=$(( a + b ));
         a=$b;
         b=$num;
         #if logic statement.
         if [[ $i -ge $start ]];then
-            printf "$a ";
+            echo "$a ";
         #else if this value we do this.
-        else if [[ $i = $end ]];then
+        elif [[ $i = $end ]];then
             break;
         fi
     }

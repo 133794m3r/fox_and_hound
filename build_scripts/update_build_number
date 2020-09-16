@@ -1,6 +1,6 @@
 #!/bin/bash
 read -r CURRENT_BUILD < ../notes/current_build_number;
-if [[$CURRENT_BUILD -ge 11 ]];then
+if [[ $CURRENT_BUILD -ge 11 ]];then
     $CURRENT_BUILD=0;
 else
     printf $((CURRENT_BUILD+1))'\n' > ../notes/current_build_number;

@@ -7,12 +7,12 @@
 if [ $# -ge 2 ];then
     file_to_search=$1;
     length=$2;
-elif [ $# eq 1 && $1 -ne '-h' ]
+elif [ $# -eq 1 ] && [ "$1" -ne '-h' ];then
     file_to_search=$1;
     length=8;
 else
     echo "Example Usage is getmethelines <file_to_search> <line_length>";
     exit;
 fi
-awk 'length($0) == '"$2"'' "$1" | grep  -P -v '[^\x00-\x7f]'
+awk 'length($0) == '"$file_to_search"'' "$length" | grep  -P -v '[^\x00-\x7f]'
 

@@ -21,7 +21,7 @@ answer_array_len=${#answer_array[*]};
 if [[ $1 -ne 1 ]];
 then
 echo 'What is your question?';
-read query;
+read -r query;
 fi
 #get_random_number 0 $answer_array_len;
 #echo $#;

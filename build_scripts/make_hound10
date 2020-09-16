@@ -52,7 +52,7 @@ i=0;
 while [[ "$regex_case0" = "$regex_case" && $i -lt 255 ]];do
 #tmp=$( select_regex );
 #tmp=("$tmp");
-read -r -a tmp <<< $( select_regex );
+	read -r -a tmp <<< $( select_regex );
     false_regex_str0=${tmp[1]};
     regex_case=${tmp[0]};
     i=$(( $i+1 ));
@@ -64,7 +64,7 @@ regex_case=${tmp[0]}
 while [[ "$regex_case0" = "$regex_case" && $i -lt 255 ]];do
 #tmp=$( select_regex );
 #tmp=("$tmp");
-read -r -a tmp <<< $( select_regex );
+	read -r -a tmp <<< $( select_regex );
     false_regex_str1=${tmp[1]};
     regex_case=${tmp[0]};
     i=$(( $i+1 ));
@@ -88,7 +88,7 @@ done
 tmp_file="tmp$level";
 echo -n '' > $tmp_file;
 tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
-ls -a ../hounds/hound$level | egrep "($tmp)" | xargs -i{} rm -v "../hounds/hound$level/""{}";
+ls -a "../hounds/hound$level" | grep -E "($tmp)" | xargs -i{} rm -v "../hounds/hound$level/""{}";
 
 file_location="../hounds/hound$level/$filename"
 

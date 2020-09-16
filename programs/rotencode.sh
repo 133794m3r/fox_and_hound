@@ -9,26 +9,26 @@ function rot_47(){
     local encoded_line='';
     local new_file="$2-1";
     local i=0;
-while read line
-do
+	while read line
+  	do
 
-    if [ $1 == '-e' ]
-        then
-        encoded_line="$(echo $line |  tr '\!-~' 'P-~\!-O')";
-    elif [$1 == -'d']
-        then
-        encoded_line="$(echo $line |  tr 'P-~\!-O' '\!-~')";
-    fi
-if [ $i == 0 ];
-then
-echo $encoded_line > $new_file;
-else
-echo $encoded_line >> $new_file;
-fi
-echo $encoded_line;
+  	if [ "$1" == '-e' ]
+	  then
+	  encoded_line="$(echo $line |  tr '\!-~' 'P-~\!-O')";
+	elif [ "$1" == -'d' ]
+		then
+		encoded_line="$(echo $line |  tr 'P-~\!-O' '\!-~')";
+	fi
+	if [ $i == 0 ];
+	then
+		echo $encoded_line > $new_file;
+	else
+		echo $encoded_line >> $new_file;
+	fi
+	echo $encoded_line;
 
-i=$i+1;
-done < $FILENAME
+	i=$i+1;
+	done < $FILENAME
 }
 
 function rot_n(){

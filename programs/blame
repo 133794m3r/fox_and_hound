@@ -4,12 +4,12 @@
 # Licenesed under AGPLv3
 # (C) 2019 - 2020
 
-CONTACT_NAME = "Macarthur David Inbody";
-EMAIL_ADDR = "admin-contact@transcendental.us";
+CONTACT_NAME="Macarthur David Inbody";
+EMAIL_ADDR="admin-contact@transcendental.us";
 DIRNAME=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_');
 case $1 in
 	'-debug')
-	echo "Person to blame: $CONTACT_NAME email: $EMAIL_ADDR Include in email Body: d|$DIRNAME f|$USER name:$MEME_NAME\nPlus anything else that you think might be relevant.";;
+	echo -e "Person to blame: $CONTACT_NAME email: $EMAIL_ADDR Include in email Body: d|$DIRNAME f|$USER name:$MEME_NAME\nPlus anything else that you think might be relevant.";;
 	'-person')
 	echo "Person to blame: $CONTACT_NAME  email: $EMAIL_ADDR";;
 	*)

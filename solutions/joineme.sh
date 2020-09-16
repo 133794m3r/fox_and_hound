@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 # Hound9
 # I am the master of joining. All connection are known instantly.
 # Macarthur Inbody
