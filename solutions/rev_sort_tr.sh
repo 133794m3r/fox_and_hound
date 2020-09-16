@@ -14,5 +14,5 @@
 # I prefer abusing sed though.
 # This script does _exactly_ the same thing as the line above just using sed scripting instead of
 # utilizing standard unix scripts.
-cat ./`(ls -A)` | sort | uniq -u | rev | sed -n -e 's/\(.*\)/\L\1/g;s/\ \(.*\)/\1/p'
+sort <  ./"$(ls -A)" | uniq -u | rev | sed -n -e 's/\(.*\)/\L\1/g;s/\ \(.*\)/\1/p'
 

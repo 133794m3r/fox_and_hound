@@ -49,7 +49,7 @@ int main(int argc, char **argv){
 					}
 					else{
 						level = atoi(optarg);
-						if(level <0 || level > 19){
+						if(level < 0 || level > 19){
 							fprintf(stderr,"A challenge doesn't exist for level:%d\n",level);
 							return 1;
 						}

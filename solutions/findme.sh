@@ -5,4 +5,4 @@
 # Licenesed under AGPLv3
 # (C) 2019 -
 
-find -uid $1 -gid $2 perm $3  -size "$4"c -exec cat {} \;
+find . -uid "$1" -gid "$2" perm "$3"  -size "$4"c -exec cat {} \;

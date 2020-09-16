@@ -67,7 +67,7 @@ function decompression_tester(){
     # this should _never_ ever happen with the actual file like ever.
     if [[ "$command" == 'ABSOLUTE_FAILURE' ]];then
         echo 'Failed';
-        return -1;
+        return 255;
     fi
     #iterate over it until we're done or if we're 20 layers deep because that's the maximum
     # if we go higher than that then something's fucked up.

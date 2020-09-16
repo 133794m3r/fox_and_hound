@@ -5,7 +5,8 @@
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
 # (C) 2019 -
-IFS='|';
-files=($(ls -A | tr '\n' '|' ));
+#IFS='|';
+#files=($(ls -A | tr '\n' '|' ));
+mapfile -t files < <(ls -A);
 IFS=' ';
 join -t':' <(sort -k1 -t':' ./"${files[0]}") <(sort -k1 -t':' ./"${files[1]}") 2>/dev/null | grep $1 | cut -d':' -f8
