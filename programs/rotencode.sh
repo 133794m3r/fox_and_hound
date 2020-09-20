@@ -9,30 +9,32 @@ function rot_47(){
     local encoded_line='';
     local new_file="$2-1";
     local i=0;
-	while read line
+	while read -r line
   	do
 
   	if [ "$1" == '-e' ]
 	  then
-	  encoded_line="$(echo $line |  tr '\!-~' 'P-~\!-O')";
+	  encoded_line="$(echo "$line" |  tr '\!-~' 'P-~\!-O')";
 	elif [ "$1" == -'d' ]
 		then
-		encoded_line="$(echo $line |  tr 'P-~\!-O' '\!-~')";
+		encoded_line="$(echo "$line" |  tr 'P-~\!-O' '\!-~')";
 	fi
 	if [ $i == 0 ];
 	then
-		echo $encoded_line > $new_file;
+		echo "$encoded_line" > "$new_file";
 	else
-		echo $encoded_line >> $new_file;
+		echo "$encoded_line" >> "$new_file";
 	fi
-	echo $encoded_line;
+	echo "$encoded_line";
 
 	i=$i+1;
-	done < $FILENAME
+	done < "$FILENAME"
 }
 
+# shellcheck disable=SC2034
 function rot_n(){
     local i=0;
+
 	local rot_1='B-ZAb-za'
 	local rot_2='C-ZA-Bc-za-b'
 	local rot_3='D-ZA-Cd-za-c'
@@ -61,31 +63,26 @@ function rot_n(){
     local rotpattern="${!1}";
     local pattern='';
     local string=$3;
-    if [ $2 == '-d' ];
-        then
+    if [ "$2" == '-d' ];then
         pattern="$rotpattern' A-Za-z'";
-    elif [ $2 == '-e' ];
-        then
+    elif [ "$2" == '-e' ];then
         pattern='A-Za-z '$rotpattern;
     fi
-local encoded_line='';
-local new_file=$string'-1';
-#echo ${!1};
-#echo $2;
-#echo $1;
-while read line
-do
-
-encoded_line="$(echo $line |  tr $pattern)";
-if [ $i == 0 ];
-then
-echo $encoded_line > $new_file;
-else
-echo $encoded_line >> $new_file;
-fi
-echo $encoded_line;
-i=$i+1;
-done < $string
+	local encoded_line='';
+	local new_file=$string'-1';
+	#echo ${!1};
+	#echo $2;
+	#echo $1;
+	while read -r line; do
+		encoded_line="$(echo "$line" |  tr $pattern)";
+		if [ $i == 0 ];then
+			echo "$encoded_line" > "$new_file";
+		else
+			echo "$encoded_line" >> "$new_file";
+		fi
+		echo "$encoded_line";
+		i=$i+1;
+	done < "$string"
 
 }
 
@@ -93,11 +90,11 @@ function select_rot(){
 #echo $#;
     case $1 in
         'rot_47')
-            rot_47 $2 $3;;
+            rot_47 "$2" "$3";;
         ''|'-h')
             echo "usage: rotencode.sh [{1-25}|47] [-e|-d] {filename.extension}";;
         *)
-            rot_n "rot_$1" $2 $3;;
+            rot_n "rot_$1" "$2" "$3";;
     esac;
     #if [ $1 == 'rot_47' ];
     #then
@@ -112,4 +109,4 @@ function select_rot(){
 
 }
 
-select_rot $1 $2 $3
+select_rot "$1" "$2" "$3"
