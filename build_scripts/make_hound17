@@ -33,6 +33,8 @@ fi
 function choose_mistake(){
     local mistake_str='';
     local chosen_mistake=$1;
+
+    # shellcheck disable=SC2016
     case $chosen_mistake in
         0)
             mistake_str='if ($0 ~ /;;/ ){ gsub(/;;/,";",$0); print $0}';
@@ -60,8 +62,8 @@ function choose_mistake(){
 }
 function make_mistakes(){
     local mistake_str='';
-    local number_mistakes=$(( ( $RANDOM % 3 ) + 1 ));
-    local chosen_mistake=$(( $RANDOM %  7 ));
+    local number_mistakes=$(( ( RANDOM % 3 ) + 1 ));
+    local chosen_mistake=$(( RANDOM %  7 ));
     local i=0;
     local j=0;
     local chosen_array=();
@@ -70,17 +72,20 @@ function make_mistakes(){
     mistake_str=$( choose_mistake $chosen_mistake);
     if [[ $number_mistakes -ge 2 ]];then
         while [[ $start -ge 1 ]];do
-            chosen_mistake=$(( $RANDOM % 7 ));
-            while [[ ${chosen_array[@]} =~ $chosen_mistake ]]; do
-                chosen_mistake=$(( $RANDOM % 7 ));
+            chosen_mistake=$(( RANDOM % 7 ));
+            # shellcheck isn't smart enough to realize that I'm doing a regex
+            # comparison of the right side against the left.
+            # shellcheck disable=SC2199
+            while [[ ${chosen_array[*]} =~ $chosen_mistake ]]; do
+                chosen_mistake=$(( RANDOM % 7 ));
             done
             chosen_array[$j]=$chosen_mistake;
             mistake_str+=' else '$( choose_mistake $chosen_mistake );
-            let start--;
+            (( start-- ));
         done
     fi
 
-    printf "$mistake_str";
+    printf "%s" "$mistake_str";
 }
 
 
@@ -97,25 +102,25 @@ password_dict_len=2007;
 #set the encoding. In future versions this'll be hardcoded from the main script.
 #this is to make sure tha all hashes are b32 encoded.
 HASH_ENCODING='b32';
-num_mistakes=$(( $RANDOM % 3 ));
+num_mistakes=$(( RANDOM % 3 ));
 
 WORD_ARRAY=(53 54 55 56 57 58 59 60 61 62 63 33);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
-FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+FLAG_HOUND=$( make_semistatic_flag "$chosen_word");
 
-filename_arr=('SECRET' "IT'S A SECRET TO EVERYBODY", 'I AM ERROR' 'I AM BAGU' 'HERE_BE_DRAGONS');
+filename_arr=('SECRET' "IT'S A SECRET TO EVERYBODY" 'I AM ERROR' 'I AM BAGU' 'HERE_BE_DRAGONS');
 program_name_array=('run_this_program' 'run_me' 'here_be_treasure' 'run_it');
-program_name=${program_name_array[$(($RANDOM % 4 ))]};
+program_name=${program_name_array[$((RANDOM % 4 ))]};
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
-filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
+filename=${filename_arr[$(( RANDOM % (filename_arr_len-1) ))]};
 
-for (( i=1; i<$filename_arr_len; i++ ));do
+for (( i=1; i<filename_arr_len; i++ ));do
     tmp="$tmp|${filename_arr[$i]}";
 done
 
-ls ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
+ls ../hounds/hound$level | grep -E "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
 max_spaces=10;
 correct_spaces=$(( ($RANDOM & $max_spaces) +1 ));
 echo "correct_spaces:"$correct_spaces;
@@ -127,14 +132,14 @@ false_line=$(( $correct_line + ($RANDOM  % 5 )));
 false_line2=$(( $correct_line - ($RANDOM % 13) ));
 
 while [[ $correct_line -eq $false_line ]];do
-    false_line=$(( $correct_line + ($RANDOM  % 5 )));
-    false_line2=$(( $correct_line - ($RANDOM % 13) ));
+    false_line=$(( correct_line + (RANDOM  % 5 )));
+    false_line2=$(( correct_line - (RANDOM % 13) ));
 done
 
 file_location="../hounds/hound$level/$filename"
 
-rot_encoding=$(( ($RANDOM & 24) +1 ));
-sequence_start=$(( ($RANDOM % 6)  ));
+rot_encoding=$(( (RANDOM & 24) +1 ));
+sequence_start=$(( (RANDOM % 6)  ));
 echo 'ss: '$sequence_start;
 echo 're: '$rot_encoding;
 #cipher_string "code_$rot_encoding" $FLAG_HOUND
@@ -147,7 +152,7 @@ cipher_str=$(cipher_string "code_$rot_encoding" $encrypted_flag );
 printf "fh: $FLAG_HOUND\n";
 printf "cs: $cipher_str \n";
 printf "ef: $encrypted_flag \n";
-correct_length=$(( $correct_spaces + 64 ));
+correct_length=$(( correct_spaces + 64 ));
 printf "cl: $correct_length \n";
 echo "correct_line:$correct_line";
 echo "false_line:$false_line";
@@ -161,7 +166,7 @@ rnd=0;
 declare -i rnd;
 append_str='';
 append_str_array=('*' '-' '.' '$' '#' '!');
-correct_append_str=${append_str_array[$(( $RANDOM & 5 ))]};
+correct_append_str=${append_str_array[$(( RANDOM & 5 ))]};
 echo "Append str:$correct_append_str";
 echo 'awk command:';
 echo "'\$0 ~ /[\\"$correct_append_str"]/ && length(\$0) == "$(( $correct_spaces + 64 ))" {gsub(/[^A-Za-z0-9\+\_]/,\"\"); print }'"
@@ -171,15 +176,15 @@ GOAL_STR="$encoded_string $correct_length $correct_append_str <The_other_file_in
 echo "$GOAL_STR"
 for((i=0;i<NUM_LINES;++i)){
     str=$( make_false_flag $password_dict $password_dict_len | tr -d '=');
-    rnd=$(( $RANDOM % 6 ));
+    rnd=$(( RANDOM % 6 ));
     str=$( encrypt_str $str $rnd );
-    append_str=${append_str_array[$(( $RANDOM & 4 ))]};
-    num_spaces=$(( ($RANDOM & $max_spaces) +1 ));
+    append_str=${append_str_array[$(( RANDOM % 4 ))]};
+    num_spaces=$(( (RANDOM % max_spaces) +1 ));
     if [[ $num_spaces -eq $correct_spaces ]];then
-        num_spaces=$(( $num_spaces+1 ));
+        num_spaces=$(( num_spaces+1 ));
     fi
     while [[ "$append_str" == "$correct_append_str" ]]; do
-        append_str=${append_str_array[$(( $RANDOM & 4 ))]};
+        append_str=${append_str_array[$(( RANDOM % 4 ))]};
     done
     if [[ $i = $correct_line ]];then
         printf "%s%${correct_spaces}s\n" $cipher_str '' | sed -e 's/\([A-Za-z0-9+_)]\)/\1'"$correct_append_str"'/g' >> $tmp_file;

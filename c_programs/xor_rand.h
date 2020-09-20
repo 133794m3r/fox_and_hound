@@ -7,7 +7,6 @@ typedef unsigned long long uint64;
 
 
 #include "functions.h"
-#include "functions.c"
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdbool.h>
