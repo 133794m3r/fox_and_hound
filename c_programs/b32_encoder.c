@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-signed-bitwise"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +18,7 @@
 // the chances of this happening are next to zero but it's still possible.
 // This is just a macro like thing to make it a little less to type.
 
-static inline unsigned char uchar(char chr){ return chr;}
+static inline unsigned char uchar(char chr){ return (unsigned char)chr;}
 /**
 * This function encodes a string passed to it as a bas32 string.
 *
@@ -26,11 +28,11 @@ int base32_encode(char *dest, const char *src, unsigned int srclen, unsigned int
     //const char table[32]="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
     unsigned int i=0;
     unsigned int j=0;
-    unsigned char a=0;
-    unsigned char b=0;
-    unsigned char c=0;
-    unsigned char d=0;
-    unsigned char e=0;
+    unsigned char a;
+    unsigned char b;
+    unsigned char c;
+    unsigned char d;
+    unsigned char e;
   //  unsigned int t=0;
     unsigned char leftover_bytes=(srclen % 5);
     unsigned char replace_bytes=0;
@@ -79,20 +81,20 @@ int base32_encode(char *dest, const char *src, unsigned int srclen, unsigned int
 
 
 int main(int argc,char **argv){
-    char *dest=malloc(sizeof *dest);
+    char *dest;
     char *help="-h";
     char *src;
-    int i=0;
-    int j=0;
+    unsigned int i;
+    unsigned int j;
     struct timeval never_wait;
     never_wait.tv_sec = 1;
     never_wait.tv_usec = 5000;
-    unsigned int srclen=0;
-    unsigned int outlen=0;
+    unsigned int srclen;
+    unsigned int outlen;
     fd_set read_file_descriptors;
     FD_ZERO(&read_file_descriptors);
     FD_SET(STDIN_FILENO,&read_file_descriptors);
-    if(argc > 1 && strncmp(argv[1],help,3) != 0){
+    if(argc > 1 && strncmp(argv[1],help,2) != 0){
         src=argv[1];
         srclen=strlen(src);
         outlen=(srclen*8/5);
@@ -104,10 +106,10 @@ int main(int argc,char **argv){
 
     else if(select(1,&read_file_descriptors,NULL,NULL,&never_wait) > 0){
         char *src_buffer=malloc(sizeof *src_buffer);
-        char *total_buffer=malloc(sizeof *total_buffer);
+        char *total_buffer;
 
-        int read_bytes=0;
-        int read_status=0;
+        unsigned int read_bytes=0;
+        int read_status;
 
         size_t len=0;
         //a line of text should never be more than 4KiB.
@@ -116,7 +118,6 @@ int main(int argc,char **argv){
         total_buffer=malloc(4096*1024);
         read_status = getline(&src_buffer, &len, stdin);
         while (read_status >= 0){
-            i=0;
             j=0;
 		//this should work as I did 100K iterations in bash with random data and it worked everytime
             for(i=read_bytes;i<len;i++){
@@ -140,3 +141,5 @@ int main(int argc,char **argv){
     return 0;
 }
 
+
+#pragma clang diagnostic pop

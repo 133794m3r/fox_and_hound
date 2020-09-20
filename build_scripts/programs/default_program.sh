@@ -37,17 +37,17 @@ function generate_sequence(){
     local num=0;
     local start=$1;
     #using math requires $(( 2+2)) to get the result.
-    local end=$(($start + 5 ));
+    local end=$((start + 5 ));
     # a for loop the C style.
     for (( i=0; i<10; i++ )) {
         num=$(( a + b ));
         a=$b;
         b=$num;
         #if logic statement.
-        if [[ $i -ge $start ]];then
-            printf "$a ";
+        if [[ $i -ge "$start" ]];then
+            printf "%s" "$a ";
         #else if this value we do this.
-        elif [[ $i = $end ]];then
+        elif [[ $i = "$end" ]];then
             break;
         fi
     }
@@ -62,17 +62,18 @@ function get_specific_string(){
     #but awk uses $0 for the current line.
     awk_str="\$0 ~ /[\\$pattern]/ && length(\$0) == $len {gsub(/[^A-Za-z0-9\+\_]/,\"\"); print};"
     #piping the data from the filename to awk.
-    cat "$filename" | awk "$awk_str";
+    #cat "$filename" |
+    awk "$awk_str" < "$filename";
 }
 
 function parse_string(){
     local base_str=$1;
     #calling a subshell.
-    base_str=$( echo $base_str | base64 -d );
+    base_str=$( echo "$base_str" | base64 -d );
     str_part_1=$(( 16#${base_str:0:2} ));
     str_part_2=$(( 16#${base_str:3:2} ));
     str_part_3=$(( (16#${base_str:4}) - 127 ));
-    printf "$str_part_1 $str_part_2 $str_part_3";
+    printf "%s" "$str_part_1 $str_part_2 $str_part_3";
 }
 
 # a function.
@@ -81,6 +82,7 @@ function decrypt(){
     local sequence;
     local str_len=${#str};
     local sequence_start=$2;
+    # shellcheck disable=SC2046
     read -r -a sequence <<< $(generate_sequence $sequence_start );
     local output_str='';
     local i=0;
@@ -95,9 +97,9 @@ function decrypt(){
     for ((i=0;i<str_len;++i)); do
         #getting a substring out of a string.
         byte=${str:$i:1};
-        index=`(str_index $b64_dict $byte )`;
-        index=$(( $index ^ ${sequence[$j]} ));
-        ouput_str+="${b32_dict:$index:1}";
+        index=$( str_index $b64_dict "$byte" );
+        index=$(( index ^ ${sequence[$j]} ));
+        output_str+="${b32_dict:$index:1}";
         #printf ${b64_dict:$index:1};
         let j++;
         #if logic statement.
@@ -106,9 +108,10 @@ function decrypt(){
         fi
     done
 
-    printf "$ouput_str\n";
+    printf "%s" "$output_str\n";
 }
 
+# shellcheck disable=SC2034
 function uncipher_string(){
 	local code_1='B-ZAb-za';
 	local code_2='C-ZA-Bc-za-b';
@@ -141,10 +144,8 @@ function uncipher_string(){
     # you should get
     # 123.
     local pattern="${!1}";
-    local final_pattern='';
     local string=$2;
-    #final_pattern="'A-Za-z' '$pattern'";
-    printf "$string" | tr "$pattern" 'A-Za-z';
+    printf "%s" "$string" | tr "$pattern" 'A-Za-z';
 }
 
 #the main function.
@@ -155,16 +156,18 @@ function main(){
     local pattern="$3";
     local filename="$4";
     #this utilizes command substitution to get the result back to it w/o using a subshell.
-    local chosen_string=`(get_specific_string "$filename" $str_len "$pattern")`
+    # shellcheck disable=SC2086
+    # shellcheck disable=SC2155
+    local chosen_string=$(get_specific_string "$filename" $str_len "$pattern")
     local parsed_array;
     #reading data in into an array. <<< moves data into stdin.
-    read -r -a parsed_array <<< `(parse_string $1 )`;
+    read -r -a parsed_array <<< "$( parse_string "$passed_string" )";
     local string='';
     #the second element of the array.
     #${parsed_array[2]};
-    string=`(uncipher_string "code_${parsed_array[2]}" $chosen_string)`;
-    string=`(decrypt $string ${parsed_array[0]})`;
-    printf "$string\n";
+    string=$(uncipher_string "code_${parsed_array[2]}" "$chosen_string");
+    string=$(decrypt "$string" "${parsed_array[0]}");
+    printf "%s" "$string\n";
 }
 
 #if logic statement.

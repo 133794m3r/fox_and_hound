@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-signed-bitwise"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,21 +11,21 @@
 * 2019-
 * AGPLv3 or Later
 */
-static inline unsigned char uchar(char chr){ return chr;}
+static inline unsigned char uchar(char chr){ return (unsigned char) chr;}
 /**
 * This function encodes a string passed to it as an argument into base64. It's
 * ~1.5x as fast as the built in base64 program from gnulib. I am not allowing for
 * pipes at this time though that is a feature for a future release.
 *
 */
-int base64_encode(char *dest, const char *src, int srclen){
+int base64_encode(char *dest, const char *src, unsigned int srclen){
     const char table[64]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     unsigned int i=0;
     unsigned int j=0;
-    unsigned char a=0;
-    unsigned char b=0;
-    unsigned char c=0;
-    unsigned int t=0;
+    unsigned char a;
+    unsigned char b;
+    unsigned char c;
+    unsigned int t;
     const char padding[1]="=";
     while (i < srclen){
 
@@ -46,19 +48,19 @@ int base64_encode(char *dest, const char *src, int srclen){
     return 0;
 }
 int main(int argc,char **argv){
-    char *dest=malloc(sizeof *dest);
+    char *dest;
     char *help="-h";
 
     char *src;
     struct timeval never_wait;
     never_wait.tv_sec = 0;
     never_wait.tv_usec = 1;
-    unsigned int srclen=0;
-    unsigned int outlen=0;
+    unsigned int srclen;
+    unsigned int outlen;
     fd_set read_file_descriptors;
     FD_ZERO(&read_file_descriptors);
     FD_SET(STDIN_FILENO,&read_file_descriptors);
-    if(argc > 1 && strncmp(argv[1],help,3) != 0){
+    if(argc > 1 && strncmp(argv[1],help,2) != 0){
         src=argv[1];
         srclen=strlen(src);
         outlen=(srclen*4/3);
@@ -72,20 +74,18 @@ int main(int argc,char **argv){
         //a line of text should never be more than 4KiB.
         char *src_buffer=malloc(4096);
         //right now we're not allowing them to do more than ~4MiB of total data piped to it.
-        char *total_buffer=total_buffer=malloc(4096*1024);
+        char *total_buffer=malloc(4096*1024);
 
         int read_bytes=0;
-        int read_status=0;
+        int read_status;
         size_t len=0;
         read_status = getline(&src_buffer, &len, stdin);
         while (read_status != -1){
-            if(read_status!=-1){
-                read_bytes+=read_status;
-                strcat(total_buffer,src_buffer);
-                src_buffer=NULL;
-            }
+			read_bytes += read_status;
+			strcat(total_buffer, src_buffer);
+			src_buffer = NULL;
 
-            read_status = getline(&src_buffer, &len, stdin);
+			read_status = getline(&src_buffer, &len, stdin);
         }
         total_buffer=realloc(total_buffer,read_bytes);
         outlen=(read_bytes*4/3);
@@ -99,3 +99,5 @@ int main(int argc,char **argv){
     }
     return 0;
 }
+
+#pragma clang diagnostic pop

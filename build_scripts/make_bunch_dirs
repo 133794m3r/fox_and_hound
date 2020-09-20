@@ -8,7 +8,7 @@ correct_flag=$(( $RANDOM % $MAX ));
 #rm -rvf ../hounds/hound5/.secret/*
 #rm -rvf bunch_dirs;
 mkdir bunch_dirs;
-cd bunch_dirs;
+cd bunch_dirs || exit;
 name='';
 for (( i=0; i<=10; i++))
 do

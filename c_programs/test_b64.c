@@ -20,10 +20,10 @@ int base64_encode(char *dest, const char *src, int srclen){
     const char table[64]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     unsigned int i=0;
     unsigned int j=0;
-    unsigned char a=0;
-    unsigned char b=0;
-    unsigned char c=0;
-    unsigned int t=0;
+    unsigned char a;
+    unsigned char b;
+    unsigned char c;
+    unsigned int t;
     const char padding[1]="=";
     while (i < srclen){
            

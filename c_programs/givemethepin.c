@@ -22,10 +22,10 @@ int base64_encode(unsigned char *dest, unsigned char *src, int srclen){
     const char table[64]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     unsigned int i=0;
     unsigned int j=0;
-    unsigned int a=0;
-    unsigned int b=0;
-    unsigned int c=0;
-    unsigned int t=0;
+    unsigned int a;
+    unsigned int b;
+    unsigned int c;
+    unsigned int t;
     const char padding[1]="=";
     while (i < srclen){
         a=i < srclen ? src[i++] : 0;
@@ -54,17 +54,17 @@ int base64_encode(unsigned char *dest, unsigned char *src, int srclen){
 *
 */
 int main(int argc, char **argv){
-    char *correct_pin=malloc(3);
+    char *correct_pin;
     //correct_pin="111";
     correct_pin="<correct_pin_placeholder>";
     //char correct_pin_string[4]="MTEx";
     char *correct_pin_string=malloc(4);
     char *flag_string="The flag is ";
-    char *flag=malloc(32);
-    char *incorrect_flag1=malloc(32);
-    char *incorrect_flag2=malloc(32);
+    char *flag;
+    char *incorrect_flag1;
+    char *incorrect_flag2;
     int return_value=0;
-    int return_val=0;
+    int return_val;
     flag="<the_flag_placeholder>";
     incorrect_flag1="<incorrect_flag_placeholder1>";
     incorrect_flag2="<incorrect_flag_placeholder2>";
@@ -78,7 +78,7 @@ int main(int argc, char **argv){
         return -1;
     }
     base64_encode((unsigned char*)correct_pin_string,(unsigned char*)correct_pin,strlen(correct_pin));
-    int str_compared=0;
+    int str_compared;
     fd_set read_file_descriptors;
     FD_ZERO(&read_file_descriptors);
     struct timeval time_to_wait;
