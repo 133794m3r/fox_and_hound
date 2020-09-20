@@ -28,7 +28,6 @@ function lucky_number_guesser(){
   #random_number=$(( get_random_number 1 10));
   local random_number=$?;
   local your_number=0;
-  local number=0;
   local guesses=0;
   local guesses_max=15;
   while [[ $guesses -ne $guesses_max ]]; do
