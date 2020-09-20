@@ -101,7 +101,7 @@ function decrypt(){
         index=$(( index ^ ${sequence[$j]} ));
         output_str+="${b32_dict:$index:1}";
         #printf ${b64_dict:$index:1};
-        let j++;
+        (( j++ ));
         #if logic statement.
         if [[ $j -ge 5 ]];then
             j=0;

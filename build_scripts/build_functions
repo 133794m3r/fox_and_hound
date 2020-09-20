@@ -3,8 +3,9 @@
 # Macarthur Inbody
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
-# (C) 2019 -
+# (C) 2019 - 2020
 
+# shellcheck disable=SC2155
 # debug_random
 # arg=NULL.
 # This function is for debug purposes and starts the RNG always at 1 for the very start.
@@ -29,6 +30,7 @@ function continue_random(){
 # via it's format string, then capturing that input from the subshell, expanding it to a value and then we
 # are setting it to the variable seed. And since variables are global by default we are setting it as local
 # so that in case the variable seed is every set anywhere else it won't overwrite it.
+    # shellcheck disable=SC2155
     local seed=$( date +%N );
     RANDOM=$seed;
 }
@@ -305,7 +307,7 @@ function encrypt_str(){
     local sequence;
     local str_len=${#str};
     local sequence_start=$2;
-    read -r -a sequence <<< "$(generate_sequence $sequence_start )";
+    read -r -a sequence <<< "$(generate_sequence "$sequence_start" )";
     local output_str='';
     local i=0;
     local j=0;
@@ -319,10 +321,10 @@ function encrypt_str(){
     for ((i=0;i<str_len;++i));do
         byte=${str:$i:1};
         index=$( str_index "$b32_dict" "$byte" );
-        index=$(( $index ^ ${sequence[$j]} ));
+        index=$(( index ^ ${sequence[$j]} ));
         ouput_str+="${b64_dict:$index:1}";
         #printf ${b64_dict:$index:1};
-        let j++;
+        (( j++ ));
         if [[ $j -ge 5 ]];then
             j=0;
         fi
@@ -355,7 +357,7 @@ function decrypt(){
         index=$(( index ^ ${sequence[$j]} ));
         ouput_str+="${b32_dict:$index:1}";
         #printf ${b64_dict:$index:1};
-        let j++;
+        (( j++ ));
         #if logic statement.
         if [[ $j -ge 5 ]];then
             j=0;
