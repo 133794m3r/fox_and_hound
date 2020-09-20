@@ -9,4 +9,4 @@
 #files=($(ls -A | tr '\n' '|' ));
 mapfile -t files < <(ls -A);
 IFS=' ';
-join -t':' <(sort -k1 -t':' ./"${files[0]}") <(sort -k1 -t':' ./"${files[1]}") 2>/dev/null | grep $1 | cut -d':' -f8
+join -t':' <(sort -k1 -t':' ./"${files[0]}") <(sort -k1 -t':' ./"${files[1]}") 2>/dev/null | grep "$1" | cut -d':' -f8

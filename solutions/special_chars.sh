@@ -5,4 +5,4 @@
 # mdi2455@email.vccs.edu / admin-contact@transcendental.us
 # Licenesed under AGPLv3
 # (C) 2019 -
-cat ./$( ls -A);
+cat ./"$( ls -A)";

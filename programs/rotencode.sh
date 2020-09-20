@@ -9,7 +9,8 @@ function rot_47(){
     local encoded_line='';
     local new_file="$2-1";
     local i=0;
-	while read -r line
+	# shellcheck disable=SC2162
+	while read line
   	do
 
   	if [ "$1" == '-e' ]
@@ -73,8 +74,9 @@ function rot_n(){
 	#echo ${!1};
 	#echo $2;
 	#echo $1;
-	while read -r line; do
-		encoded_line="$(echo "$line" |  tr $pattern)";
+	# shellcheck disable=SC2162
+	while read line; do
+		encoded_line="$(echo "$line" |  tr "$pattern")";
 		if [ $i == 0 ];then
 			echo "$encoded_line" > "$new_file";
 		else

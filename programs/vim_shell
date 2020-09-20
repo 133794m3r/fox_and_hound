@@ -6,8 +6,8 @@
 #file=$( echo $RANDOM | base64 | tr '\~' '.-' | tr -d '=');
 dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_')
 mkdir -p /tmp/foxhunt/"$dirname";
-tar -xJf /home/$USER/challenge_file.txz -C /tmp/foxhunt/"$dirname";
-cd /tmp/foxhunt/"$dirname";
-chmod 444 *;
+tar -xJf "/home/$USER/challenge_file.txz" -C /tmp/foxhunt/"$dirname";
+cd /tmp/foxhunt/"$dirname" || exit;
+chmod 444 ./*;
 vim vim_welcome_msg 2> /dev/null
 exit;
