@@ -83,7 +83,7 @@ function decrypt(){
     local str_len=${#str};
     local sequence_start=$2;
     # shellcheck disable=SC2046
-    read -r -a sequence <<< $(generate_sequence $sequence_start );
+    read -r -a sequence <<< $(generate_sequence "$sequence_start" );
     local output_str='';
     local i=0;
     local j=0;

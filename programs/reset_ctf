@@ -7,7 +7,7 @@ function prompt(){
 echo -ne 'Are you sure you want to reset your CTF. All progress will be lost.
 Enter yes/no\n';
 local CONFIRMATION='';
-read CONFIRMATION;
+read -r CONFIRMATION;
 case $CONFIRMATION in
 	'y'|'Y'|'yes'|'YES')
 	rebuild;;
@@ -19,11 +19,12 @@ case $CONFIRMATION in
 	esac
 	return 255;
 }
+
 function rebuild(){
 local CONFIRMATION='';
 local do_it=0;
 	echo -ne 'One last chance. Are you sure?\nYES/NO\n';
-	read CONFIRMATION;
+	read -r CONFIRMATION;
 	case $CONFIRMATION in
 	'YES')
 	echo 'Actually rebuilding your workspace.';
@@ -34,20 +35,22 @@ local do_it=0;
 	esac
 return 0;
 }
+
 function actually_do_it(){
 	local dirname=$(echo "$SSH_CONNECTION$USER" | openssl dgst -sha1 -binary | base64 | tr '+\/' '-_');
 	if [[ $1 -ne 1 ]]; then
-	echo 'Confirmation not provided';
-	exit 255;
+		echo 'Confirmation not provided';
+		exit 255;
 	elif [[ $1 -eq 1 ]]; then
-rm -Rv *
-	tar -xvJ /home/$USER/challenge_file.txz -C .
+		rm -Rv ./*;
+		tar -xvJ "/home/$USER/challenge_file.txz" -C .;
 #	echo "$USER folder has been recreated.";
-	echo 'did it';
+		echo 'did it';
 	fi
 	return 0;
 
 }
+
 case $1 in
     '-yes'|'-yesimsure')
 	prompt;;

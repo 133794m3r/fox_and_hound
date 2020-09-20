@@ -1,8 +1,9 @@
 GOALSTR='Find the flag in a file.';
-padding=$( printf $USER | wc -c );
-padding=$(( 13 - $padding ));
-user=$( printf "%s.%${padding}s" $USER '' );
+padding=$( printf "%s" $USER | wc -c );
+padding=$(( 13 - padding ));
+user=$( printf "%s.%${padding}s" "$USER" '' );
 clear;
+# shellcheck disable=SC1004
 echo '                   /##/\##\
                  _/##/  \##\_
                 /###/    \###\

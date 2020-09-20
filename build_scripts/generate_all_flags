@@ -18,14 +18,16 @@ hash_string='';
 word_string='';
 hashes='';
 tmp='';
-while read -r line;do
-    hash_string+="this.hound$j""_hash=new Array(";
+# shellcheck disable=SC2162
+while read line;do
+    hash_string+="this.hound$j""_hash=[";
     level=$j;
+    # shellcheck disable=SC2206
     word_arr=( $line );
 
     for i in $( seq 0 $max_words );do
         chosen_word=${word_arr[$i]};
-        chosen_word=$(( $chosen_word - 1 ));    
+        chosen_word=$(( chosen_word - 1 ));
         if [[ $i != 0 ]];then
            hash_string+=', ';
         fi
@@ -33,7 +35,7 @@ while read -r line;do
         hashes+=$(printf "'%s'" "$( make_semistatic_flag $chosen_word) ")'\n';
     done
 
-    hash_string+=');\n';
+    hash_string+='];\n';
     word_string+="this.hound$j""_word=new Array(";
     for i in $( seq 0 $max_words );do
         chosen_word=${word_arr[$i]};
@@ -45,8 +47,8 @@ while read -r line;do
         word_string+=$(printf "'%s'" "$tmp");
     done
     word_string+=');\n';
-    let j++;
+    (( j++ ));
 done < word_arrays;
-printf "$hash_string\n";
-printf "$word_string\n";
-printf "$hashes" |  uniq -d | sort -u ;
+printf "%s" "$hash_string\n";
+printf "%s" "$word_string\n";
+printf "%s" "$hashes" |  uniq -d | sort -u ;

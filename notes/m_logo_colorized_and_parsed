@@ -24,7 +24,8 @@ clear;
 #the way that I want. Then I go into using escape codes to colorize it to look
 #way nicer. The text at the top will likely just be MECC.edu/Cyber or something
 #similar.
-echo -e '\e[0m \e[31m                       /#\
+# shellcheck disable=SC1004
+echo '\e[0m \e[31m                       /#\
 \e[31m                       /###\
 \e[31m                      /#####\
 \e[31m                     /#######\
@@ -49,4 +50,4 @@ echo -e '\e[0m \e[31m                       /#\
 \e[31m /#######/                \###/          \#########\
 \e[31m/#######/                  \#/            \#########\
 \e[31m--------                    -              ----------'
-echo -e '\e[0m';
+echo '\e[0m';

@@ -7,9 +7,9 @@
 # This script will convert a VirtualBox export OVPF into a format that VMWare prefers
 # since I guess VirtualBox isn't as strict in it's export as VMWare expects.
 vm_name="${1:0:-4}";
-mkdir -p $vm_name;
+mkdir -p "$vm_name";
 tar -xvf "$1" -C "$vm_name";
-cd $vm_name;
+cd "$vm_name" || exit;
 rm vmx_*;
 ovf_file="$vm_name.ovf";
 mf_file="$vm_name.mf";
@@ -18,6 +18,6 @@ sed -e 's/<OperatingSystemSection ovf:id\="80">/<OperatingSystemSection ovf:id\=
 sed -i 'H;1h;$!d;g;s_\(.*\)<Item>_\1<Item ovf:required="false">_' "vmx_$ovf_file";
 #mv "vmx_$ovf_file-2" "vmx_$ovf_file-1";
 ovf_hash=$( sha1sum "vmx_$ovf_file" | cut -d' ' -f1);
-sed -i -e "s/.*.foxden\.ovf.*/SHA1\ ("vmx_$ovf_file")\ \=\ $ovf_hash/" $mf_file;
+sed -i -e "s/.*.foxden\.ovf.*/SHA1\ (vmx_$ovf_file)\ \=\ $ovf_hash/" "$mf_file";
 tar -cvf "$vm_name.ova" "$ovf_file" "$vm_disks" "$mf_file";
 tar -tvf "$vm_name.ova";
