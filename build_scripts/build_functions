@@ -37,10 +37,10 @@ function continue_random(){
 # also it reads from stdin, that's why there's nothing at the front it just starts going.
 function mk_hash(){
 # You can imagine an invisible `cat stdin |` operator at the front if it helps you realize what's going on here.
-    if ! [ $HASH_ENCODING ]; then
+    if ! [ "$HASH_ENCODING" ]; then
         openssl dgst -sha1 -binary | base64 | tr '\/+' '_-';
         #if it's set to b32
-    elif [ $HASH_ENCODING = 'b32' ]; then
+    elif [ "$HASH_ENCODING" = 'b32' ]; then
         openssl dgst -sha1 -binary | b32;
     else
         #default case.
@@ -64,84 +64,87 @@ function get_random_word(){
 
 #if arguments are greater than or equal to 3 and the third argument is true/1.
     if [ $# -ge 3 ]; then
-        if [ $3 = 1 ]; then
+        if [ "$3" = 1 ]; then
             #seed random with the global variable $level
-        seed_random $level;
+        	# shellcheck disable=SC2154
+        	seed_random "$level";
         fi
     fi
     #local variables ot make it easier to read.
     local dict=$1;
     local dict_len=$2;
     #get lines  1-file_length as sed is 1 index based.
-    local rnd_line=$((  ( $RANDOM % $dict_len )+1 ));
+    local rnd_line=$((  ( RANDOM % dict_len )+1 ));
     #local password=$( sed -n "$rnd_line p" $dict_file );
     #printf $password;
     #use sed in address mode.
-    sed -n "$rnd_line p" $dict;
+    sed -n "$rnd_line p" "$dict";
 }
 
 function make_false_flag(){
     if [ $# -ge 3 ]; then
-        seed_random $level;
+        seed_random "$level";
     fi
 
     local dict=$1;
     local dict_len=$2;
-    local rnd_line=$((  ( $RANDOM % $dict_len )+1 ));
-    local password=$( sed -n "$rnd_line p" $dict );
-    printf $password | mk_hash;
+    local rnd_line=$((  ( RANDOM % dict_len )+1 ));
+    local password=$( sed -n "$rnd_line p" "$dict" );
+    printf "%s" "$password" | mk_hash;
 }
 
+# shellcheck disable=SC2155
 make_flag(){
     if [ $# -ge 1 ];then
-        seed_random $level;
+        seed_random "$level";
     fi
-# The level will be hex-encodded to reduce character count and make easier to bruteforce the password(for now).
-    local hex_num=$( printf '%x' $1 );
-# the dictionary file right now it's not checking which set of flags are being built.
-# it will have a case switch for the dictionaries later.
-    local dict_file='../dict/hound_dict';
-# we get the number of lines from the file since it can change.
-    local max_line=$( cat $dict_file | wc -l);
-# we use random to select a random line and add one to it so that we get a valid range for sed.
-# since sed counts from 1 for whatever reason.
-    local rnd_line=$((  ( $RANDOM % $max_line )+1 ));
+	# The level will be hex-encodded to reduce character count and make easier to bruteforce the password(for now).
 
-# then we use sed in address mode to selct the line from the file, and including levelnum encoded
-# as hex previously.
-    local password=$( sed -n "$rnd_line p" $dict_file )$1;
+    local hex_num=$( printf '%x' "$1" );
+	# the dictionary file right now it's not checking which set of flags are being built.
+	# it will have a case switch for the dictionaries later.
+    local dict_file='../dict/hound_dict';
+	# we get the number of lines from the file since it can change.
+    local max_line=$( wc -l < "$dict_file");
+	# we use random to select a random line and add one to it so that we get a valid range for sed.
+  	# since sed counts from 1 for whatever reason.
+    local rnd_line=$((  ( RANDOM % max_line )+1 ));
+
+  	# then we use sed in address mode to selct the line from the file, and including levelnum encoded
+  	# as hex previously.
+    local password=$( sed -n "$rnd_line p" "$dict_file" )$1;
     #sed -n "$rnd_line p" $dict_file;
-# pass it to string to the hash function.
-# then we b64 encode it, then we use tr to delete the trailing '='s and finally replace the characters to make
-# it safe for putting into directories. How it's captured is just by doing it like any other command it'd be something like.
-# <NAME><LEVEL>_FLAG=$( make_flag <NUMERIC_LEVEL>);
-    printf '%s' $password | mk_hash;
+  	# pass it to string to the hash function.
+  	# then we b64 encode it, then we use tr to delete the trailing '='s and finally replace the characters to make
+  	# it safe for putting into directories. How it's captured is just by doing it like any other command it'd be something like.
+  	# <NAME><LEVEL>_FLAG=$( make_flag <NUMERIC_LEVEL>);
+    printf '%s' "$password" | mk_hash;
 }
 
 make_semistatic_flag(){
-# The level will be hex-encodded to reduce character count and make easier to bruteforce the password(for now).
-    local hex_num=$( printf '%02x' $level );
-# the dictionary file right now it's not checking which set of flags are being built.
-# it will have a case switch for the dictionaries later.
+	# The level will be hex-encodded to reduce character count and make easier to bruteforce the password(for now).
+    local hex_num=$( printf '%02x' "$level" );
+	# the dictionary file right now it's not checking which set of flags are being built.
+	# it will have a case switch for the dictionaries later.
     local dict_file='../dict/hound_dict';
-# we get the number of lines from the file since it can change.
+	# we get the number of lines from the file since it can change.
     #local max_line=$( cat $dict_file | wc -l);
-# we use random to select a random line and add one to it so that we get a valid range for sed.
-# since sed counts from 1 for whatever reason.
-    local rnd_line=$(( $1 +1 ));
+	# we use random to select a random line and add one to it so that we get a valid range for sed.
+	# since sed counts from 1 for whatever reason.
+    local rnd_line=$(( "$1" +1 ));
 
-# then we use sed in address mode to selct the line from the file, and including levelnum encoded
-# as hex previously.
-#    local sed_str="$rnd_line p";
-IFS='|';
-    local password=$( sed -n "$rnd_line p" $dict_file );
+	# then we use sed in address mode to selct the line from the file, and including levelnum encoded
+	# as hex previously.
+	#    local sed_str="$rnd_line p";
+	IFS='|';
+    local password=$( sed -n "$rnd_line p" "$dict_file" );
     password="$password$hex_num";
     #sed -n "$rnd_line p" $dict_file;
-# pass it to string to the hash function.
-# then we b64 encode it, then we use tr to delete the trailing '='s and finally replace the characters to make
-# it safe for putting into directories. How it's captured is just by doing it like any other command it'd be something like.
-# <NAME><LEVEL>_FLAG=$( make_flag <NUMERIC_LEVEL>);
-    printf  $password | mk_hash;
+	# pass it to string to the hash function.
+	# then we b64 encode it, then we use tr to delete the trailing '='s and finally replace the characters to make
+	# it safe for putting into directories. How it's captured is just by doing it like any other command it'd be something like.
+	# <NAME><LEVEL>_FLAG=$( make_flag <NUMERIC_LEVEL>);
+    printf '%s' "$password" | mk_hash;
 }
 
 #this function will eventually actually do something.
@@ -154,7 +157,7 @@ function select_regex(){
     # the options for the regex. It sets the regex pattern for the string.
     # 0=all lowercase characters. 1=starts with uppercase. 2=starts with number. 3=starts with special character.
     # 4=ends with a number. 5=ends with a special character. 6=ends with a capital character. 7=ends with a lowercase letter.
-    regex_case=$(( ($RANDOM % 7) + 1 ));
+    regex_case=$(( (RANDOM % 7) + 1 ));
     local regex_str='';
     local tmp=0;
     case $regex_case in
@@ -162,16 +165,16 @@ function select_regex(){
 #           regex_str='s/\(.*\)/\L\1/';
 #        ;;
         1)
-            tmp=$(( ($RANDOM  % 26 ) + 65 ));
+            tmp=$(( (RANDOM  % 26 ) + 65 ));
             tmp=$( perl -e "printf '%c',$tmp;" );
             regex_str="s/\(.*\)/$tmp\1/";
         ;;
         2)
-            tmp=$(( $RANDOM % 10 ));
+            tmp=$(( RANDOM % 10 ));
             regex_str="s/\(.*\)/$tmp\1/";
         ;;
         3)
-            tmp=$(( $RANDOM % 5 ));
+            tmp=$(( RANDOM % 5 ));
             case $tmp in
                 0)
                     tmp='\.';
@@ -192,11 +195,11 @@ function select_regex(){
             regex_str="s/\(.*\)/$tmp\1/";
         ;;
         4)
-            tmp=$(( $RANDOM % 10 ));
+            tmp=$(( RANDOM % 10 ));
             regex_str="s/\(.*\)/\1$tmp/";
         ;;
         5)
-            tmp=$(( $RANDOM % 5 ));
+            tmp=$(( RANDOM % 5 ));
             case $tmp in
                 0)
                     tmp='\.';
@@ -217,12 +220,12 @@ function select_regex(){
             regex_str="s/\(.*\)/\1$tmp/";
         ;;
         6)
-            tmp=$(( ($RANDOM  % 26 ) + 65 ));
+            tmp=$(( (RANDOM  % 26 ) + 65 ));
             tmp=$( perl -e "printf '%c',$tmp;" );
             regex_str="s/\(.*\)/\1$tmp/";
         ;;
         7)
-            tmp=$(( ($RANDOM  % 26 ) + 97 ));
+            tmp=$(( (RANDOM  % 26 ) + 97 ));
             tmp=$( perl -e "printf '%c',$tmp;" );
             regex_str="s/\(.*\)/\1$tmp/";
         ;;
@@ -271,7 +274,7 @@ word_wrap_string(){
     if [[ $# != 3 ]];then
         splitter='|';
     fi
-    fmt --width="$2" --goal="$2" <<< "$1" | sed -e 's/^\ //g' | tr '\n' '|'
+    fmt --width="$columns" --goal="$columns" <<< "$str" | sed -e 's/^\ //g' | tr '\n' "$splitter";
 }
 
 function str_to_char(){
@@ -302,7 +305,7 @@ function encrypt_str(){
     local sequence;
     local str_len=${#str};
     local sequence_start=$2;
-    read -r -a sequence <<< $(generate_sequence $sequence_start );
+    read -r -a sequence <<< "$(generate_sequence $sequence_start )";
     local output_str='';
     local i=0;
     local j=0;
@@ -315,7 +318,7 @@ function encrypt_str(){
     #echo 'seq'"${sequence[*]}";
     for ((i=0;i<str_len;++i));do
         byte=${str:$i:1};
-        index=`(str_index $b32_dict $byte )`;
+        index=$( str_index "$b32_dict" "$byte" );
         index=$(( $index ^ ${sequence[$j]} ));
         ouput_str+="${b64_dict:$index:1}";
         #printf ${b64_dict:$index:1};
@@ -326,7 +329,7 @@ function encrypt_str(){
 
     done
 
-    printf "$ouput_str\n";
+    echo "$ouput_str";
 }
 
 function decrypt(){
@@ -334,7 +337,7 @@ function decrypt(){
     local sequence;
     local str_len=${#str};
     local sequence_start=$2;
-    read -r -a sequence <<< $(generate_sequence $sequence_start );
+    read -r -a sequence <<< "$(generate_sequence $sequence_start )";
     local output_str='';
     local i=0;
     local j=0;
@@ -348,8 +351,8 @@ function decrypt(){
     for ((i=0;i<str_len;++i)); do
         #getting a substring out of a string.
         byte=${str:$i:1};
-        index=`(str_index $b64_dict $byte )`;
-        index=$(( $index ^ ${sequence[$j]} ));
+        index=$( str_index $b64_dict "$byte" );
+        index=$(( index ^ ${sequence[$j]} ));
         ouput_str+="${b32_dict:$index:1}";
         #printf ${b64_dict:$index:1};
         let j++;
@@ -359,8 +362,9 @@ function decrypt(){
         fi
     done
 
-    printf "$ouput_str\n";
+    echo "$ouput_str";
 }
+
 # shellcheck disable=SC2034
 function cipher_string(){
 
@@ -430,7 +434,7 @@ function generate_sequence(){
     local b=1;
     local num=0;
     local start=$1;
-    local end=$(( $start + 5 ));
+    local end=$(( start + 5 ));
     sequence_str='';
     
     for (( i=0; i<10; i++ )); do
@@ -440,10 +444,10 @@ function generate_sequence(){
         if [[ $i -ge $start ]];then
             sequence_str="$sequence_str $a";
         fi
-        if [[ $i = $end ]];then
+        if [[ $i = "$end" ]];then
             break;
         fi
     done
     
-    printf "$sequence_str";
+    echo "$sequence_str";
 }

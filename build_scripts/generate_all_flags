@@ -22,18 +22,18 @@ while read line;do
     level=$j;
     word_arr=( $line );
 
-    for i in `( seq 0 $max_words )`;do
+    for i in $( seq 0 $max_words );do
         chosen_word=${word_arr[$i]};
         chosen_word=$(( $chosen_word - 1 ));    
         if [[ $i != 0 ]];then
            hash_string+=', ';
         fi
-        hash_string+=$(printf "'%s'" $( make_semistatic_flag $chosen_word));
-        hashes+=$(printf "'%s'" $( make_semistatic_flag $chosen_word))'\n';
+        hash_string+=$(printf "'%s'" "$( make_semistatic_flag $chosen_word)" );
+        hashes+=$(printf "'%s'" "$( make_semistatic_flag $chosen_word) ")'\n';
     done
     hash_string+=');\n';
     word_string+="this.hound$j""_word=new Array(";
-    for i in `( seq 0 $max_words )`;do
+    for i in $( seq 0 $max_words );do
         chosen_word=${word_arr[$i]};
         if [[ $i != 0 ]];then
            word_string+=', ';

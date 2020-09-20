@@ -11,24 +11,25 @@ local max=$2;
 #we are returning a status code instead of to stdout to make it look more like a normal
 #program. Normally you'd echo the output and then capture it inside of a subshell.
 #also you can just use $RANDOM as the function to get a random number it's a bash builtin
-number=$(( ($RANDOM % $max) + $min ));
+number=$(( (RANDOM % max) + min ));
 # $(( ($RANDOM % $max ) + $min ));
 return $number;
 }
 function get_your_fortune(){
-answer_array=('It is certain.' 'Without a doubt.' 'Yes - definitely.' 'As I see it, yes.' 'Most likely.' 'Signs points to yes.' 'Reply hazy, try again.' 'Ask again later.' 'Cannot predict right now.' 'Do not count on it' 'My reply is no.' 'Very doubtful.');
-answer_array_len=${#answer_array[*]};
-if [[ $1 -ne 1 ]];
-then
-echo 'What is your question?';
-read -r query;
-fi
-#get_random_number 0 $answer_array_len;
-#echo $#;
-random_number=$(( ($RANDOM % $answer_array_len ) + 0));
-#get_random_number 1 12;
-#echo $#;
-echo ${answer_array[$random_number]};
+  answer_array=('It is certain.' 'Without a doubt.' 'Yes - definitely.' 'As I see it, yes.' 'Most likely.' 'Signs points to yes.' 'Reply hazy, try again.' 'Ask again later.' 'Cannot predict right now.' 'Do not count on it' 'My reply is no.' 'Very doubtful.');
+  answer_array_len=${#answer_array[*]};
+  if [[ $1 -ne 1 ]];
+  then
+	  echo 'What is your question?';
+	  # shellcheck disable=SC2034
+	  read -r query;
+  fi
+  #get_random_number 0 $answer_array_len;
+  #echo $#;
+  random_number=$(( (RANDOM % answer_array_len ) + 0));
+  #get_random_number 1 12;
+  #echo $#;
+  echo "${answer_array[$random_number]}";
 }
 
 function main(){
@@ -39,10 +40,10 @@ then
         -h)
         echo "Usage: 8ball.sh <No Arguments>|'<Question to ask>'|-h";;
         *)
-    get_your_fortune 1 $1;;
+    get_your_fortune 1 "$1";;
     esac
 else
-get_your_fortune 0;
+	get_your_fortune 0;
 fi
 }
-main $@;
+main "$@";

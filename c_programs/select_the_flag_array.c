@@ -13,16 +13,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "xor_rand.c"
+#include "xor_rand.h"
 
 
-unsigned int get_least_used_word(unsigned int *word_freq,unsigned int num_words){
-	unsigned int min_index=0;
-	unsigned int min_freq=0;
-	unsigned int current_freq=0;
-	unsigned int i=0;
-	unsigned int start_index=0;
-	unsigned int j=0;
+unsigned int get_least_used_word(const unsigned int *word_freq,unsigned int num_words){
+	unsigned int min_index;
+	unsigned int min_freq;
+	unsigned int current_freq;
+	unsigned int i;
+	unsigned int start_index;
+	unsigned int j;
 	start_index=xor_32(0,num_words);
 	j=start_index;
 	min_freq=word_freq[start_index];
@@ -111,7 +111,7 @@ int main(int argc, char **argv){
 	for(j=0;j<=num_flags;j++){
 		printf("flag_num:%u\nWORD_ARRAY=(",j);
 		for(i=0;i<num_words_per_flag;i++){
-			the_word=(unsigned int ) word_array[j][i];
+			the_word=word_array[j][i];
 			printf("%u",the_word);
 			if( i <= (num_words_per_flag - 2 )){
 				printf(" ");
@@ -122,7 +122,7 @@ int main(int argc, char **argv){
 
 	for(j=0;j<=num_flags;j++){
 		for(i=0;i<num_words_per_flag;i++){
-			the_word=(unsigned int ) word_array[j][i];
+			the_word=word_array[j][i];
 			printf("%u",the_word+1);
 			if( i <= (num_words_per_flag - 2 )){
 				printf(" ");

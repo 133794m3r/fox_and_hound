@@ -15,20 +15,20 @@ fi
 
 args=$#;
 if [[ $args -eq 1 ]]; then
-    if [ $1 == '../hounds' ]; then
-        cd $1;
+    if [ "$1" == '../hounds' ]; then
+        cd "$1" || exit;
         #TODO: Make it so that the line is passed to a function to make it to the userid/groupid
         #but that's for a future revision for now it's gotta be set manually.
         ls > /tmp/dirs;
         shopt -s dotglob
-        files='';
         files_array='';
-        files_array2='';
+
+        # shellcheck disable=SC2162
         while read line;
         do
-            cd "$line";
+            cd "$line" || exit;
             echo "$line";
-            mapfile -t 'files_array' <<< $( ls -A )
+            mapfile -t 'files_array' <<< "$( ls -A )"
             nums_files=${#files_array[@]};
             for((i=0;i<nums_files;i++));do
                 files_array[$i]='./'${files_array[$i]};
@@ -38,7 +38,7 @@ if [[ $args -eq 1 ]]; then
             chmod 777 ../../"hounds_built/$line";
             tar -cJf ../../"hounds_built/$line/"challenge_file.txz "${files_array[@]}";
             chmod 777 ../../"hounds_built/$line/"challenge_file.txz;
-           cd ..;
+           cd .. || exit;
 
         done < /tmp/dirs
         shopt -u dotglob

@@ -19,10 +19,10 @@ int base64_encode(char *dest, const char *src, int srclen){
     const char table[64]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     unsigned int i=0;
     unsigned int j=0;
-    unsigned int a=0;
-    unsigned int b=0;
-    unsigned int c=0;
-    unsigned int t=0;
+    unsigned int a;
+    unsigned int b;
+    unsigned int c;
+    unsigned int t;
     const char padding[1]="=";
     while (i < srclen){
         //ternary's are used to save some sloc and b/c I'm lazy.       
@@ -52,10 +52,10 @@ int main(int argc,char **argv){
     struct timeval never_wait;   
     never_wait.tv_sec = 0;
     never_wait.tv_usec = 0;
-    unsigned int srclen=0;     
+    unsigned int srclen;
     char message[8];
-    int i=0;
-    int j=0;    
+    int i;
+    int j;
     fd_set read_file_descriptors;
     FD_ZERO(&read_file_descriptors);
     FD_SET(STDIN_FILENO,&read_file_descriptors);     
@@ -68,12 +68,10 @@ int main(int argc,char **argv){
     }
     else if(select(1,&read_file_descriptors,NULL,NULL,&never_wait)){
         int read_bytes=0;
-        int read_status=0;
+        int read_status;
         size_t len=0;
         read_status = getline(&src_buffer, &len, stdin);    
         while (read_status >= 0){
-            i=0;
-            j=0;
             //this should work as I did 100K iterations in bash with random data and it worked everytime
             for(i=read_bytes;i<len;i++){
                 total_buffer[i]=src_buffer[j++];
