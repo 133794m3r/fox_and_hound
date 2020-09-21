@@ -17,7 +17,8 @@ fi
 #this reads in the functions that are in the library.
 source build_functions;
 #we seed $RANDOM with the current level value.
-seed_random $level;
+# shellcheck disable=SC2086
+seed_random "$level";
 
 # shellcheck disable=SC2034
 HASH_ENCODING='b32';
@@ -41,20 +42,20 @@ FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 filename_arr=('.-' '-~' '-.' '.~');
 filename_arr_len=${#filename_arr[*]};
 #This line removes the old flag and puts the new file in there.
-cd ../hounds/hound1/
+cd ../hounds/hound1/ || exit
 tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
 #echo "$tmp";
-rm -v './'$( ls -a | egrep "($tmp)");
+rm -v './'$( ls -a | grep -E "($tmp)");
 
-file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
+file_name=${filename_arr[$(( RANDOM % filename_arr_len ))]};
 
 
 FLAG_STR="The flag is $FLAG_HOUND";
-echo $FLAG_STR > ./"$file_name";
+echo "$FLAG_STR" > ./"$file_name";
 echo "$file_name";
 echo "$FLAG_HOUND";
 CHECK_FILE=$(cat ./$( ls -A) );
-if [[ $FLAG_STR = $CHECK_FILE ]];then
+if [[ "$FLAG_STR" = "$CHECK_FILE" ]];then
     echo "It worked. By Stallman's beard it worked!";
 else
     echo "Someone messed up. Better review it manually.";
@@ -63,10 +64,10 @@ fi
 #chown 1002 ./"$file_name";
 #then we go back to the build scripts directory so that we can output to it our file that'll
 #hold the flag and the username for the next user.
-cd ../../build_scripts
+cd ../../build_scripts || exit
 #cd ../../build_scripts;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
-let level++;
+(( level++ ));
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
 echo "hound$level:$FLAG_HOUND" >> the_flags;

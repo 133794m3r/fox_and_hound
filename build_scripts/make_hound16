@@ -66,7 +66,7 @@ function decompression_tester(){
             command="$command_base | $command"
             command_base=$command;
         fi
-        let i++;
+        (( i++ ));
     done
 
     if [ "$return_val" != 'failed!' ];then
@@ -89,7 +89,7 @@ fi
 source build_functions;
 
 #we seed $RANDOM with the current level value.
-seed_random $level;
+seed_random "$level";
 
 #we then make the flag by calling it.
 #FLAG_HOUND=$( make_flag $level 1);
@@ -105,7 +105,7 @@ read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
-compression_depth=$(( ($RANDOM % 3 ) + 4));
+compression_depth=$(( (RANDOM % 3 ) + 4));
 i=0;
 filenames=('data' 'file' 'dump' 'binary');
 filenames_len=${#filenames[*]};
@@ -121,21 +121,21 @@ mkdir -p tmp;
 cd tmp;
 pwd;
 rm -v *;
-filename=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
-filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+filename=${filenames[ $(( RANDOM % filenames_len ))]}'.'${endnames[ $(( RANDOM % endnames_len ))]};
+filename2=${filenames[ $(( RANDOM % filenames_len ))]}'.'${endnames[ $(( RANDOM % endnames_len ))]};
 
 if [[ "$filename2" == "$filename" ]]; then
-    filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+    filename2=${filenames[ $(( RANDOM % filenames_len ))]}'.'${endnames[ $(( RANDOM % endnames_len ))]};
 fi
 
 printf "$FLAG_STR\n" | base64 -w 0 > "$filename";
 xxd  "$filename" > "$filename2";
 
 
-echo $filename;
-echo $filename2;
+echo "$filename";
+echo "$filename2";
 cp "$filename2" 'test';
-mv -v $filename2 $filename;
+mv -v "$filename2" "$filename";
 cat "$filename";
 #rm -v $filename;
 
@@ -168,10 +168,10 @@ chmod 755 "$output_file";
     return 0;
 }
 for (( i=0; i<compression_depth; i++)); do
-    compression=${compression_options[$(( $RANDOM % $compression_options_len ))]};
-    filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+    compression=${compression_options[$(( RANDOM % compression_options_len ))]};
+    filename2=${filenames[ $(( RANDOM % filenames_len ))]}'.'${endnames[ $(( RANDOM % endnames_len ))]};
     if [[ "$filename2" == "$filename" ]]; then
-        filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+        filename2=${filenames[ $(( RANDOM % filenames_len ))]}'.'${endnames[ $(( RANDOM % endnames_len ))]};
     fi
 
     echo $i;
@@ -187,9 +187,9 @@ done
 echo "$filename";
 rm -v ../../hounds/hound"$level"/*
 #tmp=$(( $RANDOM % 2 ));
-filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+filename2=${filenames[ $(( RANDOM % filenames_len ))]}'.'${endnames[ $(( RANDOM % endnames_len ))]};
     if [[ "$filename2" == "$filename" ]]; then
-        filename2=${filenames[ $(( $RANDOM % $filenames_len ))]}'.'${endnames[ $(( $RANDOM % $endnames_len ))]};
+        filename2=${filenames[ $(( RANDOM % filenames_len ))]}'.'${endnames[ $(( RANDOM % endnames_len ))]};
     fi
 echo "$filename2";
 echo "$filename";
@@ -205,11 +205,13 @@ else
     echo -e "We were expecting. $FLAG_STR but we got,\n $TEST_STR.";
     echo -e "Please manually review the file $filename, but first run the program pipemadness like so.\n bash pipe_madness.sh $filename \n to confirm that it isn't just a fluke.";
 fi
+
+# shellcheck disable=SC2103
 cd ..;
 #rm -Rv tmp;
 #rm -Rv tmp;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
-let level++;
+(( level++ ));
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
 echo "hound$level:$FLAG_HOUND" >> the_flags;

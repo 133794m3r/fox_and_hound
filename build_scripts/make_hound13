@@ -8,6 +8,7 @@
 # Licenesed under AGPLv3
 # (C) 2019 -
 
+# shellcheck disable=SC2034
 HASH_ENCODING='b32';
 if [[ $# -lt 1 ]];then
     level=13;
@@ -21,7 +22,7 @@ source build_functions;
 WORD_ARRAY=(6 7 70 101 102 45 71 18 19 20 65 79);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
-FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+FLAG_HOUND=$( make_semistatic_flag "$chosen_word");
 #the dictionary file that we're using to get our words from.
 #this will be set to a global variable DICTIONARY from the main script once the whole
 #build system is done.
@@ -39,12 +40,12 @@ filename_arr=('.-' '-~' '-.' '.~' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET'
 filename_arr_len=${#filename_arr[*]};
 filename_ext_arr=('.txt' '.dat' '.md' '.notes' .'flag');
 filename_ext_arr_len=${#filename_ext_arr[*]};
-filename="${filename_arr[$(( $RANDOM % $filename_arr_len ))]}${filename_ext_arr[$(( $RANDOM % $filename_ext_arr_len))]}";
+filename="${filename_arr[$(( RANDOM % filename_arr_len ))]}${filename_ext_arr[$(( RANDOM % filename_ext_arr_len))]}";
 
 
 
 prefix_string='flag ';
-declare -i number_lines=$(( ($RANDOM % 30) + 40 ));
+declare -i number_lines=$(( (RANDOM % 30) + 40 ));
 FLAG_STR="flag $FLAG_HOUND";
 flag_string=$( echo "flag $FLAG_HOUND" | sed '/\n/!G;s/\(.\)\(.*\n\)/&\2\1/;//D;s/.//'  | sed -r 's/([a-z])([^a-z]*.?)/\U\1\L\2/gi' );
 string_to_write="$flag_string";
@@ -54,9 +55,9 @@ for((i=0;i<number_lines;i++));do
     false_flag=$( echo "flag $false_flag" | sed '/\n/!G;s/\(.\)\(.*\n\)/&\2\1/;//D;s/.//'  | sed -r 's/([a-z])([^a-z]*.?)/\U\1\L\2/gi');
     string_to_write="$false_flag\n$string_to_write\n$false_flag";
 done
-cd ../hounds/hound13;
+cd ../hounds/hound13 || exit;
 
-tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
+tmp=$( echo "${filename_arr[*]}" | tr ' ' '|' );
 #remove the old file.
 #it doesthe following. First we list all of the files in the directory. Then we pipe it to egrep and search for all of the keys that we have chosen.
 #then it sends those values to xargs and we tell it to replace all instances of {} with the argument. Then we use printf to insert into the final
@@ -66,16 +67,16 @@ tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
 rm -v $( ls -A | egrep "($tmp)" | xargs -i{} printf ' ./{}' );
 
 printf "$string_to_write" | shuf -  > "$filename";
-TEST_STR=$( cat ./`(ls -A)` | sort | uniq -u | rev | tr '[A-Z]' '[a-z]' | cut -d' ' -f2 );
-if [[ $TEST_STR == $FLAG_HOUND ]];then
+TEST_STR=$( cat ./$(ls -A) | sort | uniq -u | rev | tr 'A-Z' 'a-z' | cut -d' ' -f2 );
+if [[ $TEST_STR == "$FLAG_HOUND" ]];then
     echo "Hound$level was built successfully.";
 else
     echo "Hound$level not built correctly. Test failed.";
     echo "We expected:$FLAG_HOUND";
     echo "We received:$TEST_STR";
-    printf "The command we tried was \n cat ./`(ls -A)` | sort | uniq -u | rev | tr '[A-Z]' '[a-z]' | cut -d' ' -f2\n";
+    printf "%s" "The command we tried was \n cat ./\$(ls -A) | sort | uniq -u | rev | tr 'A-Z' 'a-z' | cut -d' ' -f2\n";
     echo "Please try to do the command again from the target folder to verify that it wasn't just a weird typo.";
 fi
-cd ../../build_scripts;
-let level++;
+cd ../../build_scripts || exit;
+(( level++ ));
 echo "hound$level:$FLAG_HOUND" >> the_flags;

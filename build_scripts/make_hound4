@@ -19,7 +19,7 @@ fi
 #this reads in the functions that are in the library.
 source build_functions;
 #we seed $RANDOM with the current level value.
-#seed_random $level;
+#seed_random "$level";
 password_dict='../dict/passwords_dict';
 #get the length of the dictionary file.
 #in the future this'll be calculated once from the main build script and then the string
@@ -50,11 +50,11 @@ FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 MAX=32;
 #we select _which_ of the files will hold the flag. The rest will be binary data.
 START=$(( $MAX / 4 ));
-correct_flag=$(( ($RANDOM % ($MAX-$START)) + ($START+1)  ));
-false_flag=$(( ($RANDOM % ($MAX+1 ))  ));
+correct_flag=$(( (RANDOM % ($MAX-$START)) + ($START+1)  ));
+false_flag=$(( (RANDOM % ($MAX+1 ))  ));
 
 while [ $false_flag -eq $correct_flag ];do
-    false_flag=$(( ($RANDOM % $MAX) + 1 ));
+    false_flag=$(( (RANDOM % $MAX) + 1 ));
 done
 
 #the filename we're going to use. It's an empty string by default.
@@ -71,14 +71,14 @@ endname_arr_len=${#endname_arr[*]};
 #basically like other ones it's from 0-max for the array elements. Bash makes the length be one higher
 #than the max element you can get(for whatever reason). So this "hack" works as the modulu always makes it no more than
 #that number minux 1.
-filename=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]}'.'${endname_arr[ $(( $RANDOM % $endname_arr_len ))]};
+filename=${filename_arr[ $(( RANDOM % $filename_arr_len ))]}'.'${endname_arr[ $(( RANDOM % $endname_arr_len ))]};
 #the directory names. They are all hidden so that they have to use previous knowledge to see the files.
 #plus it makes it a tad bit harder to find.
 dirname_arr=('.secrets' '.filthy_lucre' '.files' '.information' '.top_secret' '.hidden' '.mystery');
 #get the length.
 dirname_arr_len=${#dirname_arr[*]};
 #the first directory name.
-dirname=${dirname_arr[$(( $RANDOM % dirname_arr_len ))]};
+dirname=${dirname_arr[$(( RANDOM % dirname_arr_len ))]};
 
 
 #rm -rvf ../hounds/hound5/.secret/*
@@ -159,5 +159,5 @@ if [ "$FLAG_STRING" = "$GIVEN_STRING" ];then
 else
     echo 'Some kinda error better try it yourself to make sure.';
 fi
-let level++;
+(( level++ ));
 echo "hound$level:$FLAG_HOUND" >> the_flags;

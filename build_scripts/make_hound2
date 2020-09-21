@@ -42,7 +42,7 @@ done
 ls | egrep "($tmp)"| tr '|' '\n'|xargs -d'\n' rm -v
 #rm -v './'$( ls -a | egrep "($tmp)");
 
-file_name=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
+file_name=${filename_arr[$(( RANDOM % $filename_arr_len ))]};
 
 
 echo "$FLAG_HOUND" > "$file_name";
@@ -61,7 +61,7 @@ fi
 cd ../../build_scripts
 #cd ../../build_scripts;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
-let level++;
+(( level++ ));
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
 echo "$FLAG_HOUND";

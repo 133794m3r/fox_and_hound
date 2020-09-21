@@ -18,7 +18,7 @@ HASH_ENCODING='b32';
 #this reads in the functions that are in the library.
 source build_functions;
 #we seed $RANDOM with the current level value.
-seed_random $level;
+seed_random "$level";
 #we then make the flag by calling it.
 #FLAG_HOUND=$( make_flag 1);
 #we continue by selecting things semi_randomly.
@@ -41,12 +41,12 @@ filename_arr=('this file has spaces' 'name has spaces' 'space character' 'many s
 #then we get the length.
 filename_arr_len=${#filename_arr[*]};
 #followed by selecting a random element from 0-(len-1)
-filename=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
+filename=${filename_arr[$(( RANDOM % $filename_arr_len ))]};
 #ditto of above all through here.
 dirname_arr=('.secrets' '.filthy_lucre' '.files' '.information' '.top_secret' '.hidden' '.mystery');
 dirname_arr_len=${#dirname_arr[*]};
 #followed by selecting a random element from 0-(len-1)
-dirname=${dirname_arr[$(( $RANDOM % $dirname_arr_len ))]};
+dirname=${dirname_arr[$(( RANDOM % $dirname_arr_len ))]};
 #we go to the folder where the data will live.
 cd ../hounds/hound3;
 #this is to make sure to deal with files that have spaces in their name as we're looking for certain ones
@@ -86,7 +86,7 @@ fi
 cd ../../../build_scripts
 #cd ../../build_scripts;
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
-let level++;
+(( level++ ));
 echo "$dirname/$filename";
 echo "$FLAG_HOUND";
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another

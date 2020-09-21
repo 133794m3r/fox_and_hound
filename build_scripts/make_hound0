@@ -49,7 +49,7 @@ rm -v $( ls | grep -E "($tmp)");
 # expanded into a value representing that element of the array.
 file_name=${file_prefix[$(( RANDOM % file_prefix_len ))]}'.'${file_suffix[$(( RANDOM % file_suffix_len ))]};
 # we include the flag inside of "" to make sure it's escaped properly, then we cat the file to the selected filename.
-echo "The flag is $FLAG_HOUND" >$file_name;
+echo "The flag is $FLAG_HOUND" > "$file_name";
 FLAG_STR="The flag is $FLAG_HOUND";
 CHECK_FILE=$(cat ./$( ls -A) );
 if [[ $FLAG_STR = "$CHECK_FILE" ]];then
