@@ -34,7 +34,7 @@ function select_random_regex(){
     local tmp='';
     #local tmp_rnd=`( dd if=/dev/urandom bs=2 count=1 status=none | od -A n -t u )`
     #pattern_code=$(( $tmp_rnd  % 8 ));
-    pattern_code=$(( $RANDOM % 9 ));
+    pattern_code=$(( RANDOM % 9 ));
     case $pattern_code in
         0)
             selected_pattern=' ';
@@ -61,7 +61,7 @@ function select_random_regex(){
             selected_pattern='^';
         ;;
         8)
-            tmp=$(( ($RANDOM  % 26 ) + 65 ));
+            tmp=$(( (RANDOM  % 26 ) + 65 ));
             tmp=$( perl -e "printf '%c',$tmp;" );
             selected_pattern="$tmp";
         ;;
@@ -78,6 +78,7 @@ function sed_regex_pattern(){
 
     echo "$str" | sed -e "s/\([a-z0-9]\)/\1$selected_pattern/g";
 }
+
 function sed_regex_test(){
     local selected_pattern="$1";
     local pattern_code="$2";
@@ -88,14 +89,15 @@ function sed_regex_test(){
     fi
     sed -ne "s/$selected_pattern//g;$correct_line p" "../hounds/hound$level/$filename";
 }
+
 function sed_regex_help(){
-#base_str='Goal:Use a regex pattern that deletes all of the'
-base_str='';
-extra_str0='';
-base_str_end='. Then you need to make sure sed only shows changed lines. And finally only print the line ';
-local code=$1;
-local pattern=$2;
-local line=$3;
+	#base_str='Goal:Use a regex pattern that deletes all of the'
+	base_str='';
+	extra_str0='';
+	base_str_end='. Then you need to make sure sed only shows changed lines. And finally only print the line ';
+	local code=$1;
+	local pattern=$2;
+	local line=$3;
     if [[ $code = 0 ]];then
         extra_str0='spaces';
     elif [[ $code = 8 ]];then
@@ -108,7 +110,7 @@ local line=$3;
 
 #the library of build functions.
 source build_functions;
-#seed_random $level;
+#seed_random "$level";
 #the dictionary file that we're using to get our words from.
 #this will be set to a global variable DICTIONARY from the main script once the whole
 #build system is done.
@@ -119,39 +121,40 @@ password_dict='../dict/passwords_dict';
 password_dict_len=2007;
 #set the encoding. In future versions this'll be hardcoded from the main script.
 #this is to make sure tha all hashes are b32 encoded.
+# shellcheck disable=SC2034
 HASH_ENCODING='b32';
 
 
 filename_arr=('-.' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT'S A SECRET TO EVERYBODY" 'I AM ERROR' 'I AM BAGU' 'not in here(am i lying?)');
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
-filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
-for (( i=1; i<$filename_arr_len; i++ ));do
+filename=${filename_arr[$(( RANDOM & (filename_arr_len-1) ))]};
+for (( i=1; i<filename_arr_len; i++ ));do
     tmp="$tmp|${filename_arr[$i]}";
 done
 ls -A "../hounds/hound$level" | grep -E "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
 select_random_regex;
 CORRECT_REGEX_CODE=$pattern_code;
 CORRECT_REGEX_PATTERN=$selected_pattern;
-NUM_LINES=$(( ($RANDOM % 45) + 70 ));
-correct_line=$(( ($RANDOM % 25 ) + 25 ));
-tmp=$(( $RANDOM & 1 ));
+NUM_LINES=$(( (RANDOM % 45) + 70 ));
+correct_line=$(( (RANDOM % 25 ) + 25 ));
+tmp=$(( RANDOM & 1 ));
 if [[ $tmp = 1 ]];then
-    false_line=$(( $correct_line + ($RANDOM  % 21 )));
+    false_line=$(( correct_line + (RANDOM  % 21 )));
 else
-    false_line=$(( $correct_line - ($RANDOM % 26) ));
+    false_line=$(( correct_line - (RANDOM % 26) ));
 fi
 i=0;
 while [[ $correct_line -eq $false_line ]];do
     case $tmp in
         1)
-            false_line=$(( $correct_line + ($RANDOM % 21 )));
+            false_line=$(( correct_line + (RANDOM % 21 )));
         ;;
         0)
-            false_line=$(( $correct_line - ($RANDOM % 26) ));
+            false_line=$(( correct_line - (RANDOM % 26) ));
         ;;
     esac
-    i=$(( $i + 1 ));
+    ((i++));
 done
 echo 'i:'$i;
 tmp_file=tmp_11;
@@ -164,7 +167,7 @@ echo "$FLAG_HOUND";
 capture_str='';
 tmp='';
 #NUM_LINE=102;
-for ((i=0;i<$NUM_LINES;++i));do
+for ((i=0;i<NUM_LINES;++i));do
     str=$( make_false_flag $password_dict $password_dict_len );
     select_random_regex;
     if [[ $i = $correct_line ]];then
@@ -179,26 +182,26 @@ for ((i=0;i<$NUM_LINES;++i));do
     fi
 done
 echo -en "$capture_str" >> $tmp_file;
-correct_line=$(( $correct_line + 1 ));
+correct_line=$(( correct_line + 1 ));
 tmp=0;
-regex_help=`(sed_regex_help $CORRECT_REGEX_CODE "$CORRECT_REGEX_PATTERN" "$correct_line")`;
+regex_help=$(sed_regex_help "$CORRECT_REGEX_CODE" "$CORRECT_REGEX_PATTERN" "$correct_line");
 echo "$regex_help";
-IFS='|' read -r -a str_array <<< `( word_wrap_string "$regex_help" 43 )`;
+IFS='|' read -r -a str_array <<< $( word_wrap_string "$regex_help" 43 );
 tmp=$(( ${#str_array[0]} + 1 ));
 padding=$(( 42 - ${#str_array[0]} ));
-GOAL_STR0=`(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' )`;
-IFS='|' read -r -a str_array <<< `( word_wrap_string "${regex_help:$tmp}" 41 )`;
+GOAL_STR0=$(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' );
+IFS='|' read -r -a str_array <<< $( word_wrap_string "${regex_help:$tmp}" 41 );
 tmp=$(( $tmp + ${#str_array[0]} + 1 ));
 padding=$(( 41 - ${#str_array[0]} ));
-GOAL_STR1=`(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' )`;
-IFS='|' read -r -a str_array <<< `( word_wrap_string "${regex_help:$tmp}" 40 )`;
+GOAL_STR1=$(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' );
+IFS='|' read -r -a str_array <<< $( word_wrap_string "${regex_help:$tmp}" 40 );
 tmp=$(( $tmp + ${#str_array[0]} +1 ));
 padding=$(( 40 - ${#str_array[0]} ));
-GOAL_STR2=`(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' )`;
-IFS='|' read -r -a str_array <<< `( word_wrap_string "${regex_help:$tmp}" 40 )`;
+GOAL_STR2=$(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' );
+IFS='|' read -r -a str_array <<< $( word_wrap_string "${regex_help:$tmp}" 40 );
 tmp=$(( $tmp + ${#str_array[0]} +1 ));
 padding=$(( 40 - ${#str_array[0]} ));
-GOAL_STR3=`(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' )`;
+GOAL_STR3=$(printf "${str_array[0]}%${padding}s" '' | sed -e 's/^\ //g' );
 echo -e "$GOAL_STR0";
 echo -e "$GOAL_STR1";
 echo -e "$GOAL_STR2";
@@ -207,7 +210,7 @@ sed -i 's/GOAL_STR0\=.*/GOAL_STR0\=\"'"$GOAL_STR0"'\"/' ../home_folders/hound$le
 sed -i 's/GOAL_STR1\=.*/GOAL_STR1\=\"'"$GOAL_STR1"'\"/' ../home_folders/hound$level/.ssh/rc;
 sed -i 's/GOAL_STR2\=.*/GOAL_STR2\=\"'"$GOAL_STR2"'\"/' ../home_folders/hound$level/.ssh/rc;
 sed -i 's/GOAL_STR3\=.*/GOAL_STR3\=\"'"$GOAL_STR3"'\"/' ../home_folders/hound$level/.ssh/rc;
-cp $tmp_file ../hounds/hound$level/"$filename";
+cp $tmp_file "../hounds/hound$level/$filename";
 #FLAG_STR=`( sed_regex_pattern "$CORRECT_REGEX_PATTERN" $CORRECT_REGEX_CODE $FLAG_HOUND )`;
 TEST_STR=$( sed_regex_test "$CORRECT_REGEX_PATTERN" $CORRECT_REGEX_CODE $correct_line "$filename" );
 if [[ "$TEST_STR" == "$FLAG_HOUND" ]];then
@@ -226,5 +229,5 @@ else
     echo 'sed -ne "s/'"$CORRECT_REGEX_PATTERN"'//g;'"$correct_line"' p"' "../hounds/hound$level/$filename";
 fi
 rm $tmp_file;
-let level++;
+((level++));
 echo "hound$level:$FLAG_HOUND" >> the_flags;

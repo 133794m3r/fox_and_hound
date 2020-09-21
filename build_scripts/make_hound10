@@ -55,7 +55,7 @@ while [[ "$regex_case0" = "$regex_case" && $i -lt 255 ]];do
 	read -r -a tmp <<< $( select_regex );
     false_regex_str0=${tmp[1]};
     regex_case=${tmp[0]};
-    i=$(( $i+1 ));
+    (( i++ ))
 done
 echo $i;
 read -r -a tmp <<< $( select_regex );
@@ -67,27 +67,28 @@ while [[ "$regex_case0" = "$regex_case" && $i -lt 255 ]];do
 	read -r -a tmp <<< $( select_regex );
     false_regex_str1=${tmp[1]};
     regex_case=${tmp[0]};
-    i=$(( $i+1 ));
+    (( i++ ))
 done
 filename='';
 #The prefixes for the files
 filename_arr=('ALL YOUR BASE ARE BELONG TO.us' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT IS A SECRET TO EVERYBODY" 'I AM ERROR' 'I AM BAGU');
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
-filename=${filename_arr[$(( $RANDOM % $filename_arr_len ))]};
+filename=${filename_arr[$(( RANDOM % filename_arr_len ))]};
 
-NUM_LINES=$(( ($RANDOM % 41) + 62 ));
-correct_line=$(( ($NUM_LINES % 28 ) + 27 ));
-false_line=$(( $correct_line + ($RANDOM  % 8 )));
-false_line2=$(( $correct_line - ($RANDOM % 23) ));
+NUM_LINES=$(( (RANDOM % 41) + 62 ));
+correct_line=$(( (NUM_LINES % 28 ) + 27 ));
+false_line=$(( correct_line + (RANDOM  % 8 )));
+false_line2=$(( correct_line - (RANDOM % 23) ));
 while [[ $correct_line -eq $false_line ]];do
-    correct_line=$(( ($RANDOM % 28 ) + 27 ));
-    false_line=$(( $correct_line + ($RANDOM  % 8 )));
-    false_line2=$(( $correct_line - ($RANDOM % 23) ));
+    correct_line=$(( (RANDOM % 28 ) + 27 ));
+    false_line=$(( correct_line + (RANDOM  % 8 )));
+    false_line2=$(( correct_line - (RANDOM % 23) ));
 done
 tmp_file="tmp$level";
 echo -n '' > $tmp_file;
 tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
+# shellcheck disable=SC2128
 ls -a "../hounds/hound$level" | grep -E "($tmp)" | xargs -i{} rm -v "../hounds/hound$level/""{}";
 
 file_location="../hounds/hound$level/$filename"
@@ -105,13 +106,13 @@ echo 'fn:'$filename;
 for((i=0;i<NUM_LINES;++i)){
     str=$( make_false_flag $password_dict $password_dict_len );
     if [[ $i -eq $correct_line ]];then
-        tmp_str=$(printf " $FLAG_HOUND \n" | sed -e "$regex_str");
-        printf "$tmp_str\n" >> $tmp_file;
+        tmp_str=$(printf "%s" " $FLAG_HOUND \n" | sed -e "$regex_str");
+        printf "%s" "$tmp_str\n" >> $tmp_file;
         FLAG_STR="$tmp_str";
     elif [[ $i -eq $false_line2 ]];then
-        printf " $str \n"| sed -e "$false_regex_str0" >> $tmp_file;
+        printf "%s" " $str \n"| sed -e "$false_regex_str0" >> $tmp_file;
     else
-        printf " $str \n"| sed -e "$false_regex_str1" >> $tmp_file;
+        printf "%s" " $str \n"| sed -e "$false_regex_str1" >> $tmp_file;
     fi
     read -r -a tmp <<< $( select_regex );
     false_regex_str1=${tmp[1]};
@@ -122,29 +123,29 @@ for((i=0;i<NUM_LINES;++i)){
     read -r -a tmp <<< $( select_regex );
         false_regex_str1=${tmp[1]};
         regex_case=${tmp[0]};
-        i=$(( $i+1 ));
+        (( i++ ))
     done
 }
-regex_help=`( select_regex_help_str $regex_case0)`;
-IFS='|' read -r -a str_array <<< `( word_wrap_string "$regex_help" 41 )`;
+regex_help=$( select_regex_help_str "$regex_case0" );
+IFS='|' read -r -a str_array <<< $( word_wrap_string "$regex_help" 41 );
 padding=$(( 41 - ${#str_array[0]} ));
-GOAL_STR0=`(printf "%s%${padding}s" "${str_array[0]}" '')`;
+GOAL_STR0=$(printf "%s%${padding}s" "${str_array[0]}" '');
 echo "$GOAL_STR0";
 padding=$(( 41 - ${#str_array[1]} ));
-GOAL_STR1=`(printf "%s%${padding}s" "${str_array[1]}" '')`;
+GOAL_STR1=$(printf "%s%${padding}s" "${str_array[1]}" '');
 echo "$GOAL_STR1";
 sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR0'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/GOAL_STR1\=.*/GOAL_STR1\='$GOAL_STR1'/" ../home_folders/hound$level/.ssh/rc;
-cp -v $tmp_file "$file_location";
+cp -v "$tmp_file" "$file_location";
 cp -v programs/regexer "../hounds/hound$level/regexer";
-rm $tmp_file;
-regex_test_pattern=`( select_regex_test_pattern $regex_case0 )`;
-TEST_STRING=`(sed -n "$regex_test_pattern" "$file_location")`
+rm "$tmp_file";
+regex_test_pattern=$( select_regex_test_pattern $regex_case0 );
+TEST_STRING=$(sed -n "$regex_test_pattern" "$file_location");
 if [[ $TEST_STRING == $FLAG_STR ]];then
     echo 'It worked. Both values are the same.';
 else
     echo "It didn't work. Try again. The shown regex pattern was $regex_test_pattern and the pattern that modified the line was $regex_str";
 fi
-let level++;
+(level++);
 pwd;
 echo "hound$level:$FLAG_HOUND" >> the_flags;

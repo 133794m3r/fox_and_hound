@@ -15,7 +15,7 @@ local max=$2;
 #we are returning a status code instead of to stdout to make it look more like a normal
 #program. Normally you'd echo the output and then capture it inside of a subshell.
 #also you can just use $RANDOM as the function to get a random number it's a bash builtin
-return $(( ($RANDOM % $max ) + $min ));
+return $(( (RANDOM % $max ) + $min ));
 }
 function lucky_number_guesser(){
 clear;

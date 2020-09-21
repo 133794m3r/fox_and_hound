@@ -30,7 +30,7 @@ FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 #right now it's just hardcoded. Future versions will actually convert the numeric format into a string.
 function permission_octal_to_string(){
     local num=$1;
-    local replacement_part=$(( $RANDOM % 3 ));
+    local replacement_part=$(( RANDOM % 3 ));
     local tmp='';
     tmp=${1:$replacement_part:1};
     case $tmp in
@@ -125,18 +125,18 @@ file_type_correct='text';
 
 #function's not needed.
 #function make_correct_metadata(){
-correct_owner=${owner_array[$(( $RANDOM % $owner_array_len ))]};
-correct_group=${group_array[$(( $RANDOM % $group_array_len ))]};
-correct_permission=${permission_array[$(( $RANDOM % $permission_array_len ))]};
-correct_size=${file_size_array[$(( $RANDOM % $file_size_array_len ))]};
+correct_owner=${owner_array[$(( RANDOM % $owner_array_len ))]};
+correct_group=${group_array[$(( RANDOM % $group_array_len ))]};
+correct_permission=${permission_array[$(( RANDOM % $permission_array_len ))]};
+correct_size=${file_size_array[$(( RANDOM % $file_size_array_len ))]};
 if [[ $correct_permission = 751 && ( $correct_group -ne 1007 || $correct_owner -ne 1006 )]]; then
-    correct_permission=${permission_array[$(( $RANDOM % ( $permission_array_len -1 ) ))]};
+    correct_permission=${permission_array[$(( RANDOM % ( $permission_array_len -1 ) ))]};
     #correct_permission=${permission_array[$(( $RANDOM % ( ) ))]};
 fi
 #    return 0;
 #}
 #make_correct_me
-tmp=$(( $RANDOM % 2 ));
+tmp=$(( RANDOM % 2 ));
 correct_owner_string="'$correct_owner';";
 correct_group_string="'$correct_group';";
 case $tmp in
@@ -158,12 +158,12 @@ red_herrings=directory_number;
 #this is set for each directory as the file that will be correct.
 #the redherring will always be selected as a value that is this value +1 but then
 #it wraps around.
-correct_file=$(( ($RANDOM % ($file_number*$directory_number)) ));
+correct_file=$(( (RANDOM % ($file_number*$directory_number)) ));
 l=0;
-red_herring_file=$(( $RANDOM % $file_number ));
+red_herring_file=$(( RANDOM % $file_number ));
 if [[ $red_herring_file -gt $(( $file_number - 1 )) ]];then
     red_herring_file=0;
-    red_herring_file2=$(( $RANDOM % $file_number));
+    red_herring_file2=$(( RANDOM % $file_number));
 fi
 
 if [[ $red_herring_file2 -gt $(( $file_number - 1 )) ]];then
@@ -180,7 +180,7 @@ if [[ $red_herring_file2 -eq $red_herring_file ]];then
 fi
 
 function red_herring_options(){
-	incorrect_file_metadata=$(( $RANDOM % 4));
+	incorrect_file_metadata=$(( RANDOM % 4));
 	local permission=$correct_permission;
 	local owner=$correct_owner;
 	local group=$correct_group;
@@ -190,27 +190,27 @@ function red_herring_options(){
 #by default the correct one is at the end.
 	case $incorrect_file_metadata in
 	0)
-	    permission=${permission_array[$(( $RANDOM % $permission_array_len ))]};
+	    permission=${permission_array[$(( RANDOM % $permission_array_len ))]};
         while [[ $permission -eq $correct_permission ]];do
-            permission=${permission_array[$(( $RANDOM % $permission_array_len ))]};
+            permission=${permission_array[$(( RANDOM % $permission_array_len ))]};
         done
 	;;
 	1)
-	    group=${group_array[$(( $RANDOM % $group_array_len ))]};
+	    group=${group_array[$(( RANDOM % $group_array_len ))]};
         while [[ $group -eq $correct_group ]]; do
-            group=${group_array[$(( $RANDOM % $group_array_len ))]};
+            group=${group_array[$(( RANDOM % $group_array_len ))]};
         done
 	;;
 	2)
-	   file_size=${file_size_array[$(( $RANDOM % $file_size_array_len ))]};
+	   file_size=${file_size_array[$(( RANDOM % $file_size_array_len ))]};
         while [[ $file_size -eq $correct_size ]]; do
-            file_size=${file_size_array[$(( $RANDOM % $file_size_array_len ))]};
+            file_size=${file_size_array[$(( RANDOM % $file_size_array_len ))]};
         done
 	;;
 	3)
-	   owner=${owner_array[$(( $RANDOM % $owner_array_len))]};
+	   owner=${owner_array[$(( RANDOM % $owner_array_len))]};
         while [[ $owner -eq $correct_owner ]]; do
-             owner=${owner_array[$(( $RANDOM % $owner_array_len))]};
+             owner=${owner_array[$(( RANDOM % $owner_array_len))]};
         done
 	;;
 	esac
@@ -220,7 +220,7 @@ function red_herring_options(){
 function make_false_file(){
 
     #local FILE_CONTENTS;
-    local tmp_str=$(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
+    local tmp_str=$(echo RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
     local sz=$(( $size - 1));
     case $file_type in
         'text')
@@ -241,7 +241,7 @@ cd ../tmp;
 arr='';
 tmp_str='';
 FILE_CONTENTS='';
-random_number=$(( $RANDOM % $dirname_arr_len ));
+random_number=$(( RANDOM % $dirname_arr_len ));
 
 echo $correct_file;
 echo $red_herring_file;
@@ -250,21 +250,21 @@ tmp_herring=$red_herring_file;
 tmp_herring2=$red_herring_file2;
 
 for ((i=0; i < $directory_number; i++)); do
-    dirname=${dirname_arr[$(( $RANDOM % $dirname_arr_len )) ]};
+    dirname=${dirname_arr[$(( RANDOM % $dirname_arr_len )) ]};
     mkdir "$dirname$i";
     chmod 777 "$dirname$i";
     chown 1008:1008 "$dirname$i";
     cd "$dirname$i";
-    filename=${filename_arr[$(($RANDOM % $filename_arr_len))]}${endname_arr[$(($RANDOM % $endname_arr_len))]};
-    suffix=${suffix_arr[$(($RANDOM % $suffix_arr_len))]};
+    filename=${filename_arr[$((RANDOM % $filename_arr_len))]}${endname_arr[$((RANDOM % $endname_arr_len))]};
+    suffix=${suffix_arr[$((RANDOM % $suffix_arr_len))]};
 
     echo "We're at $i";
 
     for (( j=0; j < file_number; j++ )); do
-        size=${file_size_array[$(( $RANDOM % $file_size_array_len ))]};
-        owner=${owner_array[$(( $RANDOM % $owner_array_len ))]};
-        group=${group_array[$(( $RANDOM % $group_array_len ))]};
-        permission=${permission_array[$(( $RANDOM % $permission_array_len))]};
+        size=${file_size_array[$(( RANDOM % $file_size_array_len ))]};
+        owner=${owner_array[$(( RANDOM % $owner_array_len ))]};
+        group=${group_array[$(( RANDOM % $group_array_len ))]};
+        permission=${permission_array[$(( RANDOM % $permission_array_len))]};
 
         #echo $j
         if [ $l -eq $correct_file ]; then
@@ -316,11 +316,11 @@ for ((i=0; i < $directory_number; i++)); do
             #printf "%${size}s\n" "$HOUND_STR $tmp_str" > "$filename$j$suffix";
         else
           #echo 'other';
-            file_type=${file_type_arr[$(($RANDOM % file_type_arr_len))]};
+            file_type=${file_type_arr[$((RANDOM % file_type_arr_len))]};
             #            if [[ $permission -eq $correct_permission && $file_type -eq 'text' && $size -eq $correct_size && $owner -eq $correct_owner && $group -eq $correct_group ]]; then
             while [[ $permission -eq $correct_permission && $size -eq $correct_size && $owner -eq $correct_owner && $group -eq $correct_group ]]; do
                 echo 'we have a hit';
-                permission=${permission_array[$(( $RANDOM % $permission_array_len))]};
+                permission=${permission_array[$(( RANDOM % $permission_array_len))]};
             done
             #FILE_CONTENTS=$(make_false_file $file_size $file_type);
             make_false_file;
@@ -351,7 +351,7 @@ cp -aR . ../hounds/hound$level;
 #this is used for the redherring's if the length matches up.
 # $(echo $RANDOM | openssl dgst -sha1 -binary | base64 | tr -d '=');
 #we are doing level+1 since this _flag_ is the _password_ for the next level.
-let level++;
+(( level++ ));
 #The file we are outputting do is used by the change password script that we're using to modify passwords one-after another
 #in an automated fashion.
 rm -Rd ../tmp;

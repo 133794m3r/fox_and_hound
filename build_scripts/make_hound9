@@ -50,13 +50,13 @@ filename_arr=('.-' '-~' '-.' '.~' 'this file has spaces' 'spaces in the name' 'I
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
 #the first filename we're going to be sending data to.
-filename_1=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
+filename_1=${filename_arr[ $(( RANDOM % $filename_arr_len ))]};
 #the second file data is going to be sent to.
-filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
+filename_2=${filename_arr[ $(( RANDOM % $filename_arr_len ))]};
 #to make sure that they're not equal to eachother a quick while loop to pick another one randomly.
 while [ "$filename_2" = "$filename_1" ];do
     #placeholder.
-    filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
+    filename_2=${filename_arr[ $(( RANDOM % $filename_arr_len ))]};
 done
 
 
@@ -91,9 +91,9 @@ shadow_built=../base_files/shadow_built;
 #rm $shadow_built $passwd_built;
 cp $passwd_base $passwd_built;
 cp $shadow_base $shadow_built;
-CORRECT_UID=$(( ($RANDOM % $USERS) ));
+CORRECT_UID=$(( (RANDOM % $USERS) ));
 #we do the first one outside of the normal route because we have to move the output to a new file to start off with.
-#insert_line=$(( ($RANDOM % $max_lines) +1 ));
+#insert_line=$(( (RANDOM % $max_lines) +1 ));
 #username=$( get_random_word $dictionary $dictionary_len )
 #password=$( printf $username | mk_hash );
 #password=$FLAG_HOUND;
@@ -102,7 +102,7 @@ CORRECT_UID=$(( ($RANDOM % $USERS) ));
 #the passwd string.
 #insert_string="$username\:x\:$uid\:$guid\:"$( perl -e "print ucfirst $username" )"\,\,\,\:\/home\/$username\:\/bin\/bash";
 #sed "$insert_line i$insert_string" $passwd_base > $passwd_built;
-#insert_line=$(( ($RANDOM % $max_lines) +1 ));
+#insert_line=$(( (RANDOM % $max_lines) +1 ));
 #the shadow string.
 #insert_string="$username\:$password\:18062\:0\:99999\:7\:\:\:";
 #sed "$insert_line i$insert_string" $shadow_base > $shadow_built;
@@ -110,7 +110,7 @@ CORRECT_UID=$(( ($RANDOM % $USERS) ));
 #let 'guid++';
 #':true
 for ((i=0;i<$USERS;i++));do
-    insert_line=$(( ($RANDOM % $max_lines) + 1 ));
+    insert_line=$(( (RANDOM % $max_lines) + 1 ));
     #echo '$i'$i' ';
     username=$( get_random_word $dictionary $dictionary_len )
     if [[ $i -eq $CORRECT_UID ]];then
@@ -124,7 +124,7 @@ for ((i=0;i<$USERS;i++));do
     #the passwd string.
     insert_string="$username\:x\:$uid\:$guid\:"$( perl -e "print ucfirst $username" )"\,\,\,\:\/home\/$username\:\/bin\/bash";
     sed -i "$insert_line i $insert_string" $passwd_built
-    insert_line=$(( ($RANDOM % $max_lines )+1 ));
+    insert_line=$(( (RANDOM % $max_lines )+1 ));
     #the shadow string.
     insert_string="$username\:$password\:18062\:0\:99999\:7\:\:\:";
     sed -i "$insert_line i $insert_string" $shadow_built;
@@ -161,5 +161,5 @@ cp  $shadow_built ../hounds/hound$level/"$filename_2";
 CORRECT_UID=$(( $CORRECT_UID+1000 ));
 sed -i "s/word\=.*/word\='$CORRECT_UID'/" ../home_folders/hound$level/.ssh/rc;
 echo "$FLAG_HOUND";
-let level++;
+(( level++ ));
 echo "hound$level:$FLAG_HOUND" >> the_flags;

@@ -44,14 +44,14 @@ chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
 FLAG_HOUND=$( make_semistatic_flag $chosen_word);
 
 
-NUM_LINES=$(( ($RANDOM % 50) + 65 ));
-correct_line=$(( ($NUM_LINES % 27 ) + 27 ));
-false_line=$(( $correct_line + ($RANDOM  % 10 )));
-false_line2=$(( $correct_line - ($RANDOM % 25) ));
+NUM_LINES=$(( (RANDOM % 50) + 65 ));
+correct_line=$(( (NUM_LINES % 27 ) + 27 ));
+false_line=$(( correct_line + (RANDOM  % 10 )));
+false_line2=$(( correct_line - (RANDOM % 25) ));
 while [[ $correct_line -eq $false_line ]];do
-    correct_line=$(( ($RANDOM % 27 ) + 27 ));
-    false_line=$(( $correct_line + ($RANDOM  % 10 )));
-    false_line2=$(( $correct_line - ($RANDOM % 25) ));
+    correct_line=$(( (RANDOM % 27 ) + 27 ));
+    false_line=$(( correct_line + (RANDOM  % 10 )));
+    false_line2=$(( correct_line - (RANDOM % 25) ));
 done
 #the prefix string. The false flag there'll just be one that's the correct length but also has a ':' or a ',' in it.
 #the string will be padded to a certain length and that's what they're using awk for.
@@ -59,21 +59,21 @@ FLAG_STRING='your flag is';
 regex_case=0;
 #tmp=$( select_regex );
 #tmp=("$tmp");
-read -r -a tmp <<< $( select_regex );
+read -r -a tmp <<< "$( select_regex )";
 regex_str=${tmp[1]};
 regex_case=${tmp[0]}
 regex_case0=$regex_case;
-read -r -a tmp <<< $( select_regex );
+read -r -a tmp <<< "$( select_regex )";
 false_regex_str=${tmp[1]};
 regex_case=${tmp[0]}
 i=0;
 while [[ "$regex_case0" = "$regex_case" && $i -lt 255 ]];do
 #tmp=$( select_regex );
 #tmp=("$tmp");
-read -r -a tmp <<< $( select_regex );
+read -r -a tmp <<< "$( select_regex )";
     false_regex_str0=${tmp[1]};
     regex_case=${tmp[0]};
-    i=$(( $i+1 ));
+    (( i++ ))
 done
 echo $i;
 
@@ -83,12 +83,12 @@ while [[ "$regex_case0" = "$regex_case" && $i -lt 255 ]];do
 read -r -a tmp <<< $( select_regex );
     false_regex_str1=${tmp[1]};
     regex_case=${tmp[0]};
-    i=$(( $i+1 ));
+    (( i++ ))
 done
 #the strings will be padded with extra spaces at the end of the line.
 #The correct one will also be chosen randomly.
 max_spaces=51;
-correct_spaces=$(( ($RANDOM & $max_spaces) +1 ));
+correct_spaces=$(( (RANDOM % max_spaces) +1 ));
 echo "correct_spaces:"$correct_spaces;
 num_spaces=0;
 extra_space=0;
@@ -104,7 +104,7 @@ filename='';
 filename_arr=('-.' '.mystery' '.hidden_file' 'INHERE' 'README' 'INSIDETHIS' 'FILE' 'SECRET' "IT IS A SECRET TO EVERYBODY" 'I AM ERROR' 'I AM BAGU');
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
-filename=${filename_arr[$(( $RANDOM & ($filename_arr_len-1) ))]};
+filename=${filename_arr[$(( RANDOM % (filename_arr_len-1) ))]};
 extra_str=':';
 tmp_file='tmp'$level;
 echo -n '' > $tmp_file;
@@ -120,69 +120,74 @@ echo 'fn:'$filename;
 #rm -Rv "../hounds/hound$level"'/*';
 tmp="${filename_arr[0]}";
 # this loop is no longer needed.
-for (( i=1; i<$filename_arr_len; i++ ));do
+for (( i=1; i<filename_arr_len; i++ ));do
+    # shellcheck disable=SC2128
     tmp="$tmp|${filename_arr[$i]}";
 done
-ls -a ../hounds/hound$level | egrep "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v ../hounds/hound$level"/{}"
+
+# shellcheck disable=SC2128
+ls -a "../hounds/hound$level" | grep -E "($tmp)"| tr '|' '\n'|xargs -I {} -d'\n' rm -v "../hounds/hound$level/{}"
 
 file_location="../hounds/hound$level/$filename"
 for((i=0;i<NUM_LINES;++i)){
     str=$( make_false_flag $password_dict $password_dict_len );
-    num_spaces=$(( ($RANDOM & $max_spaces) +1 ));
+    num_spaces=$(( (RANDOM % max_spaces) +1 ));
     if [[ $num_spaces -eq $correct_spaces ]];then
-        num_spaces=$(( $num_spaces+1 ));
+        num_spaces=$(( num_spaces+1 ));
     fi
-    if [[ $i = $correct_line ]];then
+    if [[ $i -eq $correct_line ]];then
         tmp_str=$(printf "$FLAG_STRING $FLAG_HOUND %${correct_spaces}s\n" ''| sed -e "$regex_str");
-        CORRECT_LEN=$( printf "$tmp_str" | wc -c );
-        printf "$tmp_str\n" >> $tmp_file;
+        CORRECT_LEN=$( printf "%s" "$tmp_str" | wc -c );
+        printf "%s" "$tmp_str\n" >> "$tmp_file";
         FLAG_STR="$tmp_str";
-    elif [[ $i = $false_line ]];then
-        printf "$FLAG_STRING $str %${num_spaces}s\n" ''| sed -e "$regex_str" >> $tmp_file;
+    elif [[ $i -eq $false_line ]];then
+        printf "$FLAG_STRING $str %${num_spaces}s\n" ''| sed -e "$regex_str" >> "$tmp_file";
         #true;
-    elif [[ $i = $false_line2 ]];then
+    elif [[ $i -eq $false_line2 ]];then
 
         num_spaces=$(( "$correct_spaces"+"$extra_space" ));
-        printf "$FLAG_STRING $str %${num_spaces}s\n" ''| sed -e "$false_regex_str0" >> $tmp_file;
+        printf "$FLAG_STRING $str %${num_spaces}s\n" ''| sed -e "$false_regex_str0" >> "$tmp_file";
     else
-        printf "$FLAG_STRING $str %${num_spaces}s\n" ''| sed -e "$false_regex_str1" >> $tmp_file;
+        printf "$FLAG_STRING $str %${num_spaces}s\n" ''| sed -e "$false_regex_str1" >> "$tmp_file";
         #true;
     fi
+
     read -r -a tmp <<< $( select_regex );
     false_regex_str1=${tmp[1]};
 }
+
 if [[ $CORRECT_LEN -lt 10 ]];then
     CORRECT_LEN="0$CORRECT_LEN";
 fi
-echo 'cc:'$CORRECT_LEN;
-regex_help=`( select_regex_help_str $regex_case0)`;
-echo $regex_case0;
+echo "cc:$CORRECT_LEN";
+regex_help=$( select_regex_help_str $regex_case0);
+echo "$regex_case0";
 echo "$regex_help";
 regex_help_combined="$regex_help";
-IFS='|' read -r -a str_array <<< `( word_wrap_string "$regex_help_combined" 42 )`;
+IFS='|' read -r -a str_array <<< $( word_wrap_string "$regex_help_combined" 42 );
 padding=$(( 43 - ${#str_array[0]} ));
-GOAL_STR0=`(printf "%s%${padding}s" "${str_array[0]}" '')`;
+GOAL_STR0=$(printf "%s%${padding}s" "${str_array[0]}" '');
 echo "$GOAL_STR0";
 padding=$(( 43 - ${#str_array[1]} ));
-GOAL_STR1=`(printf "%s%${padding}s" "${str_array[1]}" '')`;
+GOAL_STR1=$(printf "%s%${padding}s" "${str_array[1]}" '');
 padding=$(( 42 - ${#str_array[2]} ));
-GOAL_STR2=`(printf "%s%${padding}s" "${str_array[2]}" '')`;
+GOAL_STR2=$(printf "%s%${padding}s" "${str_array[2]}" '');
 sed -i "s/GOAL_STR0\=.*/GOAL_STR0\='$GOAL_STR0'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/GOAL_STR1\=.*/GOAL_STR1\='$GOAL_STR1'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/GOAL_STR2\=.*/GOAL_STR2\='$GOAL_STR2'/" ../home_folders/hound$level/.ssh/rc;
 sed -i "s/LINE_LEN\=.*/LINE_LEN\='$CORRECT_LEN';/" ../home_folders/hound$level/.ssh/rc;
-cp $tmp_file "$file_location"
-rm $tmp_file;
+cp "$tmp_file" "$file_location"
+rm "$tmp_file";
 pwd;
 #awk "$0 ~ /PATTERN/ && length($0) == $LENGTH {print };" `<FILENAME>`;
-regex_test_pattern=`( select_regex_test_pattern $regex_case0 )`;
+regex_test_pattern=$( select_regex_test_pattern $regex_case0 );
 regex_test_pattern=${regex_test_pattern:0:-1};
 TEST_STRING=$( awk "\$0 ~ $regex_test_pattern && length(\$0) == $CORRECT_LEN { print }" "$file_location");
 if [[ "$FLAG_STR" == "$TEST_STRING" ]];then
     echo 'It worked. Values are the same.';
 else
     echo 'Uh oh. Something is fubared. Verify that the values are correct. Here is what we think it should be.';
-    printf "right_value: '$FLAG_STR'\nwrong_value: '$TEST_STRING'\n The regex pattern we got was $regex_test_pattern. The help string said it should be $GOAL_STR0 $GOAL_STR1\n";
+    printf "%s" "right_value: '$FLAG_STR'\nwrong_value: '$TEST_STRING'\n The regex pattern we got was $regex_test_pattern. The help string said it should be $GOAL_STR0 $GOAL_STR1\n";
 fi
-let level++;
+(( level++ ));
 echo "hound$level:$FLAG_HOUND" >> the_flags;

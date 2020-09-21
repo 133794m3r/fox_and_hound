@@ -20,7 +20,7 @@ fi
 #this reads in the functions that are in the library.
 source build_functions;
 
-seed_random $level;
+seed_random "$level";
 
 #the dictionary file that we're using to get our words from.
 #this will be set to a global variable DICTIONARY from the main script once the whole
@@ -52,12 +52,12 @@ filename_arr=('.-' '-~' '-.' '.~' '.mystery' '.hidden_file' 'INHERE' 'README' 'I
 #we get the length of the files.
 filename_arr_len=${#filename_arr[*]};
 #the first filename we're going to be sending data to.
-filename_1=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
+filename_1=${filename_arr[ $(( RANDOM % filename_arr_len ))]};
 #the second file data is going to be sent to.
-filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
+filename_2=${filename_arr[ $(( RANDOM % filename_arr_len ))]};
 #to make sure that they're not equal to eachother a quick while loop to pick another one randomly.
 while [ "$filename_2" = "$filename_1" ];do
-    filename_2=${filename_arr[ $(( $RANDOM % $filename_arr_len ))]};
+    filename_2=${filename_arr[ $(( RANDOM % filename_arr_len ))]};
 done
 
 #get all of the filenames converted to arguments to be sent to rm.
@@ -90,7 +90,7 @@ echo -en "$FILE_STRING_CONTENTS" > ./"$filename_1";
 echo "$filename_1 $filename_2"
 #echo $( printf "$FLAG_HOUND\n$FILE_STRING_CONTENTS" | shuf ) | tr ' ' '\n' > ./"$filename_2";
 
-line_to_delete=$(( ($RANDOM % $total_lines) + 1 ));
+line_to_delete=$(( (RANDOM % total_lines) + 1 ));
 #echo "$line_to_delete!p; \$a$FLAG_HOUND";
 #sed "$line_to_delete d; \$a$FLAG_HOUND" ./"$filename_1" > ./"$filename_2";
 sed "$line_to_delete i $FLAG_HOUND" ./"$filename_1" > ./"$filename_2";
@@ -102,9 +102,10 @@ else
     echo "It didn't work. Try again.";
     echo "String we got:$TEST_STR";
     echo "What we wanted:$FLAG_HOUND";
+    # shellcheck disable=SC2016
     echo -e 'The command we submitted\n $( diff ./"'"$filename_1"'" ./"'"$filename_2"'" | tr -d "\n>" | cut -d" " -f2 )';
 fi
 
 cd ../../build_scripts || exit;
-let level++;
+(( level++ ));
 echo "hound$level:$FLAG_HOUND" >> the_flags;

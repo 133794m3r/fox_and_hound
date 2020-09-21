@@ -17,7 +17,8 @@ fi
 source build_functions;
 
 #we seed $RANDOM with the current level value.
-seed_random $level;
+seed_random "$level";
+# shellcheck disable=SC2034
 HASH_ENCODING='b32';
 #we then make the flag by calling it.
 #FLAG_HOUND=$( make_flag 1);
@@ -30,7 +31,7 @@ continue_random;
 WORD_ARRAY=(46 21 47 80 81 82 83 22 84 85 48 103);
 read -r CURRENT_BUILD < ../notes/current_build_number;
 chosen_word=${WORD_ARRAY[$CURRENT_BUILD]};
-FLAG_HOUND=$( make_semistatic_flag $chosen_word);
+FLAG_HOUND=$( make_semistatic_flag "$chosen_word");
 
 dictionary='../dict/names_dict';
 #I could just use the following command.
@@ -46,9 +47,9 @@ passwords_dictionary_len=2007;
 #The num of lines for the output file to contain.
 FILE_NUM_LINES=40;
 #the correct line number to put the real file in there. It'll be placed no more than 1/2 of the way through the file.
-CORRECT_LINE_NUM=$(( $RANDOM % (FILE_NUM_LINES/2) + 1 ));
+CORRECT_LINE_NUM=$(( RANDOM % (FILE_NUM_LINES/2) + 1 ));
 #we go to the directory that's going to contain the files.
-cd ../hounds/hound$level;
+cd "../hounds/hound$level" || exit;
 #an array of filenames to be used.
 filename_arr=('somfile' 'something' 'thisfile' '.-' '-~' '-' '.~');
 #get the length of the array.
@@ -68,20 +69,20 @@ tmp=$( echo ${filename_arr[*]} | tr ' ' '|' );
 #string utilizing printf to make each instance of the file as ./<filename> so that it can be rmed more easily. Finally the shell expands the value
 #converts it to a string, this string is then converted into a set of arguments to be utilized by rm. This way there are no errors about a file not
 #being found as rm only sees existing files because we only pass those that have been grepped.
-rm -v $( ls -a | egrep "($tmp)" | xargs -i{} printf ' ./{}' );
+rm -v $( ls -a | grep -E "($tmp)" | xargs -i{} printf ' ./{}' );
 #the file we're going to output to.
 #first we get a random element from 0-ARRAY_MAX from filename_arr, then we do the same with extension_arr. Combine them together and through command
 #shell expasnion the variables will be replaced with the actual values. It's quoted because it's safer this way.
-output_file="${filename_arr[$(( $RANDOM % $filename_arr_len ))]}${extension_arr[$(( $RANDOM % $extension_arr_len ))]}";
+output_file="${filename_arr[$(( RANDOM % filename_arr_len ))]}${extension_arr[$(( RANDOM % extension_arr_len ))]}";
 #how many false flags we're going to include.
 false_flag_num=5;
 #the first line for the false flag to start. By default it's 0-(TOTAL_LINES/10)
-false_flag_line=$(( $RANDOM % ($FILE_NUM_LINES /10 ) ));
+false_flag_line=$(( RANDOM % (FILE_NUM_LINES /10 ) ));
 #this while loop is to make sure that they are never the same value ever. Since the chance of a collision is really loop. We should be able
 #to avoid collisions. Since the second value is going to be a number between 0-3 but the first one is 0-21 hopefully this won't be an infinite loop.
 while [ $false_flag_line = $CORRECT_LINE_NUM ];do
     #keep trying for another one until the files overwith.
-    false_flag_line=$(( $RANDOM % ($FILE_NUM_LINES /10 ) ));
+    false_flag_line=$(( RANDOM % (FILE_NUM_LINES /10 ) ));
 done
 
 #we start the file off as empty.
@@ -103,15 +104,15 @@ for ((i=0; i<FILE_NUM_LINES;i++)); do
         #if this is the first time that we've come across the false flag, we have to do some special math for the next one.
         if [[ $j -eq 0 ]]; then
             #by default it's set to a line between 0-4 + the correct line number.
-            false_flag_line=$(( ($RANDOM % 5) + $CORRECT_LINE_NUM ));
+            false_flag_line=$(( (RANDOM % 5) + CORRECT_LINE_NUM ));
         else
             #else we go back to the standard modus operandi.
-            false_flag_line=$(( $false_flag_line + ($RANDOM  % ($FILE_NUM_LINES/10)) ));
+            false_flag_line=$(( false_flag_line + (RANDOM  % (FILE_NUM_LINES/10)) ));
             #set j to one so that we know we've already hit here.
             j=1;
         fi
         #we put the string into the file by appending it to the file. like before we include a new line before and after to make it easier to read.
-        printf  '\n%s %s\n' $the_word $( make_false_flag $passwords_dictionary $passwords_dictionary_len ) >> "$output_file";
+        printf  '\n%s %s\n' "$the_word" $( make_false_flag $passwords_dictionary $passwords_dictionary_len ) >> "$output_file";
     else
         #if we're just doing a binary line we make sure that it adds the correct line length of pure random data.
         #the options chosen are explained as follows. if=<where to read from> here it's /dev/urandom since it's a non-blocking source of randomness
@@ -124,7 +125,7 @@ for ((i=0; i<FILE_NUM_LINES;i++)); do
 #done with the loop.
 done
 #The correct word that we're going to be grepping to.
-echo $CORRECT_WORD;
+echo "$CORRECT_WORD";
 TEST_STR=$(strings ./"$output_file"| grep "$CORRECT_WORD");
 FLAG_STR=$(printf  '%s %s\n' $CORRECT_WORD $FLAG_HOUND);
 if [[ "$TEST_STR" == "$FLAG_STR" ]];then
@@ -136,13 +137,13 @@ else
     echo 'Manually review the build to verify the authenticity.';
 fi
 
-cd ../../build_scripts;
+cd ../../build_scripts || exit;
 padding=$(( 41 - ${#CORRECT_WORD} ));
 CORRECT_WORD=$(printf "%s%${padding}s" $CORRECT_WORD ' ' );
 #we edit the file with the new and correct word. It's actually possible to do this entirely through sed, but strings is there incase they want to do it that way.
 sed -i "s/string\=.*/string\='$CORRECT_WORD'/" ../home_folders/hound$level/.ssh/rc;
 
 #we put it into the flags file so that we can use it to the file that we're going to use to make sure that everything works.
-let level++;
+(( level++ ));
 echo "hound$level:$FLAG_HOUND" >> the_flags;
 echo "$FLAG_HOUND";

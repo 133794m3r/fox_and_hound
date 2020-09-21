@@ -33,15 +33,15 @@ function sed_it(){
 pin_suffix='edited';
 c_program_src="givemethepin-$pin_suffix.c";
 c_program_srcdir="../c_programs"
-CORRECT_PIN=$(( $RANDOM % 300 ));
+CORRECT_PIN=$(( RANDOM % 300 ));
 
 #THE_FLAG=$( mk_hash $level );
 #b64
 #uOUEm1FOsgf1W0q4UcXo9OQfKoQ
 #b32
 #zd1ojg4tj43yx7k5jkhfdtxe6u1b6kwr
-INCORRECT_FLAG1=$( echo $RANDOM | mk_hash );
-INCORRECT_FLAG2=$( echo $RANDOM | mk_hash );
+INCORRECT_FLAG1=$( echo RANDOM | mk_hash );
+INCORRECT_FLAG2=$( echo RANDOM | mk_hash );
 cp ../c_programs/'givemethepin.c' ../c_programs/givemethepin-$pin_suffix.c;
 #We had to sed the flags to the file itself including false flags.
 sed_it '<correct_pin_placeholder>' "$CORRECT_PIN";
@@ -68,5 +68,5 @@ if [[ "$TEST_STR" == "$FLAG_HOUND" ]]; then
 else
     echo "No beuno. Better do a manual check.";
 fi
-let level++;
+(( level++ ));
 echo "hound$level:$FLAG_HOUND" >> the_flags;

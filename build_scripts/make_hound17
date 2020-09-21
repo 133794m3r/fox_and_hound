@@ -158,32 +158,32 @@ echo "false_line:$false_line";
 echo "false_line2:$false_line2";
 #HASH_ENCODING='b64';
 rot_encoding=$(( rot_encoding + 127 ));
-encoded_string=`( printf '%02x%02x%02x' $sequence_start 255 $rot_encoding | base64 )`;
+encoded_string=$( printf '%02x%02x%02x' $sequence_start 255 $rot_encoding | base64 );
 echo "The encoding string:$encoded_string";
 echo 'Hex Version:'$(printf '%02x%02x%02x' $sequence_start 255 $rot_encoding );
 rnd=0;
 declare -i rnd;
 append_str='';
 append_str_array=('*' '-' '.' '$' '#' '!');
-correct_append_str=${append_str_array[$(( $RANDOM % 5 ))]};
+correct_append_str=${append_str_array[$(( RANDOM % 5 ))]};
 echo "Append str:$correct_append_str";
 echo 'awk command:';
-echo "'\$0 ~ /[\"$correct_append_str\"]/ && length(\$0) == \"$(( $correct_spaces + 64 ))\" {gsub(/[^A-Za-z0-9\+\_]/,\"\"); print }'"
+echo "'\$0 ~ /[\"$correct_append_str\"]/ && length(\$0) == \"$(( correct_spaces + 64 ))\" {gsub(/[^A-Za-z0-9\+\_]/,\"\"); print }'"
 tmp_file="tmp$level";
 printf '' > $tmp_file;
 GOAL_STR="$encoded_string $correct_length $correct_append_str <The_other_file_in_here>";
 echo "$GOAL_STR"
 for((i=0;i<NUM_LINES;++i)){
     str=$( make_false_flag $password_dict $password_dict_len | tr -d '=');
-    rnd=$(( $RANDOM % 6 ));
+    rnd=$(( RANDOM % 6 ));
     str=$( encrypt_str $str $rnd );
-    append_str=${append_str_array[$(( $RANDOM % 4 ))]};
-    num_spaces=$(( ($RANDOM % $max_spaces) +1 ));
+    append_str=${append_str_array[$(( RANDOM % 4 ))]};
+    num_spaces=$(( (RANDOM % max_spaces) +1 ));
     if [[ $num_spaces -eq $correct_spaces ]];then
-        num_spaces=$(( $num_spaces+1 ));
+        num_spaces=$(( num_spaces+1 ));
     fi
     while [[ "$append_str" == "$correct_append_str" ]]; do
-        append_str=${append_str_array[$(( $RANDOM % 4 ))]};
+        append_str=${append_str_array[$(( RANDOM % 4 ))]};
     done
     if [[ $i = $correct_line ]];then
         printf "%s%${correct_spaces}s\n" $cipher_str '' | sed -e 's/\([A-Za-z0-9+_)]\)/\1'"$correct_append_str"'/g' >> $tmp_file;
@@ -226,6 +226,6 @@ else
     echo "Expected:$FLAG_HOUND";
     echo 'Tried to run: bash programs/default_program.sh '"$encoded_string $correct_length "'"'"$correct_append_str"'"''"'"$file_location"'"';
 fi
-let level++;
+(( level++ ));
 echo "hound$level:$FLAG_HOUND" >> the_flags;
 rm -v $tmp_file;

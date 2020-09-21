@@ -12,7 +12,7 @@ local max=$2;
 #program. Normally you'd echo the output and then capture it inside of a subshell.
 #also you can just use $RANDOM as the function to get a random number it's a bash builtin
 number=$(( (RANDOM % max) + min ));
-# $(( ($RANDOM % $max ) + $min ));
+# $(( (RANDOM % $max ) + $min ));
 return $number;
 }
 function get_your_fortune(){

@@ -92,7 +92,7 @@ function decompression_tester(){
             command_base=$command;
         fi
         #increment i.
-        let i++;
+        (( i++ ));
         #echo the current full command.
         echo "$command_base";
     done

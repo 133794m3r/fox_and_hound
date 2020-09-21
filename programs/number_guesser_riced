@@ -13,7 +13,7 @@ local max=$2;
 #todo math you have to do it inside of a subshell $((<Expression> ))
 #we are returning a status code instead of to stdout to make it look more like a normal
 #program. Normally you'd echo the output and then capture it inside of a subshell.
-return $(( ($RANDOM % $max ) + $min ));
+return $(( (RANDOM % $max ) + $min ));
 }
 function lucky_number_guesser(){
 clear;
