@@ -76,7 +76,7 @@ int main(int argc,char **argv){
         //right now we're not allowing them to do more than ~4MiB of total data piped to it.
         char *total_buffer=malloc(4096*1024);
 
-        int read_bytes=0;
+        unsigned int read_bytes=0;
         int read_status;
         size_t len=0;
         read_status = getline(&src_buffer, &len, stdin);
