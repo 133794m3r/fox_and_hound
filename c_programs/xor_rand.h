@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-signed-bitwise"
 #ifndef XOR_RANDOM_LIB
 #define XOR_RANDOM_LIB
 #ifndef uint64
@@ -59,3 +61,5 @@ unsigned int xor_32(unsigned int min, unsigned int max){
     return x;
 }
 #endif
+
+#pragma clang diagnostic pop

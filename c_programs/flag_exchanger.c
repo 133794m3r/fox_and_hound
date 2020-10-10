@@ -20,7 +20,7 @@
  *
 */
 
-static inline unsigned char uchar(char chr){ return chr;}
+static inline unsigned char uchar(char chr){ return (unsigned char) chr;}
 
 void print_help(char *fname){
 	fprintf(stdout,"Usage: %s -h| -u <LEVEL> -s <SECRET_STRING>\n-h=show this help string. -u <LEVEL> The level that the secret string was generated for. So for hound0 it'd be '0'.\n-s <SECRET_STRING> This is first 5-6 characters of the flag string.\n After giving both parameters to this program it will return back to you the password to the username that you've specified if your token matches the stored one.",fname);
@@ -106,8 +106,16 @@ int main(int argc, char **argv){
 
 	//since this is super dangerous it's only set here.
 	setuid(geteuid());
+	char FILE_NAME[] = "/tmpdownload/the_flags.txt";
 	//this will be the actual directory where the files contained eventually.
-	fp = fopen("/tmpdownload/the_flags.txt","r");
+	if (access(FILE_NAME,R_OK) != -1){
+		fp = fopen(FILE_NAME,"r");
+	}
+	else{
+		fprintf(stderr,"File %s doesn't exist.\n",FILE_NAME);
+		return 2;
+	}
+
 	//followed by being returned to a much lower priv user.
 	//on the VMs this'll be the UID of hound0(but for dev purposes it's 1000. VMs it'll be 1001.
 	setuid(1000);
@@ -131,7 +139,9 @@ int main(int argc, char **argv){
 	char flag[33];
 	//get the string from the file and make it read 33 bytes(includes terminator)
 	fgets(flag,33,fp);
-
+	
+	//close the file after we use it.
+	fclose(fp);
 	//make sure that the strings match as strncmp returns the number of characters that were different.
 	if(strncmp(flag,secret,5) == 0){
 		fprintf(stdout,"%s\n",flag);
@@ -139,7 +149,7 @@ int main(int argc, char **argv){
 	else{
 		//tell them as much.
 		fprintf(stderr,"The secret string you entered was incorrect. The string '%s' is not a valid secret string.\n",secret);
-		return 1
+		return 1;
 	}
 
 	//always return 0.

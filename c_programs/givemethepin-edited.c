@@ -18,7 +18,7 @@
 * I'm using shifting so that it's a bit faster. also the table is the same as the
 * base64 program from bash so that they can actually give it the same thing.
 */
-int base64_encode(unsigned char *dest, unsigned char *src, unsigned int srclen){
+int base64_encode(unsigned char *dest, const unsigned char *src, unsigned int srclen){
     const char table[64]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     unsigned int i=0;
     unsigned int j=0;
