@@ -1,27 +1,39 @@
+# Fox and Hound CTF Project
+
+This repo contains the challenges as created by me. They can be easily put on a VM and then hosted in NetLab or a similar environment for studnets. Before COVID19 this whole thing was run on a RPI3 to support 30+ students. Config files will be added in the coming days.
+
+## Background Information
 This project contains the fox & hound CTFS the project is just called fox_ctf for 
 right now. The CTFs are grouped based upon theme.
+
+## How it works
 The ones where the user is rummaging around searching out something are called
  hound<level>
 The ones where the user is instead trying do things that are clver are called 
 fox<level>
 
-
+## Progression
 The basic progress will be hound<0-n> and then the fox<0-n> with the different fox
 species being named for each type of wargame that's being utilized.
 
+## Licenses
 Some of the C Programs are ones I've wrote that I may need in a future version I don't know if I will or not but to be safe I am including them now. They are licensed under the LGPLv3.
+
 The scripts are licensed under AGPLv3 and the data contained herein is licensed
 under CC-BY.
 
 The images are all (C) Mountain Empire Community College. The "M" logo that shows up during the signin is (C) MECC with all rights reserved to them. For the public version of this repo a new custom logo will be created so that licensing will not be an issue.
 
+#Components Utilized 
 Tools utilized when building the project.
 BASH, GNU Utils, OpenSSL, openSSH, shelldb, shellcheck, VirtualBox, VMWare, VSphere, Perl, C, GCC, REGEX, sed, awk, linux server administration, git.
 
 All of the programs that students are required to do including bzcat,zcat,file, etc.
 
-Fox & The Hound Wargames (C) 2019-
-Macarthur Inbody <mdi2455@email.vccs.edu> <133794m3r@gmail.com> 
+Fox & The Hound Wargame (C) 2019-2021
+Macarthur Inbody <admin-contact@transcendental.us>
 Public GPG Signing Key is included in this repo to help verify authenticity of
 the commits.
 Fingerprint:16A0650B6A940FD271D9D0740B179CC3CC9D4470
+
+Pull requests to add new challenges/fixes are welcome. Next big change will be cleaning up the code base.
